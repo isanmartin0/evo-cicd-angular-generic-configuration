@@ -1,0 +1,1 @@
+# evo-cicd-angular-generic-configuration
