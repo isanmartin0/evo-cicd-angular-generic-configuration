@@ -80,6 +80,7 @@ def runAngularGenericJenkinsfile() {
 
     def nodeJS_8_installation = "Node-8.9.4"
     def nodeJS_6_installation = "Node-6.11.3"
+    def nodeAngularCli_8_installation = "Node-8.9.4-angular-cli-1-0-0"
     //def nodeJS_pipeline_installation = ""
     //int image_stream_nodejs_version = image_stream_nodejs_version_default
     //def sonarProjectPath = "sonar-project.properties"
@@ -309,15 +310,19 @@ def runAngularGenericJenkinsfile() {
                 /*************************************************************
                  ************* IMAGE STREAM TAG NODE VERSION *****************
                  *************************************************************/
-                echo "params.imageStreamNodejsVersion: ${params.imageStreamNodejsVersion}"
 
+
+                nodeJS_pipeline_installation = nodeAngularCli_8_installation
+
+
+                echo "params.imageStreamNodejsVersion: ${params.imageStreamNodejsVersion}"
                 String imageStreamNodejsVersionParam = params.imageStreamNodejsVersion
                 if (imageStreamNodejsVersionParam != null && imageStreamNodejsVersionParam.isInteger()) {
                     image_stream_nodejs_version = imageStreamNodejsVersionParam as Integer
                 }
 
                 if (image_stream_nodejs_version >= 8) {
-                    echo "Assigning NodeJS installation ${nodeJS_8_installation}"
+                    echo "Assigning NodeJS installation ${nodeAngularCli_8_installation}"
                     nodeJS_pipeline_installation = nodeJS_8_installation
                 } else if (image_stream_nodejs_version >= 6) {
                     echo "Assigning NodeJS installation ${nodeJS_6_installation}"
@@ -335,6 +340,9 @@ def runAngularGenericJenkinsfile() {
 
                 echo 'NPM version:'
                 sh "npm -v"
+
+                echo 'ng version:'
+                sh "ng version"
             }
 
             stage('Configure Artifactory NPM Registry') {
