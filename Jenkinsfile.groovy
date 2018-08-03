@@ -299,6 +299,10 @@ def runAngularGenericJenkinsfile() {
 
             }
 
+            def confirm = input message: 'Waiting for user approval',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+
             stage('NodeJS initialization') {
                 echo 'Node initializing...'
 
@@ -383,7 +387,7 @@ def runAngularGenericJenkinsfile() {
             }
 
 
-            def confirm = input message: 'Waiting for user approval',
+            confirm = input message: 'Waiting for user approval',
                     parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
             withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
