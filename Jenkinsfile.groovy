@@ -80,7 +80,7 @@ def runAngularGenericJenkinsfile() {
 
     def nodeJS_8_installation = "Node-8.9.4"
     def nodeJS_6_installation = "Node-6.11.3"
-    def nodeAngularCli_8_installation = "Node-8.9.4-angular-cli-1-0-0"
+    def nodeAngularCli_8_installation = "Node-8.9.4-angular-cli-1.0.0"
     //def nodeJS_pipeline_installation = ""
     //int image_stream_nodejs_version = image_stream_nodejs_version_default
     //def sonarProjectPath = "sonar-project.properties"
@@ -314,7 +314,7 @@ def runAngularGenericJenkinsfile() {
 
                 nodeJS_pipeline_installation = nodeAngularCli_8_installation
 
-
+/*
                 echo "params.imageStreamNodejsVersion: ${params.imageStreamNodejsVersion}"
                 String imageStreamNodejsVersionParam = params.imageStreamNodejsVersion
                 if (imageStreamNodejsVersionParam != null && imageStreamNodejsVersionParam.isInteger()) {
@@ -331,7 +331,7 @@ def runAngularGenericJenkinsfile() {
                     currentBuild.result = "FAILED"
                     throw new hudson.AbortException("Error checking existence of package on NPM registry")
                 }
-
+*/
                 def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                 env.PATH = "${node}/bin:${env.PATH}"
 
@@ -340,6 +340,13 @@ def runAngularGenericJenkinsfile() {
 
                 echo 'NPM version:'
                 sh "npm -v"
+
+                echo 'NPM list'
+                sh "npm list -g --depth=0"
+
+                confirm = input message: 'Waiting 2',
+                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
 
                 echo 'ng version:'
                 sh "ng version"
