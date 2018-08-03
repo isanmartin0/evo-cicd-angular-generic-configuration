@@ -346,13 +346,20 @@ def runAngularGenericJenkinsfile() {
                         parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
-                echo 'ng version:'
-                sh "ng version"
+
             }
 
             stage('Configure Artifactory NPM Registry') {
                 echo 'Setting Artifactory NPM registry'
                 sh "npm config set registry ${npmRepositoryURL} "
+            }
+
+            stage('Install @angular/cli') {
+                echo 'Installing @angular/cli'
+                sh 'npm install -g @angular/cli@1.0.0'
+
+                echo 'ng version:'
+                sh "ng version"
             }
 
             confirm = input message: 'Waiting 2',
