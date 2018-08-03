@@ -1,0 +1,144 @@
+#!/usr/bin/env groovy
+
+def jenkinsFile
+def gitDefaultProjectConfigurationPath='https://github.com/isanmartin0/evo-cicd-generic-configuration'
+def gitNodejsDefaultProjectConfigurationPath='https://github.com/isanmartin0/evo-cicd-nodejs-generic-configuration'
+def gitAngularDefaultProjectConfigurationPath='https://github.com/isanmartin0/evo-cicd-angular-generic-configuration'
+def gitDefaultProjectConfigurationJenkinsFile='Jenkinsfile'
+def gitDefaultProjectConfigurationBranch='master'
+def gitDefaultProjectConfigurationCredentials='4b18ea85-c50b-40f4-9a81-e89e44e20178' //credentials for the generic configuration project
+def gitDefaultProjectConfigurationJenkinsNode=''
+def mavenApplicationFile='pom.xml'
+def nodeApplicationFile='package.json'
+def angularApplicationFile='tsconfig.json'
+def isMavenApplication=false
+def isNodejsApplication=false
+def isAngularApplication=false
+def isAngularTsConfigFile=false
+def isAngularPackageFile=false
+def isAngularIncorrectAplication=false
+def projectURL=''
+
+node() {
+  stage('Detect application type') {
+    echo "Detecting application type"
+    checkout scm
+
+    isMavenApplication = fileExists mavenApplicationFile
+
+    if (isMavenApplication) {
+      echo "${mavenApplicationFile} file ... FOUND. Is a Maven application type"
+
+      try {
+        def pom = readMavenPom()
+      }
+      catch (exc) {
+        echo "${mavenApplicationFile} file ... INCORRECT."
+        isMavenApplication=false
+      }
+
+    } else {
+      echo "${mavenApplicationFile} file ... NOT FOUND."
+    }
+
+    if (!isMavenApplication) {
+        isAngularTsConfigFile = fileExists angularApplicationFile
+        isAngularPackageFile = fileExists isAngularPackageFile
+
+        isAngularApplication = isAngularTsConfigFile && isAngularPackageFile
+
+        if (isAngularApplication) {
+            echo "${angularApplicationFile} file ... FOUND"
+            echo "${angularApplicationFile} file ... FOUND"
+            echo "Is a Angular application type"
+
+            try {
+              def tsconfigJSON = readJSON file: angularApplicationFile
+            }
+            catch (exc) {
+              echo "${angularApplicationFile} file ... INCORRECT."
+              isAngularApplication=false
+              isAngularIncorrectAplication=true
+            }
+
+            try {
+                def angularPackageJSON = readJSON file: nodeApplicationFile
+            }
+            catch (exc) {
+              echo "${nodeApplicationFile} file ... INCORRECT."
+              isAngularApplication=false
+              isAngularIncorrectAplication=true
+            }
+        } else {
+             echo "${angularApplicationFile} file ... NOT FOUND."
+        }
+    }
+
+    if (!isMavenApplication && !isAngularApplication && !isAngularIncorrectAplication) {
+      isNodejsApplication = fileExists nodeApplicationFile
+
+      if (isNodejsApplication) {
+        echo "${nodeApplicationFile} file ... FOUND. Is a NodeJS application type"
+        try {
+          def packageJSON = readJSON file: nodeApplicationFile
+        }
+        catch (exc) {
+          echo "${nodeApplicationFile} file ... INCORRECT."
+          isNodejsApplication=false
+        }
+      } else {
+       	 echo "${nodeApplicationFile} file ... NOT FOUND."
+      }
+    }
+
+    if (!isMavenApplication && !isAngularApplication && !isNodejsApplication) {
+     	throw new hudson.AbortException("A correct Maven, Angular or NodeJS application type not found.")
+    }
+
+  }
+}
+stage('Generic Jenkinsfile (PGC) load') {
+
+  if (isMavenApplication) {
+
+    echo "Loading Maven Jenkins pipeline (PGC)"
+
+    jenkinsFile = fileLoader.fromGit(gitDefaultProjectConfigurationJenkinsFile,
+                                     gitDefaultProjectConfigurationPath,
+                                     gitDefaultProjectConfigurationBranch,
+                                     gitDefaultProjectConfigurationCredentials,
+                                     gitDefaultProjectConfigurationJenkinsNode)
+
+	jenkinsFile.runGenericJenkinsfile()
+
+
+
+  } else if (isAngularApplication) {
+
+		echo "Loading Angular Jenkins pipeline (PGC)"
+
+    	jenkinsFile = fileLoader.fromGit(gitDefaultProjectConfigurationJenkinsFile,
+                                     	 gitAngularDefaultProjectConfigurationPath,
+                                     	 gitDefaultProjectConfigurationBranch,
+                                     	 gitDefaultProjectConfigurationCredentials,
+                                     	 gitDefaultProjectConfigurationJenkinsNode)
+
+  		jenkinsFile.runAngularGenericJenkinsfile()
+
+  } else if (isNodejsApplication) {
+
+		echo "Loading NodeJS Jenkins pipeline (PGC)"
+
+    	jenkinsFile = fileLoader.fromGit(gitDefaultProjectConfigurationJenkinsFile,
+                                     	 gitNodejsDefaultProjectConfigurationPath,
+                                     	 gitDefaultProjectConfigurationBranch,
+                                     	 gitDefaultProjectConfigurationCredentials,
+                                     	 gitDefaultProjectConfigurationJenkinsNode)
+
+  		jenkinsFile.runNodejsGenericJenkinsfile()
+
+  } else {
+    throw new hudson.AbortException("A correct Maven or Angular or NodeJS application type not found.")
+  }
+
+}
