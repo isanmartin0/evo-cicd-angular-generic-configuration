@@ -299,7 +299,7 @@ def runAngularGenericJenkinsfile() {
 
             }
 
-            def confirm = input message: 'Waiting for user approval',
+            def confirm = input message: 'Waiting 1',
                     parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
@@ -342,6 +342,8 @@ def runAngularGenericJenkinsfile() {
                 sh "npm config set registry ${npmRepositoryURL} "
             }
 
+            confirm = input message: 'Waiting 2',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
             stage('Prepare') {
