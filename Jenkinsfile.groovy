@@ -341,8 +341,6 @@ def runAngularGenericJenkinsfile() {
                 echo 'NPM version:'
                 sh "npm -v"
 
-                echo 'NPM list'
-                sh "npm list -g --depth=0"
 
                 confirm = input message: 'Waiting 2',
                         parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
