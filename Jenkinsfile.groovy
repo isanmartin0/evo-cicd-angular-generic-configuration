@@ -87,7 +87,7 @@ def runAngularGenericJenkinsfile() {
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
 
 
-    node('nodejs10') {
+    node('nodejs10-chrome') {
 
         echo 'Pipeline begin timestamp... '
         sh 'date'
@@ -383,8 +383,8 @@ def runAngularGenericJenkinsfile() {
             }
 
 
-            currentBuild.result = "FAILED"
-            throw new hudson.AbortException("Error on pipeline")
+            def confirm = input message: 'Waiting for user approval',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
             withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
                 withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {

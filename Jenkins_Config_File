@@ -24,13 +24,16 @@ node() {
     echo "Detecting application type"
     checkout scm
 
+    echo "Checking Maven application type"
     isMavenApplication = fileExists mavenApplicationFile
 
     if (isMavenApplication) {
-      echo "${mavenApplicationFile} file ... FOUND. Is a Maven application type"
+      echo "${mavenApplicationFile} file ... FOUND."
 
       try {
         def pom = readMavenPom()
+        echo "${mavenApplicationFile} file ... CORRECT."
+        echo "Is a Maven application type"
       }
       catch (exc) {
         echo "${mavenApplicationFile} file ... INCORRECT."
@@ -42,18 +45,20 @@ node() {
     }
 
     if (!isMavenApplication) {
+        echo "Checking Angular application type"
         isAngularTsConfigFile = fileExists angularApplicationFile
-        isAngularPackageFile = fileExists isAngularPackageFile
+        isAngularPackageFile = fileExists nodeApplicationFile
 
         isAngularApplication = isAngularTsConfigFile && isAngularPackageFile
 
         if (isAngularApplication) {
             echo "${angularApplicationFile} file ... FOUND"
-            echo "${angularApplicationFile} file ... FOUND"
-            echo "Is a Angular application type"
+            echo "${nodeApplicationFile} file ... FOUND"
+
 
             try {
               def tsconfigJSON = readJSON file: angularApplicationFile
+              echo "${angularApplicationFile} file ... CORRECT"
             }
             catch (exc) {
               echo "${angularApplicationFile} file ... INCORRECT."
@@ -63,24 +68,42 @@ node() {
 
             try {
                 def angularPackageJSON = readJSON file: nodeApplicationFile
+                echo "${nodeApplicationFile} file ... CORRECT"
             }
             catch (exc) {
               echo "${nodeApplicationFile} file ... INCORRECT."
               isAngularApplication=false
               isAngularIncorrectAplication=true
             }
+
+            if (isAngularApplication && !isAngularIncorrectAplication) {
+                echo "Is an Angular application type"
+            }
         } else {
-             echo "${angularApplicationFile} file ... NOT FOUND."
+            if (isAngularTsConfigFile) {
+                echo "${angularApplicationFile} file ... FOUND."
+            } else {
+                echo "${angularApplicationFile} file ... NOT FOUND."
+            }
+            if (isAngularPackageFile) {
+                echo "${nodeApplicationFile} file ... FOUND."
+            } else {
+                echo "${nodeApplicationFile} file ... NOT FOUND."
+            }
         }
     }
 
     if (!isMavenApplication && !isAngularApplication && !isAngularIncorrectAplication) {
+
+      echo "Checking NodeJS application type"
       isNodejsApplication = fileExists nodeApplicationFile
 
       if (isNodejsApplication) {
-        echo "${nodeApplicationFile} file ... FOUND. Is a NodeJS application type"
+        echo "${nodeApplicationFile} file ... FOUND."
         try {
           def packageJSON = readJSON file: nodeApplicationFile
+          echo "${nodeApplicationFile} file ... CORRECT."
+          echo "Is a NodeJS application type"
         }
         catch (exc) {
           echo "${nodeApplicationFile} file ... INCORRECT."
@@ -92,7 +115,7 @@ node() {
     }
 
     if (!isMavenApplication && !isAngularApplication && !isNodejsApplication) {
-     	throw new hudson.AbortException("A correct Maven, Angular or NodeJS application type not found.")
+     	throw new hudson.AbortException("A correct application type not found. The allowed application types are Maven, Angular and NodeJS")
     }
 
   }
@@ -138,7 +161,7 @@ stage('Generic Jenkinsfile (PGC) load') {
   		jenkinsFile.runNodejsGenericJenkinsfile()
 
   } else {
-    throw new hudson.AbortException("A correct Maven or Angular or NodeJS application type not found.")
+    throw new hudson.AbortException("A correct application type not found. The allowed application types are Maven, Angular and NodeJS")
   }
 
 }
