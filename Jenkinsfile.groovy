@@ -350,8 +350,8 @@ def runAngularGenericJenkinsfile() {
             }
 
             stage('Configure Artifactory NPM Registry') {
-                echo 'Setting Artifactory NPM registry'
-                sh "npm config set registry ${npmRepositoryURL} "
+                //echo 'Setting Artifactory NPM registry'
+                //sh "npm config set registry ${npmRepositoryURL} "
             }
 
             stage('Install @angular/cli') {
