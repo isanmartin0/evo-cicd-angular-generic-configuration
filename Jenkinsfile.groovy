@@ -376,6 +376,9 @@ def runAngularGenericJenkinsfile() {
 
                             }
 
+                            confirm = input message: 'Waiting 2-2',
+                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
                             echo 'ng version:'
                             sh "ng version"
                         }
