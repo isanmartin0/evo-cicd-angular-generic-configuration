@@ -319,7 +319,7 @@ def runAngularGenericJenkinsfile() {
                 }
 
                 if (image_stream_nodejs_version >= 8) {
-                    echo "Assigning NodeJS installation ${nodeAngularCli_8_installation}"
+                    echo "Assigning NodeJS installation ${nodeJS_8_installation}"
                     nodeJS_pipeline_installation = nodeJS_8_installation
                 } else if (image_stream_nodejs_version >= 6) {
                     echo "Assigning NodeJS installation ${nodeJS_6_installation}"
