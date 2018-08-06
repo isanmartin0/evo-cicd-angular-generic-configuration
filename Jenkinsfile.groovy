@@ -365,7 +365,7 @@ def runAngularGenericJenkinsfile() {
                             try {
                                 echo 'Installing @angular/cli'
                                 //sh 'npm install -g @angular/cli@1.0.0'
-                                sh 'npm install express'
+                                sh 'npm install -g express'
 
                             } catch (err) {
                                 confirm = input message: 'Waiting 2-1',
