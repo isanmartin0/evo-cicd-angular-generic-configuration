@@ -364,7 +364,7 @@ def runAngularGenericJenkinsfile() {
 
                             try {
                                 echo 'Installing @angular/cli'
-                                sh 'npm install -g @angular/cli'
+                                sh 'npm install -g @angular/cli@1.0.0'
                                 //sh 'npm install -g express'
 
                             } catch (err) {
