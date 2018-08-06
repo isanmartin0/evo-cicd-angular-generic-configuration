@@ -331,7 +331,7 @@ def runAngularGenericJenkinsfile() {
                     throw new hudson.AbortException("Error checking existence of package on NPM registry")
                 }
 
-                //nodeJS_pipeline_installation = nodeAngularCli_8_installation
+                nodeJS_pipeline_installation = nodeAngularCli_8_installation
 
                 def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                 env.PATH = "${node}/bin:${env.PATH}"
@@ -351,16 +351,16 @@ def runAngularGenericJenkinsfile() {
             }
 
             stage('Configure Artifactory NPM Registry') {
-                //echo 'Setting Artifactory NPM registry'
-                //sh "npm config set registry ${npmRepositoryURL} "
+                echo 'Setting Artifactory NPM registry'
+                sh "npm config set registry ${npmRepositoryURL} "
 
                 sh "npm config get registry"
             }
 
             stage('Install @angular/cli') {
-                withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
-                    withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
-                        withNPM(npmrcConfig: 'my-custom-npmrc') {
+                //withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
+                    //withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
+                        withNPM(npmrcConfig: 'npmrc-config-test') {
 
 
                             confirm = input message: 'Waiting 2',
@@ -373,8 +373,8 @@ def runAngularGenericJenkinsfile() {
                             echo 'ng version:'
                             sh "ng version"
                         }
-                    }
-                }
+                    //}
+                //}
             }
 
             confirm = input message: 'Waiting 3',
