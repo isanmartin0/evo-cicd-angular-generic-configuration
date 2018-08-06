@@ -85,6 +85,8 @@ def runAngularGenericJenkinsfile() {
     //int image_stream_nodejs_version = image_stream_nodejs_version_default
     //def sonarProjectPath = "sonar-project.properties"
 
+    def confirm
+
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
 
 
@@ -339,7 +341,7 @@ def runAngularGenericJenkinsfile() {
                 sh "npm -v"
 
 
-                confirm = input message: 'Waiting 2',
+                confirm = input message: 'Waiting 1',
                         parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
@@ -359,7 +361,7 @@ def runAngularGenericJenkinsfile() {
                         withNPM(npmrcConfig: 'my-custom-npmrc') {
 
 
-                            def confirm = input message: 'Waiting 1',
+                            confirm = input message: 'Waiting 2',
                             parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
@@ -373,7 +375,7 @@ def runAngularGenericJenkinsfile() {
                 }
             }
 
-            confirm = input message: 'Waiting 2',
+            confirm = input message: 'Waiting 3',
                     parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
@@ -420,7 +422,7 @@ def runAngularGenericJenkinsfile() {
             }
 
 
-            confirm = input message: 'Waiting for user approval',
+            confirm = input message: 'Waiting 4',
                     parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
             withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
