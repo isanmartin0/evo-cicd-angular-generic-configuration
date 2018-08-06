@@ -342,12 +342,6 @@ def runAngularGenericJenkinsfile() {
                 echo 'NPM version:'
                 sh "npm -v"
 
-
-                confirm = input message: 'Waiting 1',
-                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
-
-
             }
 
             stage('Configure Artifactory NPM Registry') {
@@ -367,9 +361,19 @@ def runAngularGenericJenkinsfile() {
                             parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
-                            echo 'Installing @angular/cli'
-                            //sh 'npm install -g @angular/cli@1.0.0'
-                            sh 'npm install -g @angular/cli'
+                            try {
+                                echo 'Installing @angular/cli'
+                                //sh 'npm install -g @angular/cli@1.0.0'
+                                sh 'npm install -g @angular/cli'
+
+                            } catch (err) {
+                                confirm = input message: 'Waiting 2-1',
+                                parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+                                currentBuild.result = "FAILED"
+                                throw new hudson.AbortException("Timeout on confirm deploy")
+
+                            }
 
                             echo 'ng version:'
                             sh "ng version"
