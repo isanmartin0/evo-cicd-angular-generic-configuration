@@ -347,7 +347,7 @@ def runAngularGenericJenkinsfile() {
 
             stage('Configure Artifactory NPM Registry') {
                 echo 'Setting Artifactory NPM registry'
-                ///sh "npm config set registry ${npmRepositoryURL} "
+                sh "npm config set registry ${npmRepositoryURL} "
 
                 sh "npm config get registry"
             }
@@ -364,8 +364,8 @@ def runAngularGenericJenkinsfile() {
 
                             try {
                                 echo 'Installing @angular/cli'
-                                sh 'npm install -g @angular/cli@1.0.0'
-                                //sh 'npm install -g express'
+                                //sh 'npm install -g @angular/cli@1.0.0'
+                                sh 'npm install -g express'
 
                             } catch (err) {
                                 confirm = input message: 'Waiting 2-1',
