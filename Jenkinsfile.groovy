@@ -331,8 +331,8 @@ def runAngularGenericJenkinsfile() {
                     throw new hudson.AbortException("Error checking existence of package on NPM registry")
                 }
 
-                nodeJS_pipeline_installation = nodeAngularCli_8_installation
-                nodeJS_pipeline_installation = 'Node-10.8.0'
+                //nodeJS_pipeline_installation = nodeAngularCli_8_installation
+                //nodeJS_pipeline_installation = 'Node-10.8.0'
 
                 def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                 env.PATH = "${node}/bin:${env.PATH}"
