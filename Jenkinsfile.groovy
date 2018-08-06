@@ -354,9 +354,9 @@ def runAngularGenericJenkinsfile() {
             }
 
             stage('Install @angular/cli') {
-                //withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
-                    //withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
-                        //withNPM(npmrcConfig: 'my-custom-npmrc') {
+                withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
+                    withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
+                        withNPM(npmrcConfig: 'my-custom-npmrc') {
 
 
                             def confirm = input message: 'Waiting 1',
@@ -368,9 +368,9 @@ def runAngularGenericJenkinsfile() {
 
                             echo 'ng version:'
                             sh "ng version"
-                        //}
-                    //}
-                //}
+                        }
+                    }
+                }
             }
 
             confirm = input message: 'Waiting 2',
