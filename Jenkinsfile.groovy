@@ -88,8 +88,8 @@ def runAngularGenericJenkinsfile() {
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
 
 
-    node('nodejs10-chrome') {
-
+    //node('nodejs10-chrome') {
+    node('nodejs') {
         echo 'Pipeline begin timestamp... '
         sh 'date'
 
@@ -311,7 +311,7 @@ def runAngularGenericJenkinsfile() {
 
                 nodeJS_pipeline_installation = nodeAngularCli_8_installation
 
-/*
+
                 echo "params.imageStreamNodejsVersion: ${params.imageStreamNodejsVersion}"
                 String imageStreamNodejsVersionParam = params.imageStreamNodejsVersion
                 if (imageStreamNodejsVersionParam != null && imageStreamNodejsVersionParam.isInteger()) {
@@ -328,7 +328,7 @@ def runAngularGenericJenkinsfile() {
                     currentBuild.result = "FAILED"
                     throw new hudson.AbortException("Error checking existence of package on NPM registry")
                 }
-*/
+
                 def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                 env.PATH = "${node}/bin:${env.PATH}"
 
