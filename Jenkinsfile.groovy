@@ -334,8 +334,8 @@ def runAngularGenericJenkinsfile() {
                 //nodeJS_pipeline_installation = nodeAngularCli_8_installation
                 //nodeJS_pipeline_installation = 'Node-10.8.0'
 
-                def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                env.PATH = "${node}/bin:${env.PATH}"
+                //def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                //env.PATH = "${node}/bin:${env.PATH}"
 
                 echo 'Node version:'
                 sh "node -v"
