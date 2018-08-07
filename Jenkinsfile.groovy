@@ -73,16 +73,19 @@ def runAngularGenericJenkinsfile() {
     //Parameters Angular
     //int port_default = 8080
     //int debug_port_default = 5858
-    int image_stream_nodejs_version_default = 8
+    int image_stream_nodejs_version_default = 10
 
     //def build_from_registry_url = 'https://github.com/isanmartin0/s2i-nodejs-container.git'
     //def build_from_artifact_branch = 'master'
 
     def nodeJS_8_installation = "Node-8.9.4"
     def nodeJS_6_installation = "Node-6.11.3"
-    def nodeAngularCli_8_installation = "Node-8.9.4-angular-cli-1.0.0"
-    //def nodeJS_pipeline_installation = ""
-    //int image_stream_nodejs_version = image_stream_nodejs_version_default
+    def nodeJS_10_installation = "Node-10.8.0"
+
+    def nodeJS_pipeline_installation = ""
+    int image_stream_nodejs_version = image_stream_nodejs_version_default
+    def angularCliVersion_default = "1.0.0"
+    def angularCliVersion = angularCliVersion_default
     //def sonarProjectPath = "sonar-project.properties"
 
     def confirm
@@ -320,7 +323,10 @@ def runAngularGenericJenkinsfile() {
                     image_stream_nodejs_version = imageStreamNodejsVersionParam as Integer
                 }
 
-                if (image_stream_nodejs_version >= 8) {
+                if (image_stream_nodejs_version >= 10) {
+                    echo "Assigning NodeJS installation ${nodeJS_8_installation}"
+                    nodeJS_pipeline_installation = nodeJS_10_installation
+                } else if (image_stream_nodejs_version >= 8) {
                     echo "Assigning NodeJS installation ${nodeJS_8_installation}"
                     nodeJS_pipeline_installation = nodeJS_8_installation
                 } else if (image_stream_nodejs_version >= 6) {
@@ -328,14 +334,11 @@ def runAngularGenericJenkinsfile() {
                     nodeJS_pipeline_installation = nodeJS_6_installation
                 } else {
                     currentBuild.result = "FAILED"
-                    throw new hudson.AbortException("Error checking existence of package on NPM registry")
+                    throw new hudson.AbortException("Error setting NodeJS version")
                 }
 
-                //nodeJS_pipeline_installation = nodeAngularCli_8_installation
-                //nodeJS_pipeline_installation = 'Node-10.8.0'
-
-                //def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                //env.PATH = "${node}/bin:${env.PATH}"
+                def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                env.PATH = "${node}/bin:${env.PATH}"
 
                 echo 'Node version:'
                 sh "node -v"
@@ -345,46 +348,50 @@ def runAngularGenericJenkinsfile() {
 
             }
 
+/*
             stage('Configure Artifactory NPM Registry') {
                 echo 'Setting Artifactory NPM registry'
                 sh "npm config set registry ${npmRepositoryURL} "
 
                 sh "npm config get registry"
             }
+*/
 
             stage('Install @angular/cli') {
-                //withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
-                    //withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
-                        withNPM(npmrcConfig: 'npmrc-config-test') {
+
+                echo "params.angularCliVersion: ${params.angularCliVersion}"
+                String angularCliVersionParam = params.angularCliVersion
+
+                if (angularCliVersionParam != null) {
+                    angularCliVersion = angularCliVersionParam
+                }
 
 
                             confirm = input message: 'Waiting 2',
                             parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
-                            try {
-                                echo 'Installing @angular/cli'
-                                //sh 'npm install -g @angular/cli@1.0.0'
-                                //sh 'npm install -g express'
-                                sh 'npm install'
+                try {
+                    echo "Installing globally @angular/cli version ${angularCliVersion}"
+                    //sh 'npm install -g @angular/cli@1.0.0'
+                    //sh 'npm install -g express'
+                    sh "npm install -g @angular/cli@${angularCliVersion}"
 
-                            } catch (err) {
-                                confirm = input message: 'Waiting 2-1',
-                                parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+                } catch (err) {
+                    confirm = input message: 'Waiting 2-1',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
-                                currentBuild.result = "FAILED"
-                                throw new hudson.AbortException("Timeout on confirm deploy")
+                    currentBuild.result = "FAILED"
+                    throw new hudson.AbortException("Timeout on confirm deploy")
 
-                            }
+                }
 
-                            confirm = input message: 'Waiting 2-2',
-                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+                confirm = input message: 'Waiting 2-2',
+                parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
-                            echo 'ng version:'
-                            sh "ng version"
-                        }
-                    //}
-                //}
+                echo 'ng version:'
+                sh "ng version"
+
             }
 
             confirm = input message: 'Waiting 3',
