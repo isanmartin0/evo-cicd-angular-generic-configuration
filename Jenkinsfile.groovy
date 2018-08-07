@@ -465,7 +465,7 @@ def runAngularGenericJenkinsfile() {
 
                                 echo "Building angular application"
 
-                                sh "build --prod --build-optimizer"
+                                sh "ng build --prod --build-optimizer"
 
                                 confirm = input message: 'Waiting for user approval',
                                         parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
