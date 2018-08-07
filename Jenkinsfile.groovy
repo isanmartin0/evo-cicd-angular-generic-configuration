@@ -378,7 +378,7 @@ def runAngularGenericJenkinsfile() {
 
                 echo 'ng version:'
                 try {
-                    sh "ng version"
+                    //sh "ng version"
 
                     sh "/tmp/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/${nodeJS_pipeline_installation}/bin/ng -v "
                 } catch (exc) {
