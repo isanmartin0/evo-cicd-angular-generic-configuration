@@ -374,7 +374,7 @@ def runAngularGenericJenkinsfile() {
 
                 echo "Installing globally @angular/cli version ${angularCliVersion}"
                 //sh "npm install -g @angular/cli@${angularCliVersion}"
-                sh "npm install -g @angular/cli@6.0.0}"
+                sh "npm install -g @angular/cli@6.0.0"
 
                 echo 'ng version:'
                 try {
