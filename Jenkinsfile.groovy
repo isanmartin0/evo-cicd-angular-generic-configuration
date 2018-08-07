@@ -373,18 +373,8 @@ def runAngularGenericJenkinsfile() {
                 }
 
                 echo "Installing globally @angular/cli version ${angularCliVersion}"
-                //sh "npm install -g @angular/cli@${angularCliVersion}"
-                sh "npm install -g @angular/cli@6.0.0"
+                sh "npm install -g @angular/cli@${angularCliVersion}"
 
-                echo 'ng version::'
-                try {
-                    //sh "ng version"
-
-                    sh "/tmp/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/${nodeJS_pipeline_installation}/bin/ng -v "
-                } catch (exc) {
-                    confirm = input message: 'Waiting 4',
-                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-                }
             }
 
 
@@ -430,10 +420,6 @@ def runAngularGenericJenkinsfile() {
                 echo "Environment selected: ${envLabel}"
             }
 
-
-            confirm = input message: 'Waiting 4',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
             withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
                 withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
                     withNPM(npmrcConfig: 'my-custom-npmrc') {
@@ -444,6 +430,25 @@ def runAngularGenericJenkinsfile() {
                                 echo 'Building dependencies...'
                                 sh 'npm i'
                             }
+
+                            stage('Set ng version') {
+                                echo 'ng version::'
+                                try {
+                                    sh "ng version"
+
+                                    sh "/tmp/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/${nodeJS_pipeline_installation}/bin/ng -v "
+                                } catch (exc) {
+                                    confirm = input message: 'Waiting 4',
+                                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+                                }
+
+
+
+                                confirm = input message: 'Waiting 4',
+                                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+                            }
+
 
                             if (branchType in params.testing.predeploy.unitTesting) {
                                 stage('Test') {
