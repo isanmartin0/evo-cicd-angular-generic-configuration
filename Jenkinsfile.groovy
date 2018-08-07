@@ -431,42 +431,17 @@ def runAngularGenericJenkinsfile() {
                                 sh 'npm i'
                             }
 
-                            stage('Set ng version') {
+                            stage('Get ng version') {
                                 echo 'ng version::'
-                                try {
-                                    sh "ng version"
 
-                                    sh "/tmp/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/${nodeJS_pipeline_installation}/bin/ng -v "
-                                } catch (exc) {
-                                    confirm = input message: 'Waiting 4',
-                                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-                                }
-
-
-
-                                confirm = input message: 'Waiting 4',
-                                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
+                                sh "ng version"
                             }
 
 
                             if (branchType in params.testing.predeploy.unitTesting) {
                                 stage('Test') {
 
-
-                                    echo 'Installing jest'
-
-                                    sh 'npm i -D jest'
-
-
-                                    echo 'Installing jest-sonar-reporter'
-
-                                    sh 'npm i -D jest-sonar-reporter'
-
-
-                                    echo 'Testing...'
-
-                                    sh 'npm test'
+                                    echo 'TODO: Executing unit tests....'
 
                                 }
                             } else {
@@ -477,71 +452,26 @@ def runAngularGenericJenkinsfile() {
                             if (branchType in params.testing.predeploy.sonarQube) {
 
                                 stage('SonarQube') {
-                                    echo "Running SonarQube..."
 
-                                    // Jenkinsfile
-                                    isSonarProjectFile = fileExists sonarProjectPath
-                                    echo "isSonarProjectFile : ${isSonarProjectFile}"
-
-                                    def sonar_project_key = packageName + "-" + branchNameHY
-                                    def sonar_project_name = packageName + "-" + branchNameHY
-
-                                    echo "sonar_project_key: ${sonar_project_key}"
-                                    echo "sonar_project_name: ${sonar_project_name}"
-
-                                    // requires SonarQube Scanner 3.1+
-                                    def scannerHome = tool 'SonarQube Scanner 3.1.0'
-
-                                    if (isSonarProjectFile) {
-                                        //sonar-project.properties contains properties for SonarQube
-
-                                        echo 'sonarQube parameters extracted from sonar-project.properties file'
-
-                                        withSonarQubeEnv('sonarqube') {
-                                            sh "${scannerHome}/bin/sonar-scanner -X -Dsonar.projectKey=${sonar_project_key} -Dsonar.projectName=${sonar_project_name}"
-                                        }
-
-                                    } else {
-
-                                        if (params.testing.predeploy.sonarQubeAnalisis.sonarSources
-                                                && params.testing.predeploy.sonarQubeAnalisis.sonarTests
-                                                && params.testing.predeploy.sonarQubeAnalisis.sonarTestExecutionReportPath
-                                                && params.testing.predeploy.sonarQubeAnalisis.sonarCoverageReportPath
-                                                && params.testing.predeploy.sonarQubeAnalisis.sonarExclusions) {
-
-                                            //Pipeline parameters contains properties for SonarQube.
-                                            def sonarSources = params.testing.predeploy.sonarQubeAnalisis.sonarSources
-                                            def sonarTests = params.testing.predeploy.sonarQubeAnalisis.sonarTests
-                                            def sonarTestExecutionReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarTestExecutionReportPath
-                                            def sonarCoverageReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarCoverageReportPath
-                                            def sonarExclusions = params.testing.predeploy.sonarQubeAnalisis.sonarExclusions
-
-                                            echo 'sonarQube parameters extracted from pipeline parameters:'
-
-                                            echo "sonarSources: ${sonarSources}"
-                                            echo "sonarTests: ${sonarTests}"
-                                            echo "sonarTestExecutionReportPath: ${sonarTestExecutionReportPath}"
-                                            echo "sonarCoverageReportPath: ${sonarCoverageReportPath}"
-                                            echo "sonarExclusions: ${sonarExclusions}"
-
-                                            withSonarQubeEnv('sonarqube') {
-                                                sh "${scannerHome}/bin/sonar-scanner -X -Dsonar.projectKey=${sonar_project_key} -Dsonar.projectName=${sonar_project_name} -Dsonar.sources=${sonarSources} -Dsonar.tests=${sonarTests} -Dsonar.testExecutionReportPaths=${sonarTestExecutionReportPath} -Dsonar.javascript.lcov.reportPaths=${sonarCoverageReportPath} -Dsonar.exclusions=${sonarExclusions}"
-                                            }
-
-                                        } else {
-                                            //Failed status
-                                            currentBuild.result = NodejsConstants.FAILURE_BUILD_RESULT
-                                            throw new hudson.AbortException("A mandatory sonarQube parameter has not found. A sonar-project.properties OR sonarQube pipeline parameters are mandatory. The mandatory properties on sonar-project.properties are sonar.sources, sonar.tests, sonar.testExecutionReportPaths, sonar.javascript.lcov.reportPaths and sonar.exclusions. The mandatory params.testing.predeploy.sonarQubeAnalisis parameters of pipeline are: sonarSources, sonarTests, sonarTestExecutionReportPath. sonarCoverageReportPath amd sonarExclusions")
-
-                                        }
-
-                                    }
+                                    echo "TODO: Running SonarQube..."
 
                                 }
 
                             } else {
                                 echo "Skipping Running SonarQube..."
                             }
+
+                            stage('Build Angular application') {
+
+                                echo "Building angular application"
+
+                                sh "build --prod --build-optimizer"
+
+                                confirm = input message: 'Waiting for user approval',
+                                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+                            }
+
 
 
                             if (branchType in params.npmRegistryPublish) {
