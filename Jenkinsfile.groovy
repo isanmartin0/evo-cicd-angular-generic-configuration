@@ -373,11 +373,16 @@ def runAngularGenericJenkinsfile() {
                 }
 
                 echo "Installing globally @angular/cli version ${angularCliVersion}"
-                sh "npm install -g @angular/cli@${angularCliVersion}"
+                //sh "npm install -g @angular/cli@${angularCliVersion}"
+                sh "npm install -g @angular/cli@6.0.0}"
 
                 echo 'ng version:'
-                sh "ng version"
-
+                try {
+                    sh "ng version"
+                } catch (exc) {
+                    confirm = input message: 'Waiting 4',
+                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+                }
             }
 
 
