@@ -379,6 +379,8 @@ def runAngularGenericJenkinsfile() {
                 echo 'ng version:'
                 try {
                     sh "ng version"
+
+                    sh "/tmp/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/${nodeJS_pipeline_installation}/bin/ng -v "
                 } catch (exc) {
                     confirm = input message: 'Waiting 4',
                             parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
