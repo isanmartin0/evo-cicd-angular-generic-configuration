@@ -1,7 +1,7 @@
 openshift:
   templatePath: kube/angular_template.yaml
 
-imageStreamNodejsVersion: 10
+imageStreamNodejsVersion: 8
 #angularCliVersion: 1.0.0
 
 
