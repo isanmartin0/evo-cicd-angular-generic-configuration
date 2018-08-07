@@ -74,18 +74,23 @@ def runAngularGenericJenkinsfile() {
     //int port_default = 8080
     //int debug_port_default = 5858
     int image_stream_nodejs_version_default = 10
+    def angularCliVersion_default = "6.1.2"
 
     //def build_from_registry_url = 'https://github.com/isanmartin0/s2i-nodejs-container.git'
     //def build_from_artifact_branch = 'master'
 
-    def nodeJS_8_installation = "Node-8.9.4"
     def nodeJS_6_installation = "Node-6.11.3"
+    def nodeJS_8_installation = "Node-8.9.4"
     def nodeJS_10_installation = "Node-10.8.0"
+
+    def nodeJS_6_installation_angularCliVersion_default = "1.0.0"
+    def nodeJS_8_installation_angularCliVersion_default = "1.7.4"
+    def nodeJS_10_installation_angularCliVersion_default = "6.1.2"
 
     def nodeJS_pipeline_installation = ""
     int image_stream_nodejs_version = image_stream_nodejs_version_default
-    def angularCliVersion_default = "1.0.0"
     def angularCliVersion = angularCliVersion_default
+
     //def sonarProjectPath = "sonar-project.properties"
 
     def confirm
@@ -312,11 +317,6 @@ def runAngularGenericJenkinsfile() {
                 /*************************************************************
                  ************* IMAGE STREAM TAG NODE VERSION *****************
                  *************************************************************/
-
-
-
-
-
                 echo "params.imageStreamNodejsVersion: ${params.imageStreamNodejsVersion}"
                 String imageStreamNodejsVersionParam = params.imageStreamNodejsVersion
                 if (imageStreamNodejsVersionParam != null && imageStreamNodejsVersionParam.isInteger()) {
@@ -326,12 +326,18 @@ def runAngularGenericJenkinsfile() {
                 if (image_stream_nodejs_version >= 10) {
                     echo "Assigning NodeJS installation ${nodeJS_8_installation}"
                     nodeJS_pipeline_installation = nodeJS_10_installation
+                    echo "Assigning @angular/cli version ${nodeJS_10_installation_angularCliVersion_default}"
+                    angularCliVersion = nodeJS_10_installation_angularCliVersion_default
                 } else if (image_stream_nodejs_version >= 8) {
                     echo "Assigning NodeJS installation ${nodeJS_8_installation}"
                     nodeJS_pipeline_installation = nodeJS_8_installation
+                    echo "Assigning @angular/cli version ${nodeJS_8_installation_angularCliVersion_default}"
+                    angularCliVersion = nodeJS_8_installation_angularCliVersion_default
                 } else if (image_stream_nodejs_version >= 6) {
                     echo "Assigning NodeJS installation ${nodeJS_6_installation}"
                     nodeJS_pipeline_installation = nodeJS_6_installation
+                    echo "Assigning @angular/cli version ${nodeJS_6_installation_angularCliVersion_default}"
+                    angularCliVersion = nodeJS_6_installation_angularCliVersion_default
                 } else {
                     currentBuild.result = "FAILED"
                     throw new hudson.AbortException("Error setting NodeJS version")
@@ -374,14 +380,11 @@ def runAngularGenericJenkinsfile() {
 
             }
 
-            confirm = input message: 'Waiting 3',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
 
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
 
-                nodejsSetDisplayName()
+                angularSetDisplayName()
 
                 echo "${currentBuild.displayName}"
 

@@ -2,7 +2,7 @@ openshift:
   templatePath: kube/angular_template.yaml
 
 imageStreamNodejsVersion: 6
-angularCliVersion: 1.0.0
+#angularCliVersion: 1.0.0
 
 
 devMode: false
