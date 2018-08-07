@@ -357,7 +357,7 @@ def runAngularGenericJenkinsfile() {
             }
 */
 
-            stage('Install @angular/cli') {
+            stage('Install globally @angular/cli') {
 
                 echo "params.angularCliVersion: ${params.angularCliVersion}"
                 String angularCliVersionParam = params.angularCliVersion
@@ -366,28 +366,8 @@ def runAngularGenericJenkinsfile() {
                     angularCliVersion = angularCliVersionParam
                 }
 
-
-                            confirm = input message: 'Waiting 2',
-                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
-
-                try {
-                    echo "Installing globally @angular/cli version ${angularCliVersion}"
-                    //sh 'npm install -g @angular/cli@1.0.0'
-                    //sh 'npm install -g express'
-                    sh "npm install -g @angular/cli@${angularCliVersion}"
-
-                } catch (err) {
-                    confirm = input message: 'Waiting 2-1',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
-                    currentBuild.result = "FAILED"
-                    throw new hudson.AbortException("Timeout on confirm deploy")
-
-                }
-
-                confirm = input message: 'Waiting 2-2',
-                parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+                echo "Installing globally @angular/cli version ${angularCliVersion}"
+                sh "npm install -g @angular/cli@${angularCliVersion}"
 
                 echo 'ng version:'
                 sh "ng version"
