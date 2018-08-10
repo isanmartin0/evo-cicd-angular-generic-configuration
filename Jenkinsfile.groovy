@@ -382,9 +382,9 @@ def runAngularGenericJenkinsfile() {
                 }
 
 
-                packageJSON.files = "[dist/,e2e/]"
+                packageJSON.files = ["dist/","e2e/"]
 
-                writeJSON file: 'package.json', json: packageJSON, pretty: 4
+                writeJSON file: 'package.json', json: packageJSON
 
                 def newPackageJSON = readJSON file: 'package.json'
 
