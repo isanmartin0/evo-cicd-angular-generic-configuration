@@ -510,7 +510,19 @@ def runAngularGenericJenkinsfile() {
                             stage('Create tarball') {
                                 tarballFilesArray.each {
                                     echo "File to proccess ${it}"
+
+
                                 }
+
+                                def packageJSONFilesNode = packageJSON.files
+                                echo "packageJSONFilesNode: ${packageJSONFilesNode}"
+
+                                if (packageJSONFilesNode) {
+                                    echo "Exists files node"
+                                } else {
+                                    echo "Files node not exists"
+                                }
+
                             }
 
                             confirm = input message: 'Waiting for user approval',
