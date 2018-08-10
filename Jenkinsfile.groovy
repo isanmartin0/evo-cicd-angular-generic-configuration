@@ -474,16 +474,30 @@ def runAngularGenericJenkinsfile() {
 
                                 echo "Building angular application"
 
-                                /********************************************************
-                                 ************* BUILD PRO PARAMETERS *****************
-                                 ********************************************************/
-                                String buildProdFlagsParam = params.buildProdFlags
+                                /***********************************************************
+                                 ************* BUILD PRODUCTION PARAMETERS *****************
+                                 ***********************************************************/
 
-                                if (params.params.buildProdFlags) {
-                                    sh "ng build --prod ${buildProdFlagsParam}"
-                                } else {
-                                    sh "ng build --prod ${buildProdFlags}"
+                                Boolean useBuildProdFlags = false
+                                echo "params.useBuildProdFlags: ${params.useBuildProdFlags}"
+                                echo "params.buildProdFlags: ${params.buildProdFlags}"
+
+                                if (params.useBuildProdFlags) {
+                                    useBuildProdFlags = params.useBuildProdFlags.toBoolean()
                                 }
+
+                                if (useBuildProdFlags) {
+                                    buildProdFlags = params.buildProdFlags
+                                } else {
+                                    echo "Build prod parameters default: ${buildProdFlags}"
+                                }
+
+                                echo "useBuildProdFlags: ${useBuildProdFlags}"
+                                echo "buildProdFlags: ${buildProdFlags}"
+
+
+                                sh "ng build --prod ${buildProdFlags}"
+
 
 
                                 confirm = input message: 'Waiting for user approval',

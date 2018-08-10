@@ -4,6 +4,7 @@ openshift:
 imageStreamNodejsVersion: 6
 #angularCliVersion: 1.0.0
 
+useBuildProdFlags: false
 buildProdFlags:
 devMode: false
 debugPort: 5858
