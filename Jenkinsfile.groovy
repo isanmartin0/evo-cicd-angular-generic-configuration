@@ -540,7 +540,14 @@ def runAngularGenericJenkinsfile() {
                                     echo 'Test NPM repository authentication'
                                     sh 'npm whoami'
 
-                                    sh "ls ${packageTarball}"
+                                    echo 'Check tarball creation ...'
+                                    tarball_creation_script = $/eval "ls ${packageTarball} | grep '${packageTarball}'"/$
+                                    echo "${tarball_creation_script}"
+                                    def tarball_creation_view = sh(script: "${tarball_creation_script}", returnStdout: true).toString().trim()
+                                    echo "${tarball_creation_view}"
+
+
+                                    //sh "ls ${packageTarball}"
 
                                     confirm = input message: 'Waiting for user approval',
                                             parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
