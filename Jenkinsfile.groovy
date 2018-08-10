@@ -537,9 +537,8 @@ def runAngularGenericJenkinsfile() {
                                     sh 'npm whoami'
 
                                     try {
-                                        def packageTarballFake =  "XX" + packageTarball
                                         echo 'Check tarball creation ...'
-                                        tarball_creation_script = $/eval "ls ${packageTarballFake}"/$
+                                        tarball_creation_script = $/eval "ls ${packageTarball}"/$
                                         //tarball_creation_script = $/eval "ls ${packageTarball} | grep '${packageTarballFake}'"/$
                                         echo "${tarball_creation_script}"
                                         def tarball_creation_view = sh(script: "${tarball_creation_script}", returnStdout: true).toString().trim()
