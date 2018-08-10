@@ -552,13 +552,11 @@ def runAngularGenericJenkinsfile() {
                                     }
 
 
-                                    confirm = input message: 'Waiting for user approval',
-                                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                                     try {
                                         echo 'Publish package on Artifactory NPM registry'
 
-                                        sh "npm publish --registry ${npmLocalRepositoryURL}"
+                                        sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
 
                                     } catch (exc) {
                                         echo 'There is an error on publish package'
@@ -568,6 +566,11 @@ def runAngularGenericJenkinsfile() {
                                         currentBuild.result = "FAILED"
                                         throw new hudson.AbortException("Error checking existence of package on NPM registry")
                                     }
+
+
+                                    confirm = input message: 'Waiting for user approval',
+                                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
 
                                     echo "Setting source code to build from URL (build from registry package)"
                                     echo "Source URL: ${projectURL} --> ${build_from_registry_url}"
