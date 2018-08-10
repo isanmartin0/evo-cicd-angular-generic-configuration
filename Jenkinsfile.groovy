@@ -377,20 +377,6 @@ def runAngularGenericJenkinsfile() {
             }
 */
 
-            stage('Install globally @angular/cli') {
-
-                echo "params.angularCliVersion: ${params.angularCliVersion}"
-                String angularCliVersionParam = params.angularCliVersion
-
-                if (angularCliVersionParam != null) {
-                    angularCliVersion = angularCliVersionParam
-                }
-
-                echo "Installing globally @angular/cli version ${angularCliVersion}"
-                sh "npm install -g @angular/cli@${angularCliVersion}"
-
-            }
-
 
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
@@ -439,6 +425,20 @@ def runAngularGenericJenkinsfile() {
                     withNPM(npmrcConfig: 'my-custom-npmrc') {
 
                         if (branchName != 'master') {
+
+                            stage('Install globally @angular/cli') {
+
+                                echo "params.angularCliVersion: ${params.angularCliVersion}"
+                                String angularCliVersionParam = params.angularCliVersion
+
+                                if (angularCliVersionParam != null) {
+                                    angularCliVersion = angularCliVersionParam
+                                }
+
+                                echo "Installing globally @angular/cli version ${angularCliVersion}"
+                                sh "npm install -g @angular/cli@${angularCliVersion}"
+
+                            }
 
                             stage('Build') {
                                 echo 'Building dependencies...'
@@ -534,6 +534,13 @@ def runAngularGenericJenkinsfile() {
 
                             if (branchType in params.npmRegistryPublish) {
 
+                                stage('Configure Artifactory NPM Registry') {
+                                    echo 'Setting Artifactory NPM registry'
+                                    sh "npm config set registry ${npmRepositoryURL} "
+
+                                    sh "npm config get registry"
+                                }
+
                                 stage('Artifact Registry Publish') {
                                     echo "Publishing artifact to a NPM registry"
 
@@ -600,6 +607,13 @@ def runAngularGenericJenkinsfile() {
                             }
 
                         } else {
+
+                            stage('Configure Artifactory NPM Registry') {
+                                echo 'Setting Artifactory NPM registry'
+                                sh "npm config set registry ${npmRepositoryURL} "
+
+                                sh "npm config get registry"
+                            }
 
                             stage('Check published package on NPM registry') {
 
