@@ -523,10 +523,6 @@ def runAngularGenericJenkinsfile() {
                                 writeJSON file: 'package.json', json: packageJSON, pretty: 4
 
                                 sh "npm pack"
-
-                                echo "---> tar artifact"
-                                sh "tar -xvzf ${packageTarball}"
-
                             }
 
                             confirm = input message: 'Waiting for user approval',
@@ -544,14 +540,16 @@ def runAngularGenericJenkinsfile() {
                                     echo 'Test NPM repository authentication'
                                     sh 'npm whoami'
 
+                                    sh "ls ${packageTarball}"
+
+                                    confirm = input message: 'Waiting for user approval',
+                                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
                                     try {
                                         echo 'Publish package on Artifactory NPM registry'
 
-                                        if (isScopedPackage) {
-                                            sh "npm publish --registry ${npmLocalRepositoryURL}"
-                                        } else {
-                                            sh "npm publish --registry ${npmLocalRepositoryURL}"
-                                        }
+                                        sh "npm publish --registry ${npmLocalRepositoryURL}"
+
                                     } catch (exc) {
                                         echo 'There is an error on publish package'
                                         def exc_message = exc.message
