@@ -500,7 +500,6 @@ def runAngularGenericJenkinsfile() {
                                 echo "useBuildProdFlags: ${useBuildProdFlags}"
                                 echo "buildProdFlags: ${buildProdFlags}"
 
-
                                 sh "ng build --prod ${buildProdFlags}"
 
                             }
@@ -516,6 +515,14 @@ def runAngularGenericJenkinsfile() {
 
                                 //Redefining packageJSON.files
                                 packageJSON.files = packageJSONFilesNodeDistributionFolder
+
+                                def packageJSONPrivateNode = packageJSON.private
+                                echo "packageJSONPrivateNode: ${packageJSONPrivateNode}"
+
+                                //Redefining packageJSON.private
+                                if (packageJSONPrivateNode) {
+                                    packageJSON.private = false
+                                }
 
                                 echo "Updated package.json:"
                                 echo "${packageJSON}"
