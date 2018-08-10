@@ -381,8 +381,8 @@ def runAngularGenericJenkinsfile() {
                     echo "Files node not exists"
                 }
 
- /*
-                packageJSON.files = "[]"
+
+                packageJSON.files = "[dist/,e2e]"
 
                 writeJSON file: 'package.json', json: packageJSON, pretty: 4
 
@@ -390,7 +390,7 @@ def runAngularGenericJenkinsfile() {
 
                 echo "package.json:"
                 echo "${newPackageJSON}"
-*/
+
                 sh "npm pack"
 
                 //echo "---> tar artifact"
