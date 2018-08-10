@@ -383,7 +383,10 @@ def runAngularGenericJenkinsfile() {
 
                 packageJSON.files = ["dist/","e2e/"]
 
-                //writeJSON file: 'package.json', json: packageJSON
+                echo "updated package.json:"
+                echo "${packageJSON}"
+
+                writeJSON file: 'package.json', json: packageJSON
 
                 //def newPackageJSON = readJSON file: 'package.json'
 
