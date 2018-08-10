@@ -525,10 +525,6 @@ def runAngularGenericJenkinsfile() {
                                 sh "npm pack"
                             }
 
-                            confirm = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
-
                             if (branchType in params.npmRegistryPublish) {
 
                                 stage('Artifact Registry Publish') {
@@ -540,14 +536,21 @@ def runAngularGenericJenkinsfile() {
                                     echo 'Test NPM repository authentication'
                                     sh 'npm whoami'
 
-                                    echo 'Check tarball creation ...'
-                                    tarball_creation_script = $/eval "ls ${packageTarball} | grep '${packageTarball}'"/$
-                                    echo "${tarball_creation_script}"
-                                    def tarball_creation_view = sh(script: "${tarball_creation_script}", returnStdout: true).toString().trim()
-                                    echo "${tarball_creation_view}"
+                                    try {
+                                        def packageTarballFake =  "XX" + packageTarball
+                                        echo 'Check tarball creation ...'
+                                        tarball_creation_script = $/eval "ls ${packageTarball} | grep '${packageTarballFake}'"/$
+                                        echo "${tarball_creation_script}"
+                                        def tarball_creation_view = sh(script: "${tarball_creation_script}", returnStdout: true).toString().trim()
+                                        echo "${tarball_creation_view}"
+                                    } catch (exc) {
+                                        echo 'There is an error on retrieving the tarball location'
+                                        def exc_message = exc.message
+                                        echo "${exc_message}"
+                                        currentBuild.result = "FAILED"
+                                        throw new hudson.AbortException("Error checking existence of package on NPM registry")
+                                    }
 
-
-                                    //sh "ls ${packageTarball}"
 
                                     confirm = input message: 'Waiting for user approval',
                                             parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
