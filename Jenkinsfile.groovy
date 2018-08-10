@@ -97,6 +97,8 @@ def runAngularGenericJenkinsfile() {
     def angularCliVersion = angularCliVersion_default
     def buildProdFlags = buildProdFlags_default
 
+    def tarballFilesArray = ["package.json", "README.md", "LICENSE.txt"]
+
     //def sonarProjectPath = "sonar-project.properties"
 
     def confirm
@@ -317,6 +319,7 @@ def runAngularGenericJenkinsfile() {
             }
 
 
+
             stage('NodeJS initialization') {
                 echo 'Node initializing...'
 
@@ -500,11 +503,18 @@ def runAngularGenericJenkinsfile() {
 
 
 
-                                confirm = input message: 'Waiting for user approval',
-                                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                             }
 
+
+                            stage('Create tarball') {
+                                tarballFilesArray.each {
+                                    echo "File to proccess ${it}"
+                                }
+                            }
+
+                            confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                             if (branchType in params.npmRegistryPublish) {
