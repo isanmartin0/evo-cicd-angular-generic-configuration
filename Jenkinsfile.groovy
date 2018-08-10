@@ -328,7 +328,7 @@ def runAngularGenericJenkinsfile() {
                     echo "Files node not exists"
                 }
 
-                packageJSON.files = "[\"dist/\"]"
+                packageJSON.files = "[]"
 
                 writeJSON file: 'package.json', json: packageJSON, pretty: 4
 
@@ -336,6 +336,11 @@ def runAngularGenericJenkinsfile() {
 
                 echo "package.json:"
                 echo "${newPackageJSON}"
+
+                sh "npm pack"
+
+                echo "---> tar artifact"
+                sh "tar -xvzf ${packageTarball}"
 
                 confirm = input message: 'Waiting for user approval',
                         parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
