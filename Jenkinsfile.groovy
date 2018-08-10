@@ -536,6 +536,9 @@ def runAngularGenericJenkinsfile() {
 
                                 sh "npm pack"
 
+                                echo "---> tar artifact"
+                                sh "tar -xvzf ${packageTarball}"
+
                             }
 
                             confirm = input message: 'Waiting for user approval',
