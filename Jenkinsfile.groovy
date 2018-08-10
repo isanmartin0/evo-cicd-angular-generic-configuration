@@ -319,43 +319,6 @@ def runAngularGenericJenkinsfile() {
             }
 
 
-            stage('XXXXX') {
-
-                echo "original package.json:"
-                echo "${packageJSON}"
-
-                def packageJSONFilesNode = packageJSON.files
-                echo "packageJSONFilesNode: ${packageJSONFilesNode}"
-
-                if (packageJSONFilesNode) {
-                    echo "Exists files node"
-                } else {
-                    echo "Files node not exists"
-                }
-
-
-                packageJSON.files = ["dist/","e2e/"]
-
-                echo "updated package.json:"
-                echo "${packageJSON}"
-
-                writeJSON file: 'package.json', json: packageJSON
-
-                //def newPackageJSON = readJSON file: 'package.json'
-
-                //echo "package.json:"
-                //echo "${newPackageJSON}"
-
-                sh "npm pack"
-
-                //echo "---> tar artifact"
-                //sh "tar -xvzf ${packageTarball}"
-
-                confirm = input message: 'Waiting for user approval',
-                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
-            }
-
             stage('NodeJS initialization') {
                 echo 'Node initializing...'
 
@@ -540,16 +503,12 @@ def runAngularGenericJenkinsfile() {
 
                                 sh "ng build --prod ${buildProdFlags}"
 
-
-
-
                             }
-
 
 
                             stage('Create tarball') {
 
-                                echo "original package.json:"
+                                echo "Original package.json:"
                                 echo "${packageJSON}"
 
                                 def packageJSONFilesNode = packageJSON.files
@@ -558,14 +517,10 @@ def runAngularGenericJenkinsfile() {
                                 //Redefining packageJSON.files
                                 packageJSON.files = packageJSONFilesNodeDistributionFolder
 
+                                echo "Updated package.json:"
+                                echo "${packageJSON}"
 
                                 writeJSON file: 'package.json', json: packageJSON, pretty: 4
-
-                                def newPackageJSON = readJSON file: 'package.json'
-
-                                echo "package.json:"
-                                echo "${newPackageJSON}"
-
 
                                 sh "npm pack"
 
