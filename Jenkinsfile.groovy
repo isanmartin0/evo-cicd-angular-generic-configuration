@@ -525,10 +525,14 @@ def runAngularGenericJenkinsfile() {
 
                                 packageJSON.files = "[\"dist/\"]"
 
-
-                                packageJSON = readJSON file: 'package.json'
-
                                 writeJSON file: 'package.json', json: packageJSON, pretty: 4
+
+                                def newPackageJSON = readJSON file: 'package.json'
+                                packageJSONFilesNode = newPackageJSON.files
+                                echo "new packageJSONFilesNode: ${packageJSONFilesNode}"
+
+
+
                                 sh "npm pack"
 
                                 echo "---> tar artifact"
