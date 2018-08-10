@@ -525,15 +525,10 @@ def runAngularGenericJenkinsfile() {
 
                                 packageJSON.files = "[\"dist/\"]"
 
-                                packageJSONFilesNode = packageJSON.files
-                                echo "packageJSONFilesNode: ${packageJSONFilesNode}"
 
-                                if (packageJSONFilesNode) {
-                                    echo "Exists files node"
-                                } else {
-                                    echo "Files node not exists"
-                                }
+                                packageJSON = readJSON file: 'package.json'
 
+                                writeJSON file: 'package.json', json: packageJSON, pretty: 4
                                 sh "npm pack"
 
                                 echo "---> tar artifact"
