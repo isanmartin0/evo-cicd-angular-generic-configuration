@@ -97,7 +97,7 @@ def runAngularGenericJenkinsfile() {
     def angularCliVersion = angularCliVersion_default
     def buildProdFlags = buildProdFlags_default
 
-    def tarballFilesArray = ["package.json", "README.md", "LICENSE.txt"]
+    def packageJSONFilesNodeDistributionFolder = ["dist/"]
 
     //def sonarProjectPath = "sonar-project.properties"
 
@@ -366,7 +366,6 @@ def runAngularGenericJenkinsfile() {
 
             }
 
-
             stage('XXXXX') {
 
                 echo "original package.json:"
@@ -400,6 +399,7 @@ def runAngularGenericJenkinsfile() {
                         parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
             }
+
 
 /*
             stage('Configure Artifactory NPM Registry') {
@@ -542,23 +542,18 @@ def runAngularGenericJenkinsfile() {
                             }
 
 
+
                             stage('Create tarball') {
-                                tarballFilesArray.each {
-                                    echo "File to proccess ${it}"
 
-
-                                }
+                                echo "original package.json:"
+                                echo "${packageJSON}"
 
                                 def packageJSONFilesNode = packageJSON.files
                                 echo "packageJSONFilesNode: ${packageJSONFilesNode}"
 
-                                if (packageJSONFilesNode) {
-                                    echo "Exists files node"
-                                } else {
-                                    echo "Files node not exists"
-                                }
+                                //Redefining packageJSON.files
+                                packageJSON.files = packageJSONFilesNodeDistributionFolder
 
-                                packageJSON.files = "[\"dist/\"]"
 
                                 writeJSON file: 'package.json', json: packageJSON, pretty: 4
 
