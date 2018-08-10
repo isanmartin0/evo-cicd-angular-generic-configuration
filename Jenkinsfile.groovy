@@ -523,6 +523,19 @@ def runAngularGenericJenkinsfile() {
                                     echo "Files node not exists"
                                 }
 
+                                packageJSON.files = "[\"dist/\"]"
+
+                                packageJSONFilesNode = packageJSON.files
+                                echo "packageJSONFilesNode: ${packageJSONFilesNode}"
+
+                                if (packageJSONFilesNode) {
+                                    echo "Exists files node"
+                                } else {
+                                    echo "Files node not exists"
+                                }
+
+                                sh "npm pack"
+
                             }
 
                             confirm = input message: 'Waiting for user approval',
