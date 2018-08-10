@@ -5,7 +5,7 @@ imageStreamNodejsVersion: 6
 #angularCliVersion: 1.0.0
 
 useBuildProdFlags: true
-buildProdFlags: --aot=false
+buildProdFlags: --aot=false --build-optimizer
 
 
 devMode: false
