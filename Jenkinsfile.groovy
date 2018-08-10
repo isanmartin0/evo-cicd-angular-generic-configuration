@@ -75,6 +75,7 @@ def runAngularGenericJenkinsfile() {
     //int debug_port_default = 5858
     int image_stream_nodejs_version_default = 10
     def angularCliVersion_default = "6.1.2"
+    def buildProdFlags_default = "--build-optimizer"
 
     //def build_from_registry_url = 'https://github.com/isanmartin0/s2i-nodejs-container.git'
     //def build_from_artifact_branch = 'master'
@@ -87,9 +88,14 @@ def runAngularGenericJenkinsfile() {
     def nodeJS_8_installation_angularCliVersion_default = "1.7.4"
     def nodeJS_10_installation_angularCliVersion_default = "6.1.2"
 
+    def nodeJS_6_installation_build_prod_flags = ""
+    def nodeJS_8_installation_build_prod_flags = ""
+    def nodeJS_10_installation_build_prod_flags = "--build-optimizer"
+
     def nodeJS_pipeline_installation = ""
     int image_stream_nodejs_version = image_stream_nodejs_version_default
     def angularCliVersion = angularCliVersion_default
+    def buildProdFlags = buildProdFlags_default
 
     //def sonarProjectPath = "sonar-project.properties"
 
@@ -324,20 +330,23 @@ def runAngularGenericJenkinsfile() {
                 }
 
                 if (image_stream_nodejs_version >= 10) {
-                    echo "Assigning NodeJS installation ${nodeJS_8_installation}"
+                    echo "Assigning NodeJS installation ${nodeJS_10_installation}"
                     nodeJS_pipeline_installation = nodeJS_10_installation
                     echo "Assigning @angular/cli version ${nodeJS_10_installation_angularCliVersion_default}"
                     angularCliVersion = nodeJS_10_installation_angularCliVersion_default
+                    buildProdFlags = nodeJS_10_installation_build_prod_flags
                 } else if (image_stream_nodejs_version >= 8) {
                     echo "Assigning NodeJS installation ${nodeJS_8_installation}"
                     nodeJS_pipeline_installation = nodeJS_8_installation
                     echo "Assigning @angular/cli version ${nodeJS_8_installation_angularCliVersion_default}"
                     angularCliVersion = nodeJS_8_installation_angularCliVersion_default
+                    buildProdFlags = nodeJS_8_installation_build_prod_flags
                 } else if (image_stream_nodejs_version >= 6) {
                     echo "Assigning NodeJS installation ${nodeJS_6_installation}"
                     nodeJS_pipeline_installation = nodeJS_6_installation
                     echo "Assigning @angular/cli version ${nodeJS_6_installation_angularCliVersion_default}"
                     angularCliVersion = nodeJS_6_installation_angularCliVersion_default
+                    buildProdFlags = nodeJS_6_installation_build_prod_flags
                 } else {
                     currentBuild.result = "FAILED"
                     throw new hudson.AbortException("Error setting NodeJS version")
@@ -465,7 +474,17 @@ def runAngularGenericJenkinsfile() {
 
                                 echo "Building angular application"
 
-                                sh "ng build --prod --build-optimizer"
+                                /********************************************************
+                                 ************* BUILD PRO PARAMETERS *****************
+                                 ********************************************************/
+                                String buildProdFlagsParam = params.buildProdFlags
+
+                                if (params.params.buildProdFlags) {
+                                    sh "ng build --prod ${buildProdFlagsParam}"
+                                } else {
+                                    sh "ng build --prod ${buildProdFlags}"
+                                }
+
 
                                 confirm = input message: 'Waiting for user approval',
                                         parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
