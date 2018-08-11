@@ -3,8 +3,8 @@ openshift:
 
 imageStreamNodejsVersion: 6
 installGloballyAngularCli: true
-installAngularCliSpecificVersion: false
-angularCliVersion: 1.0.0
+installAngularCliSpecificVersion: true
+angularCliVersion: 1.0.5
 
 useBuildProdFlags: true
 buildProdFlags: --aot=false --build-optimizer

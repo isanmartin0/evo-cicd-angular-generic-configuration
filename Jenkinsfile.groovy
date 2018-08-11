@@ -452,6 +452,8 @@ def runAngularGenericJenkinsfile() {
                                     sh "npm install -g @angular/cli@${angularCliVersion}"
 
                                 }
+                            } else {
+                                echo "Skipping @angular/cli installation..."
                             }
 
                             confirm = input message: 'Waiting for user approval',
