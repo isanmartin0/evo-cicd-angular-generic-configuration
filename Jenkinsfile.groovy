@@ -434,6 +434,7 @@ def runAngularGenericJenkinsfile() {
 
                                     if (installAngularCliSpecificVersion) {
 
+                                        echo "Installing a specific @angular/cli version"
                                         echo "params.angularCliVersion: ${params.angularCliVersion}"
                                         String angularCliVersionParam = params.angularCliVersion
 
@@ -441,6 +442,10 @@ def runAngularGenericJenkinsfile() {
                                             angularCliVersion = angularCliVersionParam
                                         }
 
+                                    } else {
+                                        echo "Installing default @angular/cli version"
+                                        echo "NodeJS version: ${nodeJS_pipeline_installation}"
+                                        echo "@angular/cli default version: ${angularCliVersion}"
                                     }
 
                                     echo "Installing globally @angular/cli version ${angularCliVersion}"
