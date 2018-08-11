@@ -414,19 +414,44 @@ def runAngularGenericJenkinsfile() {
 
                         if (branchName != 'master') {
 
-                            stage('Install globally @angular/cli') {
+                            Boolean installGloballyAngularCli = false
+                            echo "params.installGloballyAngularCli: ${params.installGloballyAngularCli}"
 
-                                echo "params.angularCliVersion: ${params.angularCliVersion}"
-                                String angularCliVersionParam = params.angularCliVersion
-
-                                if (angularCliVersionParam != null) {
-                                    angularCliVersion = angularCliVersionParam
-                                }
-
-                                echo "Installing globally @angular/cli version ${angularCliVersion}"
-                                sh "npm install -g @angular/cli@${angularCliVersion}"
-
+                            if (params.installGloballyAngularCli) {
+                                installGloballyAngularCli = params.installGloballyAngularCli.toBoolean()
                             }
+
+                            if (installGloballyAngularCli) {
+
+                                stage('Install globally @angular/cli') {
+
+                                    Boolean installAngularCliSpecificVersion = false
+                                    echo "params.installAngularCliSpecificVersion: ${params.installAngularCliSpecificVersion}"
+
+                                    if (params.installAngularCliSpecificVersion) {
+                                        installAngularCliSpecificVersion = params.installAngularCliSpecificVersion.toBoolean()
+                                    }
+
+                                    if (installAngularCliSpecificVersion) {
+
+                                        echo "params.angularCliVersion: ${params.angularCliVersion}"
+                                        String angularCliVersionParam = params.angularCliVersion
+
+                                        if (angularCliVersionParam != null) {
+                                            angularCliVersion = angularCliVersionParam
+                                        }
+
+                                    }
+
+                                    echo "Installing globally @angular/cli version ${angularCliVersion}"
+                                    sh "npm install -g @angular/cli@${angularCliVersion}"
+
+                                }
+                            }
+
+                            confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
 
                             stage('Build') {
                                 echo 'Building dependencies...'

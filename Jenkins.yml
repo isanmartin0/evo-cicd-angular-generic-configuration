@@ -2,7 +2,9 @@ openshift:
   templatePath: kube/angular_template.yaml
 
 imageStreamNodejsVersion: 6
-#angularCliVersion: 1.0.0
+installGloballyAngularCli: true
+installAngularCliSpecificVersion: false
+angularCliVersion: 1.0.0
 
 useBuildProdFlags: true
 buildProdFlags: --aot=false --build-optimizer
