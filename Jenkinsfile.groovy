@@ -8,6 +8,7 @@ def runAngularGenericJenkinsfile() {
 
     def npmRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-repo/'
     def npmLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-local/'
+    def angularLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-local/'
 
     def openshiftURL = 'https://openshift.grupoevo.corp:8443'
     def openshiftCredential = 'openshift'
@@ -601,7 +602,8 @@ def runAngularGenericJenkinsfile() {
                                     try {
                                         echo 'Publish package on Artifactory NPM registry'
 
-                                        sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
+                                        //sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
+                                        sh "npm publish ${packageTarball} --registry ${angularLocalRepositoryURL}"
 
                                     } catch (exc) {
                                         echo 'There is an error on publish package'
