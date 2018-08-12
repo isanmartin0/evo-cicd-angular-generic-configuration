@@ -607,7 +607,7 @@ def runAngularGenericJenkinsfile() {
                                         withCredentials([string(credentialsId: 'artifactory-token', variable: 'ART-ARTIFACTORY_TOKEN')]) {
                                             sh '''
                                                 set +x
-                                                curl -X POST https://digitalservices.evobanco.com/artifactory/angular-local/angular-app/angular-app-1.0.0.tgz --data angular-app-1.0.0.tgz -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}
+                                                curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" -X POST https://digitalservices.evobanco.com/artifactory/angular-local/angular-app/angular-app-1.0.0.tgz --data angular-app-1.0.0.tgz 
                                             '''
                                         }
                                         //sh "npm publish ${packageTarball} --registry ${angularLocalRepositoryURL}"
