@@ -532,7 +532,12 @@ def runAngularGenericJenkinsfile() {
                                 echo "useBuildProdFlags: ${useBuildProdFlags}"
                                 echo "buildProdFlags: ${buildProdFlags}"
 
-                                sh "ng build --prod ${buildProdFlags}"
+                                if (installGloballyAngularCli) {
+                                    sh "ng build --prod ${buildProdFlags}"
+                                } else {
+                                    sh "${angularCliLocalParh}ng --prod ${buildProdFlags}"
+                                }
+
 
                             }
 
