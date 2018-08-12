@@ -465,6 +465,10 @@ def runAngularGenericJenkinsfile() {
                                 sh 'npm i'
                             }
 
+                            confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+
                             stage('Get ng version') {
                                 echo 'ng version::'
 
