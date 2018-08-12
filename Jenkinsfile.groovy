@@ -603,7 +603,15 @@ def runAngularGenericJenkinsfile() {
                                         echo 'Publish package on Artifactory NPM registry'
 
                                         //sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
-                                        sh "npm publish ${packageTarball} --registry ${angularLocalRepositoryURL}"
+
+                                        withCredentials([string(credentialsId: 'artifactory-token', variable: 'ART-ARTIFACTORY_TOKEN')]) {
+                                            sh '''
+                                                set +x
+                                                curl -X POST https://digitalservices.evobanco.com/artifactory/angular-local/angular-app/angular-app-1.0.0.tgz --data angular-app-1.0.0.tgz -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}
+                                            '''
+                                        }
+                                        //sh "npm publish ${packageTarball} --registry ${angularLocalRepositoryURL}"
+                                        //curl -o ${DEPLOY_DIR}/ROOT.war -O ${WAR_FILE_URL} -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}"
 
                                     } catch (exc) {
                                         echo 'There is an error on publish package'
