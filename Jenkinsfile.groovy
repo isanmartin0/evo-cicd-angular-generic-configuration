@@ -459,8 +459,6 @@ def runAngularGenericJenkinsfile() {
                                 echo "Skipping @angular/cli installation..."
                             }
 
-                            confirm = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                             stage('Build') {
@@ -468,8 +466,6 @@ def runAngularGenericJenkinsfile() {
                                 sh 'npm i'
                             }
 
-                            confirm = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                             stage('Get ng version') {
@@ -535,7 +531,7 @@ def runAngularGenericJenkinsfile() {
                                 if (installGloballyAngularCli) {
                                     sh "ng build --prod ${buildProdFlags}"
                                 } else {
-                                    sh "${angularCliLocalParh}ng --prod ${buildProdFlags}"
+                                    sh "${angularCliLocalParh}ng build --prod ${buildProdFlags}"
                                 }
 
 
