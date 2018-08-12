@@ -73,9 +73,11 @@ def runAngularGenericJenkinsfile() {
     //Parameters Angular
     //int port_default = 8080
     //int debug_port_default = 5858
+    Boolean installGloballyAngularCli = false
     int image_stream_nodejs_version_default = 10
     def angularCliVersion_default = "6.1.2"
     def buildProdFlags_default = "--build-optimizer"
+    def angularCliLocalParh = "node_modules/@angular/cli/bin/"
 
     //def build_from_registry_url = 'https://github.com/isanmartin0/s2i-nodejs-container.git'
     //def build_from_artifact_branch = 'master'
@@ -98,6 +100,7 @@ def runAngularGenericJenkinsfile() {
     def buildProdFlags = buildProdFlags_default
 
     def packageJSONFilesNodeDistributionFolder = ["dist/"]
+
 
     //def sonarProjectPath = "sonar-project.properties"
 
@@ -414,7 +417,7 @@ def runAngularGenericJenkinsfile() {
 
                         if (branchName != 'master') {
 
-                            Boolean installGloballyAngularCli = false
+
                             echo "params.installGloballyAngularCli: ${params.installGloballyAngularCli}"
 
                             if (params.installGloballyAngularCli) {
@@ -472,7 +475,12 @@ def runAngularGenericJenkinsfile() {
                             stage('Get ng version') {
                                 echo 'ng version::'
 
-                                sh "ng version"
+                                if (installGloballyAngularCli) {
+                                    sh "ng version"
+                                } else {
+                                    sh "${angularCliLocalParh}ng version"
+                                }
+
                             }
 
 
