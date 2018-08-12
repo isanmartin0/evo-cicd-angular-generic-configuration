@@ -8,7 +8,7 @@ def runAngularGenericJenkinsfile() {
 
     def npmRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-repo/'
     def npmLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-local/'
-    def angularLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-local/'
+    def angularLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-local/'
 
     def openshiftURL = 'https://openshift.grupoevo.corp:8443'
     def openshiftCredential = 'openshift'
