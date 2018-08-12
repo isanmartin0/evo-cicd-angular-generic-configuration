@@ -2,7 +2,7 @@ openshift:
   templatePath: kube/angular_template.yaml
 
 imageStreamNodejsVersion: 6
-installGloballyAngularCli: true
+installGloballyAngularCli: false
 installAngularCliSpecificVersion: true
 angularCliVersion: 1.0.5
 
@@ -26,7 +26,7 @@ environmentVariables:
   # environmentVariable1: value1
 
 npmRegistryPublish:
-  - release
+  # - release
 
 confirmDeploy:
   - master
