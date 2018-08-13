@@ -1,5 +1,5 @@
 openshift:
-  templatePath: kube/angular_template.yaml
+  templatePath: kube/nginx_template.yaml
 
 imageStreamNodejsVersion: 6
 installGloballyAngularCli: false

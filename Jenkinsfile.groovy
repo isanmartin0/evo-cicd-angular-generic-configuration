@@ -35,7 +35,7 @@ def runAngularGenericJenkinsfile() {
     def isPPCOpenshiftTemplate = false
     def jenkinsFilePathPPC = relativeTargetDirPPC + 'Jenkinsfile'
     def jenkinsYamlPathPPC = relativeTargetDirPPC + 'Jenkins.yml'
-    def openshiftNodejsTemplatePathPPC = relativeTargetDirPPC + 'kube/angular_template.yaml'
+    def openshiftNginxTemplatePathPPC = relativeTargetDirPPC + 'kube/nginx_template.yaml'
     def jenknsFilePipelinePPC
 
 
@@ -216,7 +216,7 @@ def runAngularGenericJenkinsfile() {
 
                     isPPCOpenshiftTemplate = fileExists params.openshift.templatePath
                 } else {
-                    isPPCOpenshiftTemplate = fileExists openshiftNodejsTemplatePathPPC
+                    isPPCOpenshiftTemplate = fileExists openshiftNginxTemplatePathPPC
                 }
 
 
@@ -710,100 +710,9 @@ def runAngularGenericJenkinsfile() {
                 }
             }
 
-            confirm = input message: 'Waiting for user approval',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
 
             stage('OpenShift Build') {
 
-                /********************************************************
-                 ************* SPECIFIC PORT PARAMETERS *****************
-                 ********************************************************/
-                Boolean useSpecificPort = false
-                int port_number = port_default
-                Boolean createPortEnvironmentVariable = false
-                echo "params.ports.useSpecificPort: ${params.ports.useSpecificPort}"
-                echo "params.ports.portNumber: ${params.ports.portNumber}"
-                echo "params.ports.createPortEnvironmentVariable: ${params.ports.createPortEnvironmentVariable}"
-
-
-                if (params.ports.useSpecificPort) {
-                    useSpecificPort = params.ports.useSpecificPort.toBoolean()
-                }
-
-                String portNumberParam = params.ports.portNumber
-                if (portNumberParam != null && portNumberParam.isInteger() && useSpecificPort) {
-                    port_number = portNumberParam as Integer
-                }
-
-
-                if (params.ports.createPortEnvironmentVariable && useSpecificPort) {
-                    createPortEnvironmentVariable = params.ports.createPortEnvironmentVariable.toBoolean()
-                }
-
-                echo "useSpecificPort: ${useSpecificPort}"
-                echo "port_number: ${port_number}"
-                echo "createPortEnvironmentVariable: ${createPortEnvironmentVariable}"
-
-
-                /***************************************************
-                 ************* DEV MODE PARAMETERS *****************
-                 ***************************************************/
-                Boolean devMode = false
-                int debug_port_number = debug_port_default
-                echo "params.devMode: ${params.devMode}"
-                echo "params.debugPort: ${params.debugPort}"
-
-                if (params.devMode) {
-                    devMode = params.devMode.toBoolean()
-                }
-
-                String debugPortParam = params.debugPort
-
-                if (debugPortParam != null && debugPortParam.isInteger() && devMode) {
-                    debug_port_number = debugPortParam as Integer
-                }
-
-                echo "devMode: ${devMode}"
-                echo "debug_port_number: ${debug_port_number}"
-
-                /***************************************************
-                 ************* NPM MIRROR PARAMETERS *****************
-                 ***************************************************/
-                Boolean useNpmMirror = false
-                def theNpmMirror = ""
-                echo "params.useNpmMirror: ${params.useNpmMirror}"
-                echo "params.npmMirror: ${params.npmMirror}"
-
-                if (params.useNpmMirror) {
-                    useNpmMirror = params.useNpmMirror.toBoolean()
-                }
-
-                if (useNpmMirror) {
-                    theNpmMirror = params.npmMirror
-                }
-
-                echo "useNpmMirror: ${useNpmMirror}"
-                echo "theNpmMirror: ${theNpmMirror}"
-
-                /*******************************************************************
-                 ************* NPM RUN ALTERNATE SCRIPT PARAMETERS *****************
-                 *******************************************************************/
-                Boolean useAlternateNpmRun = false
-                def alternateNpmRunScript = ''
-                echo "params.useAlternateNpmRun: ${params.useAlternateNpmRun}"
-                echo "params.alternateNpmRunScript: ${params.alternateNpmRunScript}"
-
-                if (params.useAlternateNpmRun) {
-                    useAlternateNpmRun = params.useAlternateNpmRun.toBoolean()
-                }
-
-                if (useAlternateNpmRun) {
-                    alternateNpmRunScript = params.alternateNpmRunScript
-                }
-
-                echo "useAlternateNpmRun: ${useAlternateNpmRun}"
-                echo "alternateNpmRunScript: ${alternateNpmRunScript}"
 
                 /**********************************************************
                  ************* OPENSHIFT PROJECT CREATION *****************
@@ -811,7 +720,7 @@ def runAngularGenericJenkinsfile() {
 
                 echo "Building image on OpenShift..."
 
-                nodejsOpenshiftCheckAndCreateProject {
+                angularOpenshiftCheckAndCreateProject {
                     oseCredential = openshiftCredential
                     cloudURL = openshiftURL
                     environment = envLabel
@@ -823,16 +732,16 @@ def runAngularGenericJenkinsfile() {
                     dockerRegistry = registry
                     sourceRepositoryURL = projectURL
                     sourceRepositoryBranch = branchName
-                    portNumber = port_number
-                    nodejsVersion = image_stream_nodejs_version
                     package_tag = packageTag
                     package_tarball = packageTarball
-                    is_scoped_package = isScopedPackage
                     artifactoryNPMRepo = npmRepositoryURL
                     artifactoryNPMAuth = artifactoryNPMAuthCredential
                     artifactoryNPMEmailAuth = artifactoryNPMEmailAuthCredential
                 }
 
+
+                confirm = input message: 'Waiting for user approval',
+                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                 /**************************************************************
