@@ -370,15 +370,6 @@ def runAngularGenericJenkinsfile() {
 
             }
 
-            stage('XXX') {
-                withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
-                    echo "Checking credentials on Artifactory"
-                    echo "artifactoryURL: ${artifactoryURL}"
-                    //sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" ${artifactoryURL}api/system/ping'''
-                    sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping"
-                }
-            }
-
 
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
@@ -576,6 +567,23 @@ def runAngularGenericJenkinsfile() {
                                 sh "npm pack"
                             }
 
+                            stage ('Check tarball creation') {
+
+                                try {
+                                    echo 'Check tarball creation ...'
+                                    tarball_creation_script = $/eval "ls ${packageTarball}"/$
+                                    echo "${tarball_creation_script}"
+                                    def tarball_creation_view = sh(script: "${tarball_creation_script}", returnStdout: true).toString().trim()
+                                    echo "${tarball_creation_view}"
+                                } catch (exc) {
+                                    echo 'There is an error on tarball creation'
+                                    def exc_message = exc.message
+                                    echo "${exc_message}"
+                                    currentBuild.result = "FAILED"
+                                    throw new hudson.AbortException("Error checking existence of tarball")
+                                }
+                            }
+
                             if (branchType in params.npmRegistryPublish) {
 
                                 stage('Configure Artifactory NPM Registry') {
@@ -595,21 +603,6 @@ def runAngularGenericJenkinsfile() {
                                     sh 'npm whoami'
 
                                     try {
-                                        echo 'Check tarball creation ...'
-                                        tarball_creation_script = $/eval "ls ${packageTarball}"/$
-                                        //tarball_creation_script = $/eval "ls ${packageTarball} | grep '${packageTarballFake}'"/$
-                                        echo "${tarball_creation_script}"
-                                        def tarball_creation_view = sh(script: "${tarball_creation_script}", returnStdout: true).toString().trim()
-                                        echo "${tarball_creation_view}"
-                                    } catch (exc) {
-                                        echo 'There is an error on tarball creation'
-                                        def exc_message = exc.message
-                                        echo "${exc_message}"
-                                        currentBuild.result = "FAILED"
-                                        throw new hudson.AbortException("Error checking existence of tarball")
-                                    }
-
-                                    try {
                                         echo 'Publish package on Artifactory NPM registry'
 
                                         sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
@@ -622,8 +615,6 @@ def runAngularGenericJenkinsfile() {
                                         currentBuild.result = "FAILED"
                                         throw new hudson.AbortException("Error publishing package on NPM registry")
                                     }
-
-
 
 /*
                                     echo "Setting source code to build from URL (build from registry package)"
@@ -641,20 +632,6 @@ def runAngularGenericJenkinsfile() {
 
                                 stage('Artifact Generic Registry Publish') {
                                     echo "Publishing artifact to a generic registry"
-
-                                    try {
-                                        echo 'Check tarball creation ...'
-                                        tarball_creation_script = $/eval "ls ${packageTarball}"/$
-                                        echo "${tarball_creation_script}"
-                                        def tarball_creation_view = sh(script: "${tarball_creation_script}", returnStdout: true).toString().trim()
-                                        echo "${tarball_creation_view}"
-                                    } catch (exc) {
-                                        echo 'There is an error on tarball creation'
-                                        def exc_message = exc.message
-                                        echo "${exc_message}"
-                                        currentBuild.result = "FAILED"
-                                        throw new hudson.AbortException("Error checking existence of tarball")
-                                    }
 
                                     try {
                                         echo 'Publish package on Artifactory generic registry'
