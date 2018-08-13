@@ -585,7 +585,7 @@ def runAngularGenericJenkinsfile() {
                                     sh "npm config get registry"
                                 }
 
-                                stage('Artifact Registry Publish') {
+                                stage('Artifact NPM Registry Publish') {
                                     echo "Publishing artifact to a NPM registry"
 
                                     echo 'Get NPM config registry'
@@ -612,17 +612,7 @@ def runAngularGenericJenkinsfile() {
                                     try {
                                         echo 'Publish package on Artifactory NPM registry'
 
-                                        //sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
-
-                                        withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
-                                            echo "Checking credentials on Artifactory"
-                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping"
-
-                                            echo "Deploying artifact on Artifactory gemeric repository"
-                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
-                                        }
-                                        //sh "npm publish ${packageTarball} --registry ${angularLocalRepositoryURL}"
-                                        //curl -o ${DEPLOY_DIR}/ROOT.war -O ${WAR_FILE_URL} -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}"
+                                        sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
 
                                     } catch (exc) {
                                         echo 'There is an error on publish package'
@@ -649,9 +639,43 @@ def runAngularGenericJenkinsfile() {
 
                             } else {
 
-                                echo "The branch doesn't publish the package on NPM registry"
-                                currentBuild.result = "FAILED"
-                                throw new hudson.AbortException("The branch doesn't publish the package on NPM registry")
+                                stage('Artifact Generic Registry Publish') {
+                                    echo "Publishing artifact to a generic registry"
+
+                                    try {
+                                        echo 'Check tarball creation ...'
+                                        tarball_creation_script = $/eval "ls ${packageTarball}"/$
+                                        echo "${tarball_creation_script}"
+                                        def tarball_creation_view = sh(script: "${tarball_creation_script}", returnStdout: true).toString().trim()
+                                        echo "${tarball_creation_view}"
+                                    } catch (exc) {
+                                        echo 'There is an error on tarball creation'
+                                        def exc_message = exc.message
+                                        echo "${exc_message}"
+                                        currentBuild.result = "FAILED"
+                                        throw new hudson.AbortException("Error checking existence of tarball")
+                                    }
+
+                                    try {
+                                        echo 'Publish package on Artifactory generic registry'
+
+                                        withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
+                                            echo "Checking credentials on Artifactory"
+                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping"
+
+                                            echo "Deploying artifact on Artifactory gemeric repository"
+                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
+                                        }
+
+                                    } catch (exc) {
+                                        echo 'There is an error on publish package'
+                                        def exc_message = exc.message
+                                        echo "${exc_message}"
+
+                                        currentBuild.result = "FAILED"
+                                        throw new hudson.AbortException("Error publishing package on generic registry")
+                                    }
+                                }
 /*
                                 echo "******* WARNING. PACKAGE NOT PUBLISHED ON ANY NPM REGISTRY ******* "
                                 echo "The source code will be taken from a code repository, not from an artifact repository."
@@ -664,8 +688,7 @@ def runAngularGenericJenkinsfile() {
 
                             stage('Configure Artifactory NPM Registry') {
                                 echo 'Setting Artifactory NPM registry'
-                                //sh "npm config set registry ${npmRepositoryURL} "
-                                sh "npm config set registry ${angularLocalRepositoryURL} "
+                                sh "npm config set registry ${npmRepositoryURL} "
 
                                 sh "npm config get registry"
                             }
