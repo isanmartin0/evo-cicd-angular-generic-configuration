@@ -81,8 +81,8 @@ def runAngularGenericJenkinsfile() {
     def buildProdFlags_default = "--build-optimizer"
     def angularCliLocalParh = "node_modules/@angular/cli/bin/"
 
-    //def build_from_registry_url = 'https://github.com/isanmartin0/s2i-nodejs-container.git'
-    //def build_from_artifact_branch = 'master'
+    def build_from_registry_url = 'https://github.com/isanmartin0/s2i-angular-container.git'
+    def build_from_artifact_branch = 'master'
 
     def nodeJS_6_installation = "Node-6.11.3"
     def nodeJS_8_installation = "Node-8.9.4"
@@ -616,7 +616,7 @@ def runAngularGenericJenkinsfile() {
                                         throw new hudson.AbortException("Error publishing package on NPM registry")
                                     }
 
-/*
+
                                     echo "Setting source code to build from URL (build from registry package)"
                                     echo "Source URL: ${projectURL} --> ${build_from_registry_url}"
                                     projectURL = build_from_registry_url
@@ -625,7 +625,7 @@ def runAngularGenericJenkinsfile() {
                                     echo "Source branch: ${branchName} --> ${build_from_artifact_branch}"
                                     branchName = build_from_artifact_branch
                                     echo "new branchName: ${branchName}"
-*/
+
                                 }
 
                             } else {
@@ -652,13 +652,17 @@ def runAngularGenericJenkinsfile() {
                                         currentBuild.result = "FAILED"
                                         throw new hudson.AbortException("Error publishing package on generic registry")
                                     }
+
+
+                                    echo "Setting source code to build from URL (build from registry package)"
+                                    echo "Source URL: ${projectURL} --> ${build_from_registry_url}"
+                                    projectURL = build_from_registry_url
+                                    echo "new projectURL: ${projectURL}"
+                                    echo "Setting source code to build from branch (build from registry package)"
+                                    echo "Source branch: ${branchName} --> ${build_from_artifact_branch}"
+                                    branchName = build_from_artifact_branch
+                                    echo "new branchName: ${branchName}"
                                 }
-/*
-                                echo "******* WARNING. PACKAGE NOT PUBLISHED ON ANY NPM REGISTRY ******* "
-                                echo "The source code will be taken from a code repository, not from an artifact repository."
-                                echo "Source URL: ${projectURL}"
-                                echo "Source branch: ${branchName}"
-*/
                             }
 
                         } else {
@@ -690,7 +694,7 @@ def runAngularGenericJenkinsfile() {
                                     throw new hudson.AbortException("Error checking existence of package on NPM registry")
                                 }
 
-/*
+
                                 echo "Setting source code to build from URL (build from registry package)"
                                 echo "Source URL: ${projectURL} --> ${build_from_registry_url}"
                                 projectURL = build_from_registry_url
@@ -699,7 +703,7 @@ def runAngularGenericJenkinsfile() {
                                 echo "Source branch: ${branchName} --> ${build_from_artifact_branch}"
                                 branchName = build_from_artifact_branch
                                 echo "new branchName: ${branchName}"
-*/
+
                             }
                         }
                     }
