@@ -9,6 +9,7 @@ def runAngularGenericJenkinsfile() {
     def npmRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-repo/'
     def npmLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-local/'
     def angularLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-local/'
+    def artifactoryURL = 'https://digitalservices.evobanco.com/artifactory'
 
     def openshiftURL = 'https://openshift.grupoevo.corp:8443'
     def openshiftCredential = 'openshift'
@@ -370,20 +371,6 @@ def runAngularGenericJenkinsfile() {
             }
 
 
-            stage ('Ping Artifactory') {
-                echo "Ping Artifactory"
-                withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
-                    sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" https://digitalservices.evobanco.com/artifactory/api/system/ping'''
-                }
-
-                withCredentials([string(credentialsId: 'artifactory-tokenjcfernandez', variable: 'ARTIFACTORY_TOKEN')]) {
-                    sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" https://digitalservices.evobanco.com/artifactory/api/system/ping'''
-                }
-            }
-
-            confirm = input message: 'Waiting for user approval',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
 
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
@@ -620,9 +607,13 @@ def runAngularGenericJenkinsfile() {
                                         //sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
 
                                         withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
+                                            echo "Checking credentials on Artifactory"
+                                            sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" ${artifactoryURL}/api/system/ping'''
+
+                                            echo "Deploying artifact on Artifactory gemeric repository"
                                             sh '''
                                                 set +x
-                                                curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" -X PUT https://digitalservices.evobanco.com/artifactory/angular-local/angular-app/angular-app-1.0.0.tgz -T angular-app-1.0.0.tgz
+                                                curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}
                                             '''
                                         }
                                         //sh "npm publish ${packageTarball} --registry ${angularLocalRepositoryURL}"
