@@ -60,9 +60,11 @@ objects:
           value: ${ARTIFACTORY_NPM_AUTH}
         - name: ARTIFACTORY_NPM_EMAIL_AUTH
           value: ${ARTIFACTORY_NPM_EMAIL_AUTH}
+        - name: ARTIFACTORY_REPOSITORY
+          value: ${ARTIFACTORY_REPOSITORY}
         from:
           kind: ImageStreamTag
-          name: nginx:${NGINX_VERSION}
+          name: nginx${NGINX_VERSION}
           namespace: openshift
     output:
       to:
@@ -229,9 +231,6 @@ parameters:
 - description: "Node module tarball"
   name: "NODEJS_PACKAGE_TARBALL"
   value: ""
-- description: "Flag indicating a scoped package"
-  name: "NODEJS_IS_SCOPED_PACKAGE"
-  value: "false"
 - description: "Artifactory NPM repository"
   name: "ARTIFACTORY_NPM_REPO"
   value: ""
@@ -246,4 +245,7 @@ parameters:
   value: ""
 - description: "Version of NGINX image to be used (1.12 by default)."
   name: "NGINX_VERSION"
-  value: "1.12"
+  value: "112"
+- description: "Artifactory repository where the artifact is allocated"
+  name: "ARTIFACTORY_REPOSITORY"
+  value: "2"
