@@ -375,6 +375,10 @@ def runAngularGenericJenkinsfile() {
                 withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
                     sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" https://digitalservices.evobanco.com/artifactory/api/system/ping'''
                 }
+
+                withCredentials([string(credentialsId: 'artifactory-tokenjcfernandez', variable: 'ARTIFACTORY_TOKEN')]) {
+                    sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" https://digitalservices.evobanco.com/artifactory/api/system/ping'''
+                }
             }
 
             confirm = input message: 'Waiting for user approval',
@@ -615,7 +619,7 @@ def runAngularGenericJenkinsfile() {
 
                                         //sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
 
-                                        withCredentials([string(credentialsId: 'artifactory-token', variable: 'ART-ARTIFACTORY_TOKEN')]) {
+                                        withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
                                             sh '''
                                                 set +x
                                                 curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" -X POST https://digitalservices.evobanco.com/artifactory/angular-local/angular-app/angular-app-1.0.0.tgz --data angular-app-1.0.0.tgz 
