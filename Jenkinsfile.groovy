@@ -10,6 +10,7 @@ def runAngularGenericJenkinsfile() {
     def npmLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-local/'
     def angularLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-local/'
     def artifactoryURL = 'https://digitalservices.evobanco.com/artifactory/'
+    def artifactoryRepositoryType = ''
 
     def openshiftURL = 'https://openshift.grupoevo.corp:8443'
     def openshiftCredential = 'openshift'
@@ -607,6 +608,8 @@ def runAngularGenericJenkinsfile() {
 
                                         //sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
 
+                                        artifactoryRepositoryType = 'NPM'
+
                                     } catch (exc) {
                                         echo 'There is an error on publish package'
                                         def exc_message = exc.message
@@ -615,16 +618,6 @@ def runAngularGenericJenkinsfile() {
                                         currentBuild.result = "FAILED"
                                         throw new hudson.AbortException("Error publishing package on NPM registry")
                                     }
-
-
-                                    echo "Setting source code to build from URL (build from registry package)"
-                                    echo "Source URL: ${projectURL} --> ${build_from_registry_url}"
-                                    projectURL = build_from_registry_url
-                                    echo "new projectURL: ${projectURL}"
-                                    echo "Setting source code to build from branch (build from registry package)"
-                                    echo "Source branch: ${branchName} --> ${build_from_artifact_branch}"
-                                    branchName = build_from_artifact_branch
-                                    echo "new branchName: ${branchName}"
 
                                 }
 
@@ -642,6 +635,8 @@ def runAngularGenericJenkinsfile() {
 
                                             echo "Deploying artifact on Artifactory gemeric repository"
                                             sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
+
+                                            artifactoryRepositoryType = "Generic"
                                         }
 
                                     } catch (exc) {
@@ -653,15 +648,6 @@ def runAngularGenericJenkinsfile() {
                                         throw new hudson.AbortException("Error publishing package on generic registry")
                                     }
 
-
-                                    echo "Setting source code to build from URL (build from registry package)"
-                                    echo "Source URL: ${projectURL} --> ${build_from_registry_url}"
-                                    projectURL = build_from_registry_url
-                                    echo "new projectURL: ${projectURL}"
-                                    echo "Setting source code to build from branch (build from registry package)"
-                                    echo "Source branch: ${branchName} --> ${build_from_artifact_branch}"
-                                    branchName = build_from_artifact_branch
-                                    echo "new branchName: ${branchName}"
                                 }
                             }
 
@@ -695,16 +681,23 @@ def runAngularGenericJenkinsfile() {
                                 }
 
 
-                                echo "Setting source code to build from URL (build from registry package)"
-                                echo "Source URL: ${projectURL} --> ${build_from_registry_url}"
-                                projectURL = build_from_registry_url
-                                echo "new projectURL: ${projectURL}"
-                                echo "Setting source code to build from branch (build from registry package)"
-                                echo "Source branch: ${branchName} --> ${build_from_artifact_branch}"
-                                branchName = build_from_artifact_branch
-                                echo "new branchName: ${branchName}"
+
 
                             }
+                        }
+
+
+                        stage('Setting S2I project') {
+
+                            echo "Setting source code to build from URL (build from registry package)"
+                            echo "Source URL: ${projectURL} --> ${build_from_registry_url}"
+                            projectURL = build_from_registry_url
+                            echo "new projectURL: ${projectURL}"
+                            echo "Setting source code to build from branch (build from registry package)"
+                            echo "Source branch: ${branchName} --> ${build_from_artifact_branch}"
+                            branchName = build_from_artifact_branch
+                            echo "new branchName: ${branchName}"
+
                         }
                     }
                 }
@@ -737,6 +730,8 @@ def runAngularGenericJenkinsfile() {
                     artifactoryNPMRepo = npmRepositoryURL
                     artifactoryNPMAuth = artifactoryNPMAuthCredential
                     artifactoryNPMEmailAuth = artifactoryNPMEmailAuthCredential
+                    artifactoryRepositoryTypeOpenshift = artifactoryRepositoryType
+                    artifactoryGenericRepo = angularLocalRepositoryURL
                 }
 
 

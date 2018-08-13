@@ -60,8 +60,10 @@ objects:
           value: ${ARTIFACTORY_NPM_AUTH}
         - name: ARTIFACTORY_NPM_EMAIL_AUTH
           value: ${ARTIFACTORY_NPM_EMAIL_AUTH}
-        - name: ARTIFACTORY_REPOSITORY
-          value: ${ARTIFACTORY_REPOSITORY}
+        - name: ARTIFACTORY_REPOSITORY_TYPE
+          value: ${ARTIFACTORY_REPOSITORY_TYPE}
+        - name: ARTIFACTORY_GENERIC_REPO
+          value: ${ARTIFACTORY_GENERIC_REPO}
         from:
           kind: ImageStreamTag
           name: nginx${NGINX_VERSION}
@@ -246,6 +248,9 @@ parameters:
 - description: "Version of NGINX image to be used (1.12 by default)."
   name: "NGINX_VERSION"
   value: "112"
-- description: "Artifactory repository where the artifact is allocated"
-  name: "ARTIFACTORY_REPOSITORY"
-  value: "2"
+- description: "Artifactory repository type where the artifact is allocated"
+  name: "ARTIFACTORY_REPOSITORY_TYPE"
+  value: ""
+- description: "Artifactory generic repository"
+  name: "ARTIFACTORY_GENERIC_REPO"
+  value: ""
