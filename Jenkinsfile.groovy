@@ -9,7 +9,7 @@ def runAngularGenericJenkinsfile() {
     def npmRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-repo/'
     def npmLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-local/'
     def angularLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-local/'
-    def artifactoryURL = 'https://digitalservices.evobanco.com/artifactory'
+    def artifactoryURL = 'https://digitalservices.evobanco.com/artifactory/'
 
     def openshiftURL = 'https://openshift.grupoevo.corp:8443'
     def openshiftCredential = 'openshift'
@@ -608,12 +608,12 @@ def runAngularGenericJenkinsfile() {
 
                                         withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
                                             echo "Checking credentials on Artifactory"
-                                            sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" ${artifactoryURL}/api/system/ping'''
+                                            sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping" '''
 
                                             echo "Deploying artifact on Artifactory gemeric repository"
                                             sh '''
                                                 set +x
-                                                curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}
+                                                curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
                                             '''
                                         }
                                         //sh "npm publish ${packageTarball} --registry ${angularLocalRepositoryURL}"
