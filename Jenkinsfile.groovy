@@ -372,7 +372,7 @@ def runAngularGenericJenkinsfile() {
 
             stage ('Ping Artifactory') {
                 echo "Ping Artifactory"
-                withCredentials([string(credentialsId: 'artifactory-token', variable: 'ART-ARTIFACTORY_TOKEN')]) {
+                withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
                     sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" https://digitalservices.evobanco.com/artifactory/api/system/ping'''
                 }
             }
