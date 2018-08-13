@@ -374,7 +374,8 @@ def runAngularGenericJenkinsfile() {
                 withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
                     echo "Checking credentials on Artifactory"
                     echo "artifactoryURL: ${artifactoryURL}"
-                    sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" ${artifactoryURL}api/system/ping'''
+                    //sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" ${artifactoryURL}api/system/ping'''
+                    sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping"
                 }
             }
 
