@@ -379,9 +379,6 @@ def runAngularGenericJenkinsfile() {
                 }
             }
 
-            confirm = input message: 'Waiting for user approval',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
 
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
@@ -619,13 +616,10 @@ def runAngularGenericJenkinsfile() {
 
                                         withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
                                             echo "Checking credentials on Artifactory"
-                                            sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" "$artifactoryURL"api/system/ping'''
+                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping"
 
                                             echo "Deploying artifact on Artifactory gemeric repository"
-                                            sh '''
-                                                set +x
-                                                curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
-                                            '''
+                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
                                         }
                                         //sh "npm publish ${packageTarball} --registry ${angularLocalRepositoryURL}"
                                         //curl -o ${DEPLOY_DIR}/ROOT.war -O ${WAR_FILE_URL} -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}"
