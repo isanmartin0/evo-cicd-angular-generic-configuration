@@ -370,6 +370,17 @@ def runAngularGenericJenkinsfile() {
             }
 
 
+            stage ('Ping Artifactory') {
+                echo "Ping Artifactory"
+                withCredentials([string(credentialsId: 'artifactory-token', variable: 'ART-ARTIFACTORY_TOKEN')]) {
+                    sh '''curl -H "X-JFrog-Art-Api:${ARTIFACTORY_TOKEN}" http://digitalservices.evobanco.com/artifactory/api/system/ping'''
+                }
+            }
+
+            confirm = input message: 'Waiting for user approval',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
 
