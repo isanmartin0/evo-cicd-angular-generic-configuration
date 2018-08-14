@@ -784,20 +784,11 @@ def runAngularGenericJenkinsfile() {
                 }
 
 
-                confirm = input message: 'Waiting for user approval',
-                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
 
                 nodejsOpenshiftBuildProject {
                     repoUrl = angularNPMRepositoryURL
                     branchHY = branchNameHY
                     branch_type = branchType
-                    devModeOpenshift = devMode
-                    debugPortOpenshift = debug_port_number
-                    useNpmMirrorOpenshift = useNpmMirror
-                    npmMirrorOpenshift = theNpmMirror
-                    useAlternateNpmRunOpenshift = useAlternateNpmRun
-                    alternateNpmRunScriptOpenshift = alternateNpmRunScript
                 }
             }
 
@@ -903,6 +894,13 @@ def runAngularGenericJenkinsfile() {
             }
 
             echo "errorOnPostDeployTestsUnstableResult value: ${errorOnPostDeployTestsUnstableResult}"
+
+
+
+            confirm = input message: 'Waiting for user approval',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+
 
             def tasks = [:]
 
