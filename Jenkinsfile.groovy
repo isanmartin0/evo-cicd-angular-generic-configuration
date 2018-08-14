@@ -372,6 +372,28 @@ def runAngularGenericJenkinsfile() {
             }
 
 
+            stage('Curl Artifactory') {
+
+
+                echo "Curl generic repository"
+
+                withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
+                    echo "Checking credentials on Artifactory"
+                    sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping"
+
+                    echo "Deploying artifact on Artifactory gemeric repository"
+                    sh "curl -o ${packageTarball} -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -O ${angularGenericLocalRepositoryURL}${packageName}/${packageTarball}"
+                }
+
+                echo "Curl NPM repository"
+
+
+            }
+
+            confirm = input message: 'Waiting for user approval',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
 
@@ -636,7 +658,7 @@ def runAngularGenericJenkinsfile() {
                                             echo "Deploying artifact on Artifactory gemeric repository"
                                             sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularGenericLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
 
-                                            artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_GENEROC_TYPE
+                                            artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_GENERIC_TYPE
                                         }
 
                                     } catch (exc) {
