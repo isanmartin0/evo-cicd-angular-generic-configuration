@@ -794,8 +794,6 @@ def runAngularGenericJenkinsfile() {
                 }
 
 
-                confirm = input message: 'Waiting for user approval',
-                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                 /**************************************************************
@@ -819,25 +817,26 @@ def runAngularGenericJenkinsfile() {
                     echo "Map environment variable: ${key} = ${value}"
                 }
 
+                int mapEnvironmentVariablesSize = mapEnvironmentVariables.size()
 
+                echo "mapEnvironmentVariables size: ${mapEnvironmentVariablesSize}"
 
-                retry(3) {
-                    nodejsOpenshiftEnvironmentVariables {
-                        branchHY = branchNameHY
-                        branch_type = branchType
-                        createPortEnvironmentVariableOpenshift = createPortEnvironmentVariable
-                        portNumber = port_number
-                        devModeOpenshift = devMode
-                        debugPortOpenshift = debug_port_number
-                        useNpmMirrorOpenshift = useNpmMirror
-                        npmMirrorOpenshift = theNpmMirror
-                        useAlternateNpmRunOpenshift = useAlternateNpmRun
-                        alternateNpmRunScriptOpenshift = alternateNpmRunScript
-                        map_environment_variables = mapEnvironmentVariables
+                if (mapEnvironmentVariablesSize > 0) {
+
+                    retry(3) {
+                        nodejsOpenshiftEnvironmentVariables {
+                            branchHY = branchNameHY
+                            branch_type = branchType
+                            map_environment_variables = mapEnvironmentVariables
+                        }
+
+                        sleep(10)
                     }
-
-                    sleep(10)
                 }
+
+
+                confirm = input message: 'Waiting for user approval',
+                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                 nodejsOpenshiftBuildProject {
