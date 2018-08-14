@@ -64,6 +64,8 @@ objects:
           value: ${ARTIFACTORY_REPOSITORY_TYPE}
         - name: ARTIFACTORY_GENERIC_REPO
           value: ${ARTIFACTORY_GENERIC_REPO}
+        - name: ARTIFACTORY_TOKEN
+          value: ${ARTIFACTORY_TOKEN}
         from:
           kind: ImageStreamTag
           name: nginx-${NGINX_VERSION}:latest
@@ -253,4 +255,7 @@ parameters:
   value: ""
 - description: "Artifactory generic repository"
   name: "ARTIFACTORY_GENERIC_REPO"
+  value: ""
+- description: "Artifactory Token"
+  name: "ARTIFACTORY_TOKEN"
   value: ""
