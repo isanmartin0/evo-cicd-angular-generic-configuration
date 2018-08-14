@@ -752,7 +752,7 @@ def runAngularGenericJenkinsfile() {
                     dockerRegistry = registry
                     sourceRepositoryURL = projectURL
                     sourceRepositoryBranch = branchName
-                    package_tag = packageTag
+                    package_name = packageName
                     package_tarball = packageTarball
                     artifactoryNPMRepo = angularNPMLocalRepositoryURL
                     //artifactoryNPMAuth = artifactoryNPMAuthCredential

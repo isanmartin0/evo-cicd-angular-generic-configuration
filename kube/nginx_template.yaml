@@ -50,10 +50,10 @@ objects:
       type: Source
       sourceStrategy:
         env:
-        - name: NODEJS_PACKAGE_TAG
-          value: ${NODEJS_PACKAGE_TAG}
-        - name: NODEJS_PACKAGE_TARBALL
-          value: ${NODEJS_PACKAGE_TARBALL}
+        - name: ANGULAR_PACKAGE_NAME
+          value: ${ANGULAR_PACKAGE_NAME}
+        - name: ANGULAR_PACKAGE_TARBALL
+          value: ${ANGULAR_PACKAGE_TARBALL}
         - name: ARTIFACTORY_NPM_REPO
           value: ${ARTIFACTORY_NPM_REPO}
         - name: ARTIFACTORY_REPOSITORY_TYPE
@@ -225,11 +225,11 @@ parameters:
 - description: "Maximum number of replicas of pods"
   name: "MAX_POD_REPLICAS"
   value: ""
-- description: "Node module tag"
-  name: "NODEJS_PACKAGE_TAG"
+- description: "Angular package name"
+  name: "ANGULAR_PACKAGE_NAME"
   value: ""
-- description: "Node module tarball"
-  name: "NODEJS_PACKAGE_TARBALL"
+- description: "Angular package tarball"
+  name: "ANGULAR_PACKAGE_TARBALL"
   value: ""
 - description: "Artifactory NPM repository"
   name: "ARTIFACTORY_NPM_REPO"
