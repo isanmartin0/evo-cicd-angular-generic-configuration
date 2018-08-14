@@ -411,6 +411,14 @@ def runAngularGenericJenkinsfile() {
                 }
 
                 echo "mapEnvironmentVariables size: ${mapEnvironmentVariables.size}"
+                echo "mapEnvironmentVariables size: ${mapEnvironmentVariables}.size"
+                echo "mapEnvironmentVariables size: ${mapEnvironmentVariables.length}"
+                echo "mapEnvironmentVariables size: ${mapEnvironmentVariables}.length"
+
+                echo "${params.environmentVariables.size}"
+                echo "${params.environmentVariables.length}"
+                echo "${params.environmentVariables}.size"
+                echo "${params.environmentVariables}.length"
             }
 
             confirm = input message: 'Waiting for user approval',
