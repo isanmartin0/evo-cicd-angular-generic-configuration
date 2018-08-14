@@ -371,10 +371,7 @@ def runAngularGenericJenkinsfile() {
 
             }
 
-            confirm = input message: 'Waiting for user approval',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
-
+/*
             stage('Curl Artifactory') {
                 withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
                     echo "Checking credentials on Artifactory"
@@ -393,10 +390,7 @@ def runAngularGenericJenkinsfile() {
 
                 }
             }
-
-            confirm = input message: 'Waiting for user approval',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
+*/
 
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
