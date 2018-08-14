@@ -5,6 +5,7 @@ imageStreamNodejsVersion: 6
 installGloballyAngularCli: false
 installAngularCliSpecificVersion: true
 angularCliVersion: 1.0.5
+nginxVersion: 112
 
 useBuildProdFlags: true
 buildProdFlags: --aot=false --build-optimizer

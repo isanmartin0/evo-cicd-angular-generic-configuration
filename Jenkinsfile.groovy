@@ -608,7 +608,7 @@ def runAngularGenericJenkinsfile() {
 
                                         //sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
 
-                                        artifactoryRepositoryType = 'NPM'
+                                        artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_NPM_TYPE
 
                                     } catch (exc) {
                                         echo 'There is an error on publish package'
@@ -636,7 +636,7 @@ def runAngularGenericJenkinsfile() {
                                             echo "Deploying artifact on Artifactory gemeric repository"
                                             sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
 
-                                            artifactoryRepositoryType = "Generic"
+                                            artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_GENEROC_TYPE
                                         }
 
                                     } catch (exc) {
@@ -706,6 +706,14 @@ def runAngularGenericJenkinsfile() {
 
             stage('OpenShift Build') {
 
+                /*********************************************
+                 ************* NGINX VERSION *****************
+                 *********************************************/
+                echo "params.nginxVersion: ${params.nginxVersion}"
+                def theNginxVerxion = params.nginxVersion
+
+                echo "theNginxVerxion: ${theNginxVerxion}"
+
 
                 /**********************************************************
                  ************* OPENSHIFT PROJECT CREATION *****************
@@ -730,6 +738,8 @@ def runAngularGenericJenkinsfile() {
                     artifactoryNPMRepo = npmRepositoryURL
                     artifactoryNPMAuth = artifactoryNPMAuthCredential
                     artifactoryNPMEmailAuth = artifactoryNPMEmailAuthCredential
+                    contextDir = ''
+                    nginxVersion = theNginxVerxion
                     artifactoryRepositoryTypeOpenshift = artifactoryRepositoryType
                     artifactoryGenericRepo = angularLocalRepositoryURL
                 }
