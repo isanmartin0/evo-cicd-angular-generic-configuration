@@ -10,7 +10,7 @@ def runAngularGenericJenkinsfile() {
     def angularNPMLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-local/'
     def angularGenericLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-generic-local/'
     def artifactoryURL = 'https://digitalservices.evobanco.com/artifactory/'
-    def artifactoryRepositoryType = ''
+    def artifactoryRepository = ''
 
     def openshiftURL = 'https://openshift.grupoevo.corp:8443'
     def openshiftCredential = 'openshift'
@@ -606,7 +606,7 @@ def runAngularGenericJenkinsfile() {
 
                                         //sh "npm publish ${packageTarball} --registry ${angularNPMLocalRepositoryURL}"
 
-                                        artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_NPM_TYPE
+                                        artifactoryRepository = angularNPMLocalRepositoryURL
 
                                     } catch (exc) {
                                         echo 'There is an error on publish package'
@@ -634,7 +634,7 @@ def runAngularGenericJenkinsfile() {
                                             echo "Deploying artifact on Artifactory gemeric repository"
                                             sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularGenericLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
 
-                                            artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_GENERIC_TYPE
+                                            artifactoryRepository = angularGenericLocalRepositoryURL
                                         }
 
                                     } catch (exc) {
@@ -733,13 +733,9 @@ def runAngularGenericJenkinsfile() {
                     sourceRepositoryBranch = branchName
                     package_name = packageName
                     package_tarball = packageTarball
-                    artifactoryNPMRepo = angularNPMLocalRepositoryURL
-                    //artifactoryNPMAuth = artifactoryNPMAuthCredential
-                    //artifactoryNPMEmailAuth = artifactoryNPMEmailAuthCredential
+                    artifactoryRepo = artifactoryRepository
                     contextDir = ''
                     nginxVersion = theNginxVerxion
-                    artifactoryRepositoryTypeOpenshift = artifactoryRepositoryType
-                    artifactoryGenericRepo = angularGenericLocalRepositoryURL
                 }
 
 

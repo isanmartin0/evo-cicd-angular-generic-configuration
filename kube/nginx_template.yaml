@@ -54,12 +54,8 @@ objects:
           value: ${ANGULAR_PACKAGE_NAME}
         - name: ANGULAR_PACKAGE_TARBALL
           value: ${ANGULAR_PACKAGE_TARBALL}
-        - name: ARTIFACTORY_NPM_REPO
-          value: ${ARTIFACTORY_NPM_REPO}
-        - name: ARTIFACTORY_REPOSITORY_TYPE
-          value: ${ARTIFACTORY_REPOSITORY_TYPE}
-        - name: ARTIFACTORY_GENERIC_REPO
-          value: ${ARTIFACTORY_GENERIC_REPO}
+        - name: ARTIFACTORY_REPO
+          value: ${ARTIFACTORY_REPO}
         - name: ARTIFACTORY_TOKEN
           value: ${ARTIFACTORY_TOKEN}
         from:
@@ -231,8 +227,8 @@ parameters:
 - description: "Angular package tarball"
   name: "ANGULAR_PACKAGE_TARBALL"
   value: ""
-- description: "Artifactory NPM repository"
-  name: "ARTIFACTORY_NPM_REPO"
+- description: "Artifactory repository"
+  name: "ARTIFACTORY_REPO"
   value: ""
 - description: "Set this to the relative path to your project if it is not in the root of your repository."
   name: "CONTEXT_DIR"
@@ -240,12 +236,6 @@ parameters:
 - description: "Version of NGINX image to be used (1.12 by default)."
   name: "NGINX_VERSION"
   value: "112"
-- description: "Artifactory repository type where the artifact is allocated"
-  name: "ARTIFACTORY_REPOSITORY_TYPE"
-  value: ""
-- description: "Artifactory generic repository"
-  name: "ARTIFACTORY_GENERIC_REPO"
-  value: ""
 - description: "Artifactory Token"
   name: "ARTIFACTORY_TOKEN"
   value: ""
