@@ -373,6 +373,8 @@ def runAngularGenericJenkinsfile() {
 
 
             stage('Curl Artifactory') {
+                confirm = input message: 'Waiting for user approval',
+                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                 echo "Curl generic repository"
@@ -385,7 +387,12 @@ def runAngularGenericJenkinsfile() {
                     sh "curl -o ${packageTarball} -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -O ${angularGenericLocalRepositoryURL}${packageName}/${packageTarball}"
                 }
 
+                confirm = input message: 'Waiting for user approval',
+                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+
                 echo "Curl NPM repository"
+                sh "rm ${packageTarball}"
 
                 withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
                     echo "Checking credentials on Artifactory"
