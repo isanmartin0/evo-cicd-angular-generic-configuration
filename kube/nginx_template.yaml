@@ -56,10 +56,6 @@ objects:
           value: ${NODEJS_PACKAGE_TARBALL}
         - name: ARTIFACTORY_NPM_REPO
           value: ${ARTIFACTORY_NPM_REPO}
-        - name: ARTIFACTORY_NPM_AUTH
-          value: ${ARTIFACTORY_NPM_AUTH}
-        - name: ARTIFACTORY_NPM_EMAIL_AUTH
-          value: ${ARTIFACTORY_NPM_EMAIL_AUTH}
         - name: ARTIFACTORY_REPOSITORY_TYPE
           value: ${ARTIFACTORY_REPOSITORY_TYPE}
         - name: ARTIFACTORY_GENERIC_REPO
@@ -237,12 +233,6 @@ parameters:
   value: ""
 - description: "Artifactory NPM repository"
   name: "ARTIFACTORY_NPM_REPO"
-  value: ""
-- description: "Artifactory NPM Authorization Token"
-  name: "ARTIFACTORY_NPM_AUTH"
-  value: ""
-- description: "Artifactory NPM Email Authorization Token"
-  name: "ARTIFACTORY_NPM_EMAIL_AUTH"
   value: ""
 - description: "Set this to the relative path to your project if it is not in the root of your repository."
   name: "CONTEXT_DIR"

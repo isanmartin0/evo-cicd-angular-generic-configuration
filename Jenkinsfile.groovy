@@ -6,8 +6,8 @@ def runAngularGenericJenkinsfile() {
 
     def utils = new AngularUtils()
 
-    def npmRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-repo/'
-    def npmLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-local/'
+    def angularNPMRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-repo/'
+    def angularNPMLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-local/'
     def angularGenericLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-generic-local/'
     def artifactoryURL = 'https://digitalservices.evobanco.com/artifactory/'
     def artifactoryRepositoryType = ''
@@ -389,15 +389,7 @@ def runAngularGenericJenkinsfile() {
                     sh "rm ${packageTarball}"
 
                     echo "Curl NPM repository"
-                    sh "curl -o ${packageTarball} -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -O ${npmLocalRepositoryURL}${packageName}/${packageTarball}"
-
-                    confirm = input message: 'Waiting for user approval',
-                            parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
-                    sh "rm ${packageTarball}"
-
-                    echo "Curl NPM repository without npm/api"
-                    sh "curl -o ${packageTarball} -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -O https://digitalservices.evobanco.com/artifactory/angular-npm-local/${packageName}/${packageTarball}"
+                    sh "curl -o ${packageTarball} -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -O ${angularNPMLocalRepositoryURL}${packageName}/${packageTarball}"
 
                 }
             }
@@ -497,6 +489,12 @@ def runAngularGenericJenkinsfile() {
                             }
 
 
+                            stage('Configure Artifactory NPM Registry') {
+                                echo 'Setting Artifactory NPM registry'
+                                sh "npm config set registry ${angularNPMRepositoryURL} "
+
+                                sh "npm config get registry"
+                            }
 
                             stage('Build') {
                                 echo 'Building dependencies...'
@@ -621,13 +619,6 @@ def runAngularGenericJenkinsfile() {
 
                             if (branchType in params.npmRegistryPublish) {
 
-                                stage('Configure Artifactory NPM Registry') {
-                                    echo 'Setting Artifactory NPM registry'
-                                    sh "npm config set registry ${npmRepositoryURL} "
-
-                                    sh "npm config get registry"
-                                }
-
                                 stage('Artifact NPM Registry Publish') {
                                     echo "Publishing artifact to a NPM registry"
 
@@ -640,7 +631,7 @@ def runAngularGenericJenkinsfile() {
                                     try {
                                         echo 'Publish package on Artifactory NPM registry'
 
-                                        sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
+                                        sh "npm publish ${packageTarball} --registry ${angularNPMLocalRepositoryURL}"
 
                                         artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_NPM_TYPE
 
@@ -689,7 +680,7 @@ def runAngularGenericJenkinsfile() {
 
                             stage('Configure Artifactory NPM Registry') {
                                 echo 'Setting Artifactory NPM registry'
-                                sh "npm config set registry ${npmRepositoryURL} "
+                                sh "npm config set registry ${angularNPMRepositoryURL} "
 
                                 sh "npm config get registry"
                             }
@@ -769,9 +760,9 @@ def runAngularGenericJenkinsfile() {
                     sourceRepositoryBranch = branchName
                     package_tag = packageTag
                     package_tarball = packageTarball
-                    artifactoryNPMRepo = npmRepositoryURL
-                    artifactoryNPMAuth = artifactoryNPMAuthCredential
-                    artifactoryNPMEmailAuth = artifactoryNPMEmailAuthCredential
+                    artifactoryNPMRepo = angularNPMLocalRepositoryURL
+                    //artifactoryNPMAuth = artifactoryNPMAuthCredential
+                    //artifactoryNPMEmailAuth = artifactoryNPMEmailAuthCredential
                     contextDir = ''
                     nginxVersion = theNginxVerxion
                     artifactoryRepositoryTypeOpenshift = artifactoryRepositoryType
@@ -824,7 +815,7 @@ def runAngularGenericJenkinsfile() {
 
 
                 nodejsOpenshiftBuildProject {
-                    repoUrl = npmRepositoryURL
+                    repoUrl = angularNPMRepositoryURL
                     branchHY = branchNameHY
                     branch_type = branchType
                     devModeOpenshift = devMode
