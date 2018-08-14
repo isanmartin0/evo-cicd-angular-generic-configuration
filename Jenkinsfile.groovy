@@ -6,9 +6,9 @@ def runAngularGenericJenkinsfile() {
 
     def utils = new AngularUtils()
 
-    def npmRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-repo/'
-    def npmLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-local/'
-    def angularLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-local/'
+    def npmRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-repo/'
+    def npmLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-local/'
+    def angularGenericLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-generic-local/'
     def artifactoryURL = 'https://digitalservices.evobanco.com/artifactory/'
     def artifactoryRepositoryType = ''
 
@@ -606,7 +606,7 @@ def runAngularGenericJenkinsfile() {
                                     try {
                                         echo 'Publish package on Artifactory NPM registry'
 
-                                        //sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
+                                        sh "npm publish ${packageTarball} --registry ${npmLocalRepositoryURL}"
 
                                         artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_NPM_TYPE
 
@@ -634,7 +634,7 @@ def runAngularGenericJenkinsfile() {
                                             sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping"
 
                                             echo "Deploying artifact on Artifactory gemeric repository"
-                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
+                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularGenericLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
 
                                             artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_GENEROC_TYPE
                                         }
@@ -741,7 +741,7 @@ def runAngularGenericJenkinsfile() {
                     contextDir = ''
                     nginxVersion = theNginxVerxion
                     artifactoryRepositoryTypeOpenshift = artifactoryRepositoryType
-                    artifactoryGenericRepo = angularLocalRepositoryURL
+                    artifactoryGenericRepo = angularGenericLocalRepositoryURL
                 }
 
 
