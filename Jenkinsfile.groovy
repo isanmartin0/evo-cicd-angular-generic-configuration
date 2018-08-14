@@ -409,8 +409,12 @@ def runAngularGenericJenkinsfile() {
                 mapEnvironmentVariables.each { key, value ->
                     echo "Map environment variable: ${key} = ${value}"
                 }
+
+                echo "mapEnvironmentVariables size: ${mapEnvironmentVariables.size}"
             }
 
+            confirm = input message: 'Waiting for user approval',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
             stage('Prepare') {
