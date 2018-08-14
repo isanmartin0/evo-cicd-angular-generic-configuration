@@ -24,7 +24,7 @@ ports:
   createPortEnvironmentVariable: false
 
 environmentVariables:
-  # environmentVariable1: value1
+   environmentVariable1: value1
 
 npmRegistryPublish:
   - release

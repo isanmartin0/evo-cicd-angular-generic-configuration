@@ -392,6 +392,27 @@ def runAngularGenericJenkinsfile() {
             }
 */
 
+            stage('Test environment variables') {
+                echo "Creating environment variables"
+                def mapEnvironmentVariables = [:]
+
+                echo "params.environmentVariables:"
+                params.environmentVariables.each { key, value ->
+                    echo "params environment variable: ${key} = ${value}"
+                }
+
+                if (params.environmentVariables) {
+                    mapEnvironmentVariables = params.environmentVariables
+                }
+
+                echo "mapEnvironmentVariables:"
+                mapEnvironmentVariables.each { key, value ->
+                    echo "Map environment variable: ${key} = ${value}"
+                }
+            }
+
+
+
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
 
@@ -788,6 +809,8 @@ def runAngularGenericJenkinsfile() {
                 mapEnvironmentVariables.each { key, value ->
                     echo "Map environment variable: ${key} = ${value}"
                 }
+
+
 
                 retry(3) {
                     nodejsOpenshiftEnvironmentVariables {
