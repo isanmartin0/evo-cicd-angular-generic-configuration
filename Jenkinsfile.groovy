@@ -625,7 +625,7 @@ def runAngularGenericJenkinsfile() {
                                     try {
                                         echo 'Publish package on Artifactory NPM registry'
 
-                                        sh "npm publish ${packageTarball} --registry ${angularNPMLocalRepositoryURL}"
+                                        //sh "npm publish ${packageTarball} --registry ${angularNPMLocalRepositoryURL}"
 
                                         artifactoryRepositoryType = AngularConstants.ARTIFACTORY_REPOSITORY_NPM_TYPE
 
