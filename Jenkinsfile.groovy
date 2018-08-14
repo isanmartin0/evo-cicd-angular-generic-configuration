@@ -387,6 +387,14 @@ def runAngularGenericJenkinsfile() {
 
                 echo "Curl NPM repository"
 
+                withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
+                    echo "Checking credentials on Artifactory"
+                    sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping"
+
+                    echo "Deploying artifact on Artifactory gemeric repository"
+                    sh "curl -o ${packageTarball} -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -O ${npmLocalRepositoryURL}${packageName}/${packageTarball}"
+                }
+
 
             }
 
