@@ -11,7 +11,7 @@ angularCli:
 nginxVersion: 112
 
 ngBuildProd:
-  useBuildProdFlags: true
+  useBuildProdFlags: false
   buildProdFlags:  --aot=false
 
 environmentVariables:
