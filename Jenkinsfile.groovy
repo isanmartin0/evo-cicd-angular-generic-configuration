@@ -712,6 +712,31 @@ def runAngularGenericJenkinsfile() {
 
                 echo "Building image on OpenShift..."
 
+                nodejsOpenshiftCheckAndCreateProject {
+                    oseCredential = openshiftCredential
+                    cloudURL = openshiftURL
+                    environment = envLabel
+                    jenkinsNS = jenkinsNamespace
+                    artCredential = artifactoryCredential
+                    template = params.openshift.templatePath
+                    branchHY = branchNameHY
+                    branch_type = branchType
+                    dockerRegistry = registry
+                    sourceRepositoryURL = projectURL
+                    sourceRepositoryBranch = branchName
+                    portNumber = 8080
+                    nodejsVersion = 8
+                    package_tag = packageTag
+                    package_tarball = packageTarball
+                    is_scoped_package = false
+                    artifactoryNPMRepo = ""
+                    artifactoryNPMAuth = ""
+                    artifactoryNPMEmailAuth = ""
+                }
+
+                currentBuild.result = "FAILED"
+                throw new hudson.AbortException("Timeout on confirm deploy")
+
                 angularOpenshiftCheckAndCreateProject {
                     oseCredential = openshiftCredential
                     cloudURL = openshiftURL
