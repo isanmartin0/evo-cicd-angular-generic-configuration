@@ -74,8 +74,6 @@ def runAngularGenericJenkinsfile() {
     def openshift_route_hostname_with_protocol = ''
 
     //Parameters Angular
-    //int port_default = 8080
-    //int debug_port_default = 5858
     Boolean installGloballyAngularCli = false
     int image_stream_nodejs_version_default = 10
     def angularCliVersion_default = "6.1.2"
@@ -93,8 +91,8 @@ def runAngularGenericJenkinsfile() {
     def nodeJS_8_installation_angularCliVersion_default = "1.7.4"
     def nodeJS_10_installation_angularCliVersion_default = "6.1.2"
 
-    def nodeJS_6_installation_build_prod_flags = ""
-    def nodeJS_8_installation_build_prod_flags = ""
+    def nodeJS_6_installation_build_prod_flags = "--aot=false"
+    def nodeJS_8_installation_build_prod_flags = "--aot=false"
     def nodeJS_10_installation_build_prod_flags = "--build-optimizer"
 
     def nodeJS_pipeline_installation = ""
@@ -105,15 +103,10 @@ def runAngularGenericJenkinsfile() {
     def packageJSONFilesNodeDistributionFolder = ["dist/"]
 
 
-    //def sonarProjectPath = "sonar-project.properties"
-
-    def confirm
-
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
 
-
     node('nodejs10-chrome') {
-    //node('nodejs') {
+
         echo 'Pipeline begin timestamp... '
         sh 'date'
 
@@ -420,10 +413,10 @@ def runAngularGenericJenkinsfile() {
                         if (branchName != 'master') {
 
 
-                            echo "params.installGloballyAngularCli: ${params.installGloballyAngularCli}"
+                            echo "params.angularCli.installGloballyAngularCli: ${params.angularCli.installGloballyAngularCli}"
 
-                            if (params.installGloballyAngularCli) {
-                                installGloballyAngularCli = params.installGloballyAngularCli.toBoolean()
+                            if (params.angularCli.installGloballyAngularCli) {
+                                installGloballyAngularCli = params.angularCli.installGloballyAngularCli.toBoolean()
                             }
 
                             if (installGloballyAngularCli) {
@@ -431,17 +424,17 @@ def runAngularGenericJenkinsfile() {
                                 stage('Install globally @angular/cli') {
 
                                     Boolean installAngularCliSpecificVersion = false
-                                    echo "params.installAngularCliSpecificVersion: ${params.installAngularCliSpecificVersion}"
+                                    echo "params.angularCli.installAngularCliSpecificVersion: ${params.angularCli.installAngularCliSpecificVersion}"
 
-                                    if (params.installAngularCliSpecificVersion) {
-                                        installAngularCliSpecificVersion = params.installAngularCliSpecificVersion.toBoolean()
+                                    if (params.angularCli.installAngularCliSpecificVersion) {
+                                        installAngularCliSpecificVersion = params.angularCli.installAngularCliSpecificVersion.toBoolean()
                                     }
 
                                     if (installAngularCliSpecificVersion) {
 
                                         echo "Installing a specific @angular/cli version"
-                                        echo "params.angularCliVersion: ${params.angularCliVersion}"
-                                        String angularCliVersionParam = params.angularCliVersion
+                                        echo "params.angularCli.angularCliVersion: ${params.angularCli.angularCliVersion}"
+                                        String angularCliVersionParam = params.angularCli.angularCliVersion
 
                                         if (angularCliVersionParam != null) {
                                             angularCliVersion = angularCliVersionParam
@@ -520,15 +513,15 @@ def runAngularGenericJenkinsfile() {
                                  ***********************************************************/
 
                                 Boolean useBuildProdFlags = false
-                                echo "params.useBuildProdFlags: ${params.useBuildProdFlags}"
-                                echo "params.buildProdFlags: ${params.buildProdFlags}"
+                                echo "params.ngBuildProd.useBuildProdFlags: ${params.ngBuildProd.useBuildProdFlags}"
+                                echo "params.ngBuildProd.buildProdFlags: ${params.ngBuildProd.buildProdFlags}"
 
-                                if (params.useBuildProdFlags) {
-                                    useBuildProdFlags = params.useBuildProdFlags.toBoolean()
+                                if (params.ngBuildProd.useBuildProdFlags) {
+                                    useBuildProdFlags = params.ngBuildProd.useBuildProdFlags.toBoolean()
                                 }
 
                                 if (useBuildProdFlags) {
-                                    buildProdFlags = params.buildProdFlags
+                                    buildProdFlags = params.ngBuildProd.buildProdFlags
                                 } else {
                                     echo "Build prod parameters default: ${buildProdFlags}"
                                 }

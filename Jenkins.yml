@@ -2,26 +2,17 @@ openshift:
   templatePath: kube/nginx_template.yaml
 
 imageStreamNodejsVersion: 6
-installGloballyAngularCli: false
-installAngularCliSpecificVersion: true
-angularCliVersion: 1.0.5
+
+angularCli:
+  installGloballyAngularCli: false
+  installAngularCliSpecificVersion: true
+  angularCliVersion: 1.0.5
+
 nginxVersion: 112
 
-useBuildProdFlags: true
-buildProdFlags: --aot=false --build-optimizer
-
-
-devMode: false
-debugPort: 5858
-useNpmMirror: false
-npmMirror: https://registry.npmjs.org/
-useAlternateNpmRun: false
-alternateNpmRunScript: script_alt
-
-ports:
-  useSpecificPort: false
-  portNumber: 8080
-  createPortEnvironmentVariable: false
+ngBuildProd:
+  useBuildProdFlags: true
+  buildProdFlags:  --aot=false
 
 environmentVariables:
   # environmentVariable1: value1
@@ -48,13 +39,6 @@ testing:
       - develop
       - release
       - hotfix
-
-    sonarQubeAnalisis:
-      sonarSources: server
-      sonarTests: __tests__
-      sonarTestExecutionReportPath: test-report.xml
-      sonarCoverageReportPath: coverage/lcov.info
-      sonarExclusions: node_modules/**
 
   postdeploy:
     smokeTesting:
