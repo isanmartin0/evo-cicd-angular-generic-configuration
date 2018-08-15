@@ -2,7 +2,7 @@
 import com.evobanco.NodejsUtils
 import com.evobanco.NodejsConstants
 
-def runNodejsGenericJenkinsfile() {
+def runAngularGenericJenkinsfile() {
 
     def utils = new NodejsUtils()
 
