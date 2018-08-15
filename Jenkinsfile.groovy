@@ -1,14 +1,16 @@
 #!/usr/bin/groovy
-import com.evobanco.NodejsUtils
-import com.evobanco.NodejsConstants
+import com.evobanco.AngularUtils
+import com.evobanco.AngularConstants
 
 def runAngularGenericJenkinsfile() {
 
+    def utils = new AngularUtils()
 
-    def utils = new NodejsUtils()
-
-    def npmRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-repo/'
-    def npmLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-local/'
+    def angularNPMRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-repo/'
+    def angularNPMLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-local/'
+    def angularGenericLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-generic-local/'
+    def artifactoryURL = 'https://digitalservices.evobanco.com/artifactory/'
+    def artifactoryRepository = ''
 
     def openshiftURL = 'https://openshift.grupoevo.corp:8443'
     def openshiftCredential = 'openshift'
@@ -34,12 +36,12 @@ def runAngularGenericJenkinsfile() {
     def isPPCOpenshiftTemplate = false
     def jenkinsFilePathPPC = relativeTargetDirPPC + 'Jenkinsfile'
     def jenkinsYamlPathPPC = relativeTargetDirPPC + 'Jenkins.yml'
-    def openshiftNodejsTemplatePathPPC = relativeTargetDirPPC + 'kube/nodejs_template.yaml'
+    def openshiftNginxTemplatePathPPC = relativeTargetDirPPC + 'kube/nginx_template.yaml'
     def jenknsFilePipelinePPC
 
 
     //Generic project configuration properties
-    def gitDefaultProjectConfigurationPath='https://github.com/isanmartin0/evo-cicd-nodejs-generic-configuration'
+    def gitDefaultProjectConfigurationPath='https://github.com/isanmartin0/evo-cicd-angular-generic-configuration'
     def relativeTargetDirGenericPGC = '/tmp/configs/generic/'
     def branchGenericPGC = 'master'
     def credentialsIdGenericPGC = '4b18ea85-c50b-40f4-9a81-e89e44e20178' //credentials of the generic configuration project
@@ -71,24 +73,39 @@ def runAngularGenericJenkinsfile() {
     def openshift_route_hostname = ''
     def openshift_route_hostname_with_protocol = ''
 
-    //Parameters nodejs
-    int port_default = 8080
-    int debug_port_default = 5858
-    int image_stream_nodejs_version_default = 8
+    //Parameters Angular
+    Boolean installGloballyAngularCli = false
+    int image_stream_nodejs_version_default = 10
+    def angularCliVersion_default = "6.1.2"
+    def buildProdFlags_default = "--build-optimizer"
+    def angularCliLocalParh = "node_modules/@angular/cli/bin/"
 
-    def build_from_registry_url = 'https://github.com/isanmartin0/s2i-nodejs-container.git'
+    def build_from_registry_url = 'https://github.com/isanmartin0/s2i-angular-container.git'
     def build_from_artifact_branch = 'master'
 
-    def nodeJS_8_installation = "Node-8.9.4"
     def nodeJS_6_installation = "Node-6.11.3"
+    def nodeJS_8_installation = "Node-8.9.4"
+    def nodeJS_10_installation = "Node-10.8.0"
+
+    def nodeJS_6_installation_angularCliVersion_default = "1.0.0"
+    def nodeJS_8_installation_angularCliVersion_default = "1.7.4"
+    def nodeJS_10_installation_angularCliVersion_default = "6.1.2"
+
+    def nodeJS_6_installation_build_prod_flags = "--aot=false"
+    def nodeJS_8_installation_build_prod_flags = "--aot=false"
+    def nodeJS_10_installation_build_prod_flags = "--build-optimizer"
+
     def nodeJS_pipeline_installation = ""
     int image_stream_nodejs_version = image_stream_nodejs_version_default
-    def sonarProjectPath = "sonar-project.properties"
+    def angularCliVersion = angularCliVersion_default
+    def buildProdFlags = buildProdFlags_default
 
-    echo "BEGIN NODE.JS GENERIC CONFIGURATION PROJECT (PGC)"
+    def packageJSONFilesNodeDistributionFolder = ["dist/"]
 
 
-    node('nodejs') {
+    echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
+
+    node('nodejs10-chrome') {
 
         echo 'Pipeline begin timestamp... '
         sh 'date'
@@ -116,7 +133,7 @@ def runAngularGenericJenkinsfile() {
 
         echo "credentialsIdPPC: ${credentialsIdPPC}"
 
-        stage('Detect Node.js Parallel project configuration (PPC)') {
+        stage('Detect Angular Parallel project configuration (PPC)') {
 
             packageJSON = readJSON file: 'package.json'
 
@@ -143,7 +160,7 @@ def runAngularGenericJenkinsfile() {
             try {
                 def parallelConfigurationProject = utils.getParallelConfigurationProjectURL(projectURL)
 
-                echo "Node.js parallel configuration project ${parallelConfigurationProject} searching"
+                echo "Angular parallel configuration project ${parallelConfigurationProject} searching"
 
                 retry (3)
                         {
@@ -157,15 +174,15 @@ def runAngularGenericJenkinsfile() {
                                                                            url          : parallelConfigurationProject]]])
                         }
 
-                echo "Node.js Parallel configuration project ${parallelConfigurationProject} exits"
+                echo "Angular Parallel configuration project ${parallelConfigurationProject} exits"
 
                 // Jenkinsfile
                 isPPCJenkinsFile = fileExists jenkinsFilePathPPC
 
                 if (isPPCJenkinsFile) {
-                    echo "Node.js Parallel configuration project Jenkinsfile... FOUND"
+                    echo "Angular Parallel configuration project Jenkinsfile... FOUND"
                 } else {
-                    echo "Node.js Parallel configuration project Jenkinsfile... NOT FOUND"
+                    echo "Angular Parallel configuration project Jenkinsfile... NOT FOUND"
                 }
 
 
@@ -173,9 +190,9 @@ def runAngularGenericJenkinsfile() {
                 isPPCJenkinsYaml = fileExists jenkinsYamlPathPPC
 
                 if (isPPCJenkinsYaml) {
-                    echo "Node.js Parallel configuration project Jenkins.yml... FOUND"
+                    echo "Angular Parallel configuration project Jenkins.yml... FOUND"
                 } else {
-                    echo "Node.js Parallel configuration project Jenkins.yml... NOT FOUND"
+                    echo "Angular Parallel configuration project Jenkins.yml... NOT FOUND"
                 }
 
                 // Openshift template (template.yaml)
@@ -184,7 +201,7 @@ def runAngularGenericJenkinsfile() {
                 if (isPPCJenkinsYaml) {
                     //Take parameters of the parallel project configuration (PPC)
                     params = readYaml  file: jenkinsYamlPathPPC
-                    echo "Using Jenkins.yml from Node.js parallel project configuration (PPC)"
+                    echo "Using Jenkins.yml from Angular parallel project configuration (PPC)"
 
                     //The template is provided by parallel project configuration (PPC)
                     params.openshift.templatePath = relativeTargetDirPPC + params.openshift.templatePath
@@ -193,14 +210,14 @@ def runAngularGenericJenkinsfile() {
 
                     isPPCOpenshiftTemplate = fileExists params.openshift.templatePath
                 } else {
-                    isPPCOpenshiftTemplate = fileExists openshiftNodejsTemplatePathPPC
+                    isPPCOpenshiftTemplate = fileExists openshiftNginxTemplatePathPPC
                 }
 
 
                 if (isPPCOpenshiftTemplate) {
-                    echo "Node.js Parallel configuration project Openshift template... FOUND"
+                    echo "Angular Parallel configuration project Openshift template... FOUND"
                 } else {
-                    echo "Node.js Parallel configuration project Openshift template... NOT FOUND"
+                    echo "Angular Parallel configuration project Openshift template... NOT FOUND"
                 }
 
 
@@ -210,7 +227,7 @@ def runAngularGenericJenkinsfile() {
 
             }
             catch (exc) {
-                echo 'There is an error on retrieving Node.js parallel project configuration'
+                echo 'There is an error on retrieving Angular parallel project configuration'
                 def exc_message = exc.message
                 echo "${exc_message}"
             }
@@ -219,45 +236,45 @@ def runAngularGenericJenkinsfile() {
 
         if (isPPCJenkinsFile) {
 
-            stage('Switch to Node.js parallel configuration project Jenkinsfile') {
+            stage('Switch to Angular parallel configuration project Jenkinsfile') {
 
-                echo "Loading Jenkinsfile from Node.js Parallel Configuration Project (PPC)"
+                echo "Loading Jenkinsfile from Angular Parallel Configuration Project (PPC)"
 
                 jenknsFilePipelinePPC = load jenkinsFilePathPPC
 
-                echo "Jenkinsfile from Node.js Parallel Configuration Project (PPC) loaded"
+                echo "Jenkinsfile from Angular Parallel Configuration Project (PPC) loaded"
 
-                echo "Executing Jenkinsfile from Node.js Parallel Configuration Project (PPC)"
+                echo "Executing Jenkinsfile from Angular Parallel Configuration Project (PPC)"
 
-                jenknsFilePipelinePPC.runNodejsPPCJenkinsfile()
+                jenknsFilePipelinePPC.runAngularPPCJenkinsfile()
             }
 
 
         } else {
-            echo "Executing Jenkinsfile from Node.js Generic Configuration Project (PGC)"
+            echo "Executing Jenkinsfile from Angular Generic Configuration Project (PGC)"
 
-            stage('Load Node.js pipeline configuration') {
+            stage('Load Angular pipeline configuration') {
 
                 if (isPPCJenkinsYaml && isPPCOpenshiftTemplate) {
                     //The generic pipeline will use Jenkins.yml and template of the parallel project configuration
 
                     //Take parameters of the parallel project configuration (PPC)
                     params = readYaml  file: jenkinsYamlPathPPC
-                    echo "Using Jenkins.yml from Node.js parallel project configuration (PPC)"
+                    echo "Using Jenkins.yml from Angular parallel project configuration (PPC)"
 
                     //The template is provided by parallel project configuration (PPC)
                     params.openshift.templatePath = relativeTargetDirPPC + params.openshift.templatePath
-                    echo "Template provided by Node.js parallel project configuration (PPC)"
+                    echo "Template provided by Angular parallel project configuration (PPC)"
 
                     assert params.openshift.templatePath?.trim()
 
                     echo "params.openshift.templatePath: ${params.openshift.templatePath}"
 
                 } else {
-                    //The Node.js generic pipeline will use Node.js generic Jenkins.yml or Node.js generic Openshift template
+                    //The Angular generic pipeline will useAngular generic Jenkins.yml or Angular generic Openshift template
                     //We need load this elements
 
-                    echo "Node.js generic configuration project loading"
+                    echo "Angular generic configuration project loading"
 
                     retry (3) {
                         checkout([$class                           : 'GitSCM',
@@ -270,27 +287,27 @@ def runAngularGenericJenkinsfile() {
                                                                        url          : gitDefaultProjectConfigurationPath]]])
                     }
 
-                    echo "Node.js generic configuration project loaded"
+                    echo "Angular generic configuration project loaded"
 
 
                     if (isPPCJenkinsYaml) {
                         //Take parameters of the parallel project configuration (PPC)
                         params = readYaml  file: jenkinsYamlPathPPC
-                        echo "Using Jenkins.yml from Node.js parallel project configuration (PPC)"
+                        echo "Using Jenkins.yml from Angular parallel project configuration (PPC)"
                     } else {
                         //Take the generic parameters
                         params = readYaml  file: jenkinsYamlGenericPath
-                        echo "Using Jenkins.yml from Node.js generic project"
+                        echo "Using Jenkins.yml from Angular generic project"
                     }
 
                     if (isPPCOpenshiftTemplate) {
                         //The template is provided by parallel project configuration (PPC)
                         params.openshift.templatePath = relativeTargetDirPPC + params.openshift.templatePath
-                        echo "Template provided by Node.js parallel project configuration (PPC)"
+                        echo "Template provided by Angular parallel project configuration (PPC)"
                     } else {
                         //The tamplate is provided by generic configuration
                         params.openshift.templatePath = relativeTargetDirGenericPGC + params.openshift.templatePath
-                        echo "Template provided by Node.js generic configuration project"
+                        echo "Template provided by Angular generic configuration project"
                     }
 
                     assert params.openshift.templatePath?.trim()
@@ -300,6 +317,7 @@ def runAngularGenericJenkinsfile() {
 
             }
 
+
             stage('NodeJS initialization') {
                 echo 'Node initializing...'
 
@@ -307,21 +325,32 @@ def runAngularGenericJenkinsfile() {
                  ************* IMAGE STREAM TAG NODE VERSION *****************
                  *************************************************************/
                 echo "params.imageStreamNodejsVersion: ${params.imageStreamNodejsVersion}"
-
                 String imageStreamNodejsVersionParam = params.imageStreamNodejsVersion
                 if (imageStreamNodejsVersionParam != null && imageStreamNodejsVersionParam.isInteger()) {
                     image_stream_nodejs_version = imageStreamNodejsVersionParam as Integer
                 }
 
-                if (image_stream_nodejs_version >= 8) {
+                if (image_stream_nodejs_version >= 10) {
+                    echo "Assigning NodeJS installation ${nodeJS_10_installation}"
+                    nodeJS_pipeline_installation = nodeJS_10_installation
+                    echo "Assigning @angular/cli version ${nodeJS_10_installation_angularCliVersion_default}"
+                    angularCliVersion = nodeJS_10_installation_angularCliVersion_default
+                    buildProdFlags = nodeJS_10_installation_build_prod_flags
+                } else if (image_stream_nodejs_version >= 8) {
                     echo "Assigning NodeJS installation ${nodeJS_8_installation}"
                     nodeJS_pipeline_installation = nodeJS_8_installation
+                    echo "Assigning @angular/cli version ${nodeJS_8_installation_angularCliVersion_default}"
+                    angularCliVersion = nodeJS_8_installation_angularCliVersion_default
+                    buildProdFlags = nodeJS_8_installation_build_prod_flags
                 } else if (image_stream_nodejs_version >= 6) {
                     echo "Assigning NodeJS installation ${nodeJS_6_installation}"
                     nodeJS_pipeline_installation = nodeJS_6_installation
+                    echo "Assigning @angular/cli version ${nodeJS_6_installation_angularCliVersion_default}"
+                    angularCliVersion = nodeJS_6_installation_angularCliVersion_default
+                    buildProdFlags = nodeJS_6_installation_build_prod_flags
                 } else {
                     currentBuild.result = "FAILED"
-                    throw new hudson.AbortException("Error checking existence of package on NPM registry")
+                    throw new hudson.AbortException("Error setting NodeJS version")
                 }
 
                 def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
@@ -332,19 +361,13 @@ def runAngularGenericJenkinsfile() {
 
                 echo 'NPM version:'
                 sh "npm -v"
+
             }
-
-            stage('Configure Artifactory NPM Registry') {
-                echo 'Setting Artifactory NPM registry'
-                sh "npm config set registry ${npmRepositoryURL} "
-            }
-
-
 
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
 
-                nodejsSetDisplayName()
+                angularSetDisplayName()
 
                 echo "${currentBuild.displayName}"
 
