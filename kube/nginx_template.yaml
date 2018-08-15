@@ -60,7 +60,7 @@ objects:
           value: ${ARTIFACTORY_TOKEN}
         from:
           kind: ImageStreamTag
-          name: nginx-${NGINX_VERSION}:latest
+          name: nginx:${NGINX_VERSION}
           namespace: openshift
     output:
       to:
@@ -235,7 +235,7 @@ parameters:
   value: ""
 - description: "Version of NGINX image to be used (1.12 by default)."
   name: "NGINX_VERSION"
-  value: "112"
+  value: "1.12"
 - description: "Artifactory Token"
   name: "ARTIFACTORY_TOKEN"
   value: ""

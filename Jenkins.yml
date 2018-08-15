@@ -8,7 +8,7 @@ angularCli:
   installAngularCliSpecificVersion: true
   angularCliVersion: 1.0.5
 
-nginxVersion: 112
+nginxVersion: 1.12
 
 ngBuildProd:
   useBuildProdFlags: false
