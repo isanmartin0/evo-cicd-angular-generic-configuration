@@ -730,8 +730,8 @@ def runAngularGenericJenkinsfile() {
                     package_tarball = packageTarball
                     is_scoped_package = false
                     artifactoryNPMRepo = ""
-                    artifactoryNPMAuth = ""
-                    artifactoryNPMEmailAuth = ""
+                    artifactoryNPMAuth = artifactoryNPMAuthCredential
+                    artifactoryNPMEmailAuth = artifactoryNPMEmailAuthCredential
                 }
 
                 currentBuild.result = "FAILED"
