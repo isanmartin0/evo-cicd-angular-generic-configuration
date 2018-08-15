@@ -733,6 +733,12 @@ def runAngularGenericJenkinsfile() {
 
 
 
+                angularOpenshiftBuildProject {
+                    repoUrl = angularNPMRepositoryURL
+                    branchHY = branchNameHY
+                    branch_type = branchType
+                }
+
 
                 /**************************************************************
                  ************* ENVIRONMENT VARIABLES CREATION *****************
@@ -772,13 +778,6 @@ def runAngularGenericJenkinsfile() {
                     }
                 }
 
-
-
-                angularOpenshiftBuildProject {
-                    repoUrl = angularNPMRepositoryURL
-                    branchHY = branchNameHY
-                    branch_type = branchType
-                }
             }
 
         }
