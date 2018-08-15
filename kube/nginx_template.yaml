@@ -78,6 +78,7 @@ objects:
     generation: 1
     labels:
       app: ${PROJECT}
+      deploymentconfig: ${PROJECT}
     name: ${PROJECT}
   spec:
     replicas: 1
