@@ -4,6 +4,7 @@ import com.evobanco.NodejsConstants
 
 def runAngularGenericJenkinsfile() {
 
+
     def utils = new NodejsUtils()
 
     def npmRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/npm-repo/'
