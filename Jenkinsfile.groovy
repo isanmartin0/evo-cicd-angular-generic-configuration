@@ -107,7 +107,8 @@ def runAngularGenericJenkinsfile() {
 
     //node('nodejs10-chrome') {
     //node('nodejs') {
-    node('prueba-nodejs-centos') {
+    //node('prueba-nodejs-centos') {
+    node('openshift36-nodejs10-chrome') {}
 
         echo 'Pipeline begin timestamp... '
         sh 'date'
@@ -599,7 +600,7 @@ def runAngularGenericJenkinsfile() {
                                     try {
                                         echo 'Publish package on Artifactory NPM registry'
 
-                                        sh "npm publish ${packageTarball} --registry ${angularNPMLocalRepositoryURL}"
+                                        //sh "npm publish ${packageTarball} --registry ${angularNPMLocalRepositoryURL}"
 
                                         artifactoryRepository = angularNPMLocalRepositoryURL
 
