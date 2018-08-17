@@ -465,7 +465,18 @@ def runAngularGenericJenkinsfile() {
                                 sh "npm config get registry"
                             }
 
+
+
                             stage('Build') {
+
+                                echo "Removing package-lock.json"
+
+                                try {
+                                    sh "rm package-lock.json"
+                                } catch (err) {
+                                    echo "package-lock.json doesn't exist"
+                                }
+
                                 echo 'Building dependencies...'
                                 sh 'npm i'
                             }
