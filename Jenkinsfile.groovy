@@ -495,11 +495,60 @@ def runAngularGenericJenkinsfile() {
                                 echo 'Building dependencies...'
                                 sh 'npm i'
 
-                                echo "List global dependencies (depth 1)"
-                                sh "npm -g list --depth=1"
+                            }
 
-                                echo "list local dependencies (depth 1)"
-                                sh "npm list --depth=1"
+
+                            stage ('Display installed dependencies') {
+
+                                Boolean showGlobalInstalledDependencies = false
+                                Boolean showLocalInstalledDependencies = false
+
+                                echo "params.installedDependencies.showGlobalInstalledDependencies: ${params.installedDependencies.showGlobalInstalledDependencies}"
+                                echo "params.installedDependencies.showLocalInstalledDependencies: ${params.installedDependencies.showLocalInstalledDependencies}"
+
+                                if (params.installedDependencies.showGlobalInstalledDependencies) {
+                                    showGlobalInstalledDependencies = params.installedDependencies.showGlobalInstalledDependencies.toBoolean()
+                                }
+
+                                if (params.installedDependencies.showLocalInstalledDependencies) {
+                                    showLocalInstalledDependencies = params.installedDependencies.showLocalInstalledDependencies.toBoolean()
+                                }
+
+                                if (showGlobalInstalledDependencies) {
+                                    Boolean showGlobalInstalledDependenciesDepthLimit = false
+                                    int showGlobalInstalledDependenciesDepth = -1
+
+                                    echo "params.installedDependencies.showGlobalInstalledDependenciesDepthLimit: ${params.installedDependencies.showGlobalInstalledDependenciesDepthLimit}"
+                                    echo "params.installedDependencies.showGlobalInstalledDependenciesDepth: ${params.installedDependencies.showGlobalInstalledDependenciesDepth}"
+
+                                    if (params.installedDependencies.showGlobalInstalledDependenciesDepthLimit) {
+                                        showGlobalInstalledDependenciesDepthLimit = params.installedDependencies.showGlobalInstalledDependenciesDepthLimit.toBoolean()
+                                    }
+
+                                    if (showGlobalInstalledDependenciesDepthLimit) {
+
+                                        String showGlobalInstalledDependenciesDepthParam = params.installedDependencies.showGlobalInstalledDependenciesDepth
+
+                                        if (showGlobalInstalledDependenciesDepthParam != null && showGlobalInstalledDependenciesDepthParam.isInteger()) {
+                                            showGlobalInstalledDependenciesDepth = showGlobalInstalledDependenciesDepthParam as Integer
+                                        }
+                                    }
+
+                                    if (showGlobalInstalledDependenciesDepth >=0) {
+                                        echo "List global dependencies (depth ${showGlobalInstalledDependenciesDepth})"
+                                        try {
+                                            sh "npm -g list --depth=${showGlobalInstalledDependenciesDepth}"
+                                        } catch(err) {
+                                            echo 'ERROR. There is an error retrieving NPM global dependencies'
+                                        }
+
+                                    } else {
+                                        echo "List global dependencies)"
+                                        sh "npm -g list"
+                                    }
+
+                                }
+
                             }
 
 
