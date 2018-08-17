@@ -502,7 +502,7 @@ def runAngularGenericJenkinsfile() {
                                 echo 'ng version:'
 
                                 if (installGloballyAngularCli) {
-                                    sh "ng version --global"
+                                    sh "ng --global version "
                                 } else {
                                     sh "${angularCliLocalParh}ng version"
                                 }
