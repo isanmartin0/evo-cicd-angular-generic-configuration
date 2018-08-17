@@ -541,7 +541,7 @@ def runAngularGenericJenkinsfile() {
 
                                     try {
                                         echo "List global dependencies ${showGlobalInstalledDependenciesDepthFlags}"
-                                        sh "npm -g list ${showGlobalInstalledDependenciesDepthFlags}"
+                                        //sh "npm -g list ${showGlobalInstalledDependenciesDepthFlags}"
                                     } catch(err) {
                                         echo 'ERROR. There is an error retrieving NPM global dependencies'
                                     }
@@ -599,7 +599,7 @@ def runAngularGenericJenkinsfile() {
 
                                     try {
                                         echo "List local dependencies ${showGlobalInstalledDependenciesDepthFlags}"
-                                        sh "npm list ${showLocalInstalledDependenciesDepthFlags} ${showLocalInstalledDependenciesTypeFlags}"
+                                        //sh "npm list ${showLocalInstalledDependenciesDepthFlags} ${showLocalInstalledDependenciesTypeFlags}"
                                     } catch(err) {
                                         echo 'ERROR. There is an error retrieving NPM local dependencies'
                                     }
