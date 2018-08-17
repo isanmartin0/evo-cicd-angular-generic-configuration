@@ -652,6 +652,8 @@ def runAngularGenericJenkinsfile() {
                                 sh "npm config set registry ${angularNPMRepositoryURL} "
 
                                 sh "npm config get registry"
+
+                                artifactoryRepository = angularNPMLocalRepositoryURL
                             }
 
                             stage('Check published package on NPM registry') {
