@@ -469,23 +469,28 @@ def runAngularGenericJenkinsfile() {
 
                             stage('Build') {
 
-                                def confirm = input message: 'Waiting for user approval',
-                                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+                                Boolean removeSourcePackageLock = false
+                                echo "params.removeSourcePackageLock: ${params.removeSourcePackageLock}"
 
-
-                                boolean isPackageLockJSON = fileExists 'package-lock.json'
-                                echo "file packag-lock.json exists: ${isPackageLockJSON}"
-
-                                echo "Removing package-lock.json"
-
-                                try {
-                                    sh "rm package-lock.json"
-                                } catch (err) {
-                                    echo "package-lock.json doesn't exist"
+                                if (params.removeSourcePackageLock) {
+                                    removeSourcePackageLock = params.removeSourcePackageLock.toBoolean()
                                 }
 
-                                isPackageLockJSON = fileExists 'package-lock'
-                                echo "file packag-lock.json exists: ${isPackageLockJSON}"
+                                if (removeSourcePackageLock) {
+                                    boolean isPackageLockJSON = fileExists 'package-lock.json'
+                                    echo "file package-lock.json exists: ${isPackageLockJSON}"
+
+                                    echo "Removing package-lock.json"
+
+                                    try {
+                                        sh "rm package-lock.json"
+                                    } catch (err) {
+                                        echo "package-lock.json doesn't exist"
+                                    }
+
+                                    isPackageLockJSON = fileExists 'package-lock'
+                                    echo "file package-lock.json exists: ${isPackageLockJSON}"
+                                }
 
                                 echo 'Building dependencies...'
                                 sh 'npm i'

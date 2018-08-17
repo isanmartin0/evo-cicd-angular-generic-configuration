@@ -3,6 +3,8 @@ openshift:
 
 imageStreamNodejsVersion: 6
 
+removeSourcePackageLock: false
+
 angularCli:
   installGloballyAngularCli: false
   installAngularCliSpecificVersion: false
