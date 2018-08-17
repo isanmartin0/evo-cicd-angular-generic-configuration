@@ -547,7 +547,7 @@ def runAngularGenericJenkinsfile() {
                                     }
 
                                 }
-/*
+
                                 if (showLocalInstalledDependencies) {
 
                                     Boolean showLocalInstalledDependenciesDepthLimit = false
@@ -566,6 +566,7 @@ def runAngularGenericJenkinsfile() {
                                     if (params.installedDependencies.showLocalInstalledDependenciesDepthLimit) {
                                         showLocalInstalledDependenciesDepthLimit = params.installedDependencies.showLocalInstalledDependenciesDepthLimit.toBoolean()
                                     }
+
                                     if (params.installedDependencies.showLocalInstalledDependenciesOnlyType) {
                                         showLocalInstalledDependenciesOnlyType = params.installedDependencies.showLocalInstalledDependenciesOnlyType.toBoolean()
                                     }
@@ -588,24 +589,24 @@ def runAngularGenericJenkinsfile() {
                                             showLocalInstalledDependenciesType = params.installedDependencies.showLocalInstalledDependenciesType
                                             showLocalInstalledDependenciesType = showLocalInstalledDependenciesType.trim()
                                         }
-
+/*
                                         if (!showLocalInstalledDependenciesType.equalsIgnoreCase("dev") && !showLocalInstalledDependenciesType.equalsIgnoreCase("prod")) {
                                             currentBuild.result = "FAILED"
                                             throw new hudson.AbortException("The parameter installedDependencies.showLocalInstalledDependenciesType has an incorrect value. Allowed values (dev, prod)") as Throwable
                                         }
-
+*/
                                         showLocalInstalledDependenciesTypeFlags = " --only=${showLocalInstalledDependenciesType}"
                                     }
 
                                     try {
                                         echo "List local dependencies ${showGlobalInstalledDependenciesDepthFlags}"
-                                        //sh "npm list ${showLocalInstalledDependenciesDepthFlags} ${showLocalInstalledDependenciesTypeFlags}"
+                                        sh "npm list ${showLocalInstalledDependenciesDepthFlags} ${showLocalInstalledDependenciesTypeFlags}"
                                     } catch(err) {
                                         echo 'ERROR. There is an error retrieving NPM local dependencies'
                                     }
 
                                 }
-*/
+
 
                             }
 
