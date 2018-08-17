@@ -571,6 +571,7 @@ def runAngularGenericJenkinsfile() {
                                         showLocalInstalledDependenciesOnlyType = params.installedDependencies.showLocalInstalledDependenciesOnlyType.toBoolean()
                                     }
 
+/*
                                     if (showLocalInstalledDependenciesDepthLimit) {
 
                                         String showLocalInstalledDependenciesDepthParam = params.installedDependencies.showLocalInstalledDependenciesDepth
@@ -589,12 +590,12 @@ def runAngularGenericJenkinsfile() {
                                             showLocalInstalledDependenciesType = params.installedDependencies.showLocalInstalledDependenciesType
                                             showLocalInstalledDependenciesType = showLocalInstalledDependenciesType.trim()
                                         }
-/*
+
                                         if (!showLocalInstalledDependenciesType.equalsIgnoreCase("dev") && !showLocalInstalledDependenciesType.equalsIgnoreCase("prod")) {
                                             currentBuild.result = "FAILED"
                                             throw new hudson.AbortException("The parameter installedDependencies.showLocalInstalledDependenciesType has an incorrect value. Allowed values (dev, prod)") as Throwable
                                         }
-*/
+
                                         showLocalInstalledDependenciesTypeFlags = " --only=${showLocalInstalledDependenciesType}"
                                     }
 
@@ -604,6 +605,7 @@ def runAngularGenericJenkinsfile() {
                                     } catch(err) {
                                         echo 'ERROR. There is an error retrieving NPM local dependencies'
                                     }
+*/
 
                                 }
 
