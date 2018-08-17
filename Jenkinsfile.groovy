@@ -500,115 +500,16 @@ def runAngularGenericJenkinsfile() {
 
                             stage ('Display installed dependencies') {
 
-                                Boolean showGlobalInstalledDependencies = false
-                                Boolean showLocalInstalledDependencies = false
-
-                                echo "params.installedDependencies.showGlobalInstalledDependencies: ${params.installedDependencies.showGlobalInstalledDependencies}"
-                                echo "params.installedDependencies.showLocalInstalledDependencies: ${params.installedDependencies.showLocalInstalledDependencies}"
-
-                                if (params.installedDependencies.showGlobalInstalledDependencies) {
-                                    showGlobalInstalledDependencies = params.installedDependencies.showGlobalInstalledDependencies.toBoolean()
+                                angularDisplayInstalledDependencies {
+                                    showGlobalInstalledDependencies = params.installedDependencies.showGlobalInstalledDependencies
+                                    showGlobalInstalledDependenciesDepthLimit = params.installedDependencies.showGlobalInstalledDependenciesDepthLimit
+                                    showGlobalInstalledDependenciesDepth = params.installedDependencies.showGlobalInstalledDependenciesDepth
+                                    showLocalInstalledDependencies = params.installedDependencies.showLocalInstalledDependencies
+                                    showLocalInstalledDependenciesDepthLimit = params.installedDependencies.showLocalInstalledDependenciesDepthLimit
+                                    showLocalInstalledDependenciesDepth = params.installedDependencies.showLocalInstalledDependenciesDepth
+                                    showLocalInstalledDependenciesOnlyType = params.installedDependencies.showLocalInstalledDependenciesOnlyType
+                                    showLocalInstalledDependenciesType = params.installedDependencies.showLocalInstalledDependenciesType
                                 }
-
-                                if (params.installedDependencies.showLocalInstalledDependencies) {
-                                    showLocalInstalledDependencies = params.installedDependencies.showLocalInstalledDependencies.toBoolean()
-                                }
-
-                                if (showGlobalInstalledDependencies) {
-                                    Boolean showGlobalInstalledDependenciesDepthLimit = false
-                                    int showGlobalInstalledDependenciesDepth = -1
-                                    String showGlobalInstalledDependenciesDepthFlags = ""
-
-                                    echo "params.installedDependencies.showGlobalInstalledDependenciesDepthLimit: ${params.installedDependencies.showGlobalInstalledDependenciesDepthLimit}"
-                                    echo "params.installedDependencies.showGlobalInstalledDependenciesDepth: ${params.installedDependencies.showGlobalInstalledDependenciesDepth}"
-
-                                    if (params.installedDependencies.showGlobalInstalledDependenciesDepthLimit) {
-                                        showGlobalInstalledDependenciesDepthLimit = params.installedDependencies.showGlobalInstalledDependenciesDepthLimit.toBoolean()
-                                    }
-
-                                    if (showGlobalInstalledDependenciesDepthLimit) {
-
-                                        String showGlobalInstalledDependenciesDepthParam = params.installedDependencies.showGlobalInstalledDependenciesDepth
-
-                                        if (showGlobalInstalledDependenciesDepthParam != null && showGlobalInstalledDependenciesDepthParam.isInteger()) {
-                                            showGlobalInstalledDependenciesDepth = showGlobalInstalledDependenciesDepthParam as Integer
-                                        }
-                                    }
-
-                                    if (showGlobalInstalledDependenciesDepth >=0) {
-                                        showGlobalInstalledDependenciesDepthFlags = " --depth=${showGlobalInstalledDependenciesDepth}"
-                                    }
-
-                                    try {
-                                        echo "List global dependencies ${showGlobalInstalledDependenciesDepthFlags}"
-                                        //sh "npm -g list ${showGlobalInstalledDependenciesDepthFlags}"
-                                    } catch(err) {
-                                        echo 'ERROR. There is an error retrieving NPM global dependencies'
-                                    }
-
-                                }
-
-                                if (showLocalInstalledDependencies) {
-
-                                    Boolean showLocalInstalledDependenciesDepthLimit = false
-                                    int showLocalInstalledDependenciesDepth = -1
-                                    Boolean showLocalInstalledDependenciesOnlyType = false
-                                    String showLocalInstalledDependenciesType = ""
-                                    String showLocalInstalledDependenciesDepthFlags = ""
-                                    String showLocalInstalledDependenciesTypeFlags = ""
-
-
-//                                    echo "params.installedDependencies.showLocalInstalledDependenciesDepthLimit: ${params.installedDependencies.showLocalInstalledDependenciesDepthLimit}"
-//                                    echo "params.installedDependencies.showLocalInstalledDependenciesDepth: ${params.installedDependencies.showLocalInstalledDependenciesDepth}"
-//                                    echo "params.installedDependencies.showLocalInstalledDependenciesOnlyType: ${params.installedDependencies.showLocalInstalledDependenciesOnlyType}"
-//                                    echo "params.installedDependencies.showLocalInstalledDependenciesType: ${params.installedDependencies.showLocalInstalledDependenciesType}"
-
-                                    if (params.installedDependencies.showLocalInstalledDependenciesDepthLimit) {
-                                        showLocalInstalledDependenciesDepthLimit = params.installedDependencies.showLocalInstalledDependenciesDepthLimit.toBoolean()
-                                    }
-
-                                    if (params.installedDependencies.showLocalInstalledDependenciesOnlyType) {
-                                        showLocalInstalledDependenciesOnlyType = params.installedDependencies.showLocalInstalledDependenciesOnlyType.toBoolean()
-                                    }
-
-
-                                    if (showLocalInstalledDependenciesDepthLimit) {
-
-                                        String showLocalInstalledDependenciesDepthParam = params.installedDependencies.showLocalInstalledDependenciesDepth
-
-                                        if (showLocalInstalledDependenciesDepthParam != null && showLocalInstalledDependenciesDepthParam.isInteger()) {
-                                            showLocalInstalledDependenciesDepth = showLocalInstalledDependenciesDepthParam as Integer
-                                        }
-
-                                        if (showLocalInstalledDependenciesDepth >= 0) {
-                                            showLocalInstalledDependenciesDepthFlags = " --depth=${showLocalInstalledDependenciesDepth}"
-                                        }
-                                    }
-
-                                    if (showLocalInstalledDependenciesOnlyType) {
-                                        if (params.installedDependencies.showLocalInstalledDependenciesType) {
-                                            showLocalInstalledDependenciesType = params.installedDependencies.showLocalInstalledDependenciesType
-                                            showLocalInstalledDependenciesType = showLocalInstalledDependenciesType.trim()
-                                        }
-
-                                        if (!showLocalInstalledDependenciesType.equalsIgnoreCase("dev") && !showLocalInstalledDependenciesType.equalsIgnoreCase("prod")) {
-                                            currentBuild.result = "FAILED"
-                                            throw new hudson.AbortException("The parameter installedDependencies.showLocalInstalledDependenciesType has an incorrect value. Allowed values (dev, prod)") as Throwable
-                                        }
-
-                                        showLocalInstalledDependenciesTypeFlags = " --only=${showLocalInstalledDependenciesType}"
-                                    }
-
-                                    try {
-                                        echo "List local dependencies ${showGlobalInstalledDependenciesDepthFlags}"
-                                        sh "npm list ${showLocalInstalledDependenciesDepthFlags} ${showLocalInstalledDependenciesTypeFlags}"
-                                    } catch(err) {
-                                        echo 'ERROR. There is an error retrieving NPM local dependencies'
-                                    }
-
-
-                                }
-
 
                             }
 
