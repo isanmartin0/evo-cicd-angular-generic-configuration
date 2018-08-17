@@ -560,8 +560,8 @@ def runAngularGenericJenkinsfile() {
 
                                     echo "params.installedDependencies.showLocalInstalledDependenciesDepthLimit: ${params.installedDependencies.showLocalInstalledDependenciesDepthLimit}"
                                     echo "params.installedDependencies.showLocalInstalledDependenciesDepth: ${params.installedDependencies.showLocalInstalledDependenciesDepth}"
-/*                                    echo "params.installedDependencies.showLocalInstalledDependenciesOnlyType: ${params.installedDependencies.showLocalInstalledDependenciesOnlyType}"
-                                    echo "params.installedDependencies.showLocalInstalledDependenciesType: ${params.installedDependencies.showLocalInstalledDependenciesType}"
+//                                    echo "params.installedDependencies.showLocalInstalledDependenciesOnlyType: ${params.installedDependencies.showLocalInstalledDependenciesOnlyType}"
+//                                    echo "params.installedDependencies.showLocalInstalledDependenciesType: ${params.installedDependencies.showLocalInstalledDependenciesType}"
 
                                     if (params.installedDependencies.showLocalInstalledDependenciesDepthLimit) {
                                         showLocalInstalledDependenciesDepthLimit = params.installedDependencies.showLocalInstalledDependenciesDepthLimit.toBoolean()
@@ -605,7 +605,7 @@ def runAngularGenericJenkinsfile() {
                                     } catch(err) {
                                         echo 'ERROR. There is an error retrieving NPM local dependencies'
                                     }
-*/
+
 
                                 }
 
