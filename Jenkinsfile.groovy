@@ -469,7 +469,11 @@ def runAngularGenericJenkinsfile() {
 
                             stage('Build') {
 
-                                boolean isPackageLockJSON = fileExists 'package-lock'
+                                def confirm = input message: 'Waiting for user approval',
+                                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+
+                                boolean isPackageLockJSON = fileExists 'package-lock.json'
                                 echo "file packag-lock.json exists: ${isPackageLockJSON}"
 
                                 echo "Removing package-lock.json"
