@@ -498,7 +498,7 @@ def runAngularGenericJenkinsfile() {
                                 echo "List global dependencies (depth 1)"
                                 sh "npm -g list --depth=1"
 
-                                echi "list local dependencies (depth 1)"
+                                echo "list local dependencies (depth 1)"
                                 sh "npm list --depth=1"
                             }
 
