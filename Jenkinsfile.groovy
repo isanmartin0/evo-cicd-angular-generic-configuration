@@ -517,6 +517,7 @@ def runAngularGenericJenkinsfile() {
                                 if (showGlobalInstalledDependencies) {
                                     Boolean showGlobalInstalledDependenciesDepthLimit = false
                                     int showGlobalInstalledDependenciesDepth = -1
+                                    String showGlobalInstalledDependenciesDepthFlags = ""
 
                                     echo "params.installedDependencies.showGlobalInstalledDependenciesDepthLimit: ${params.installedDependencies.showGlobalInstalledDependenciesDepthLimit}"
                                     echo "params.installedDependencies.showGlobalInstalledDependenciesDepth: ${params.installedDependencies.showGlobalInstalledDependenciesDepth}"
@@ -535,16 +536,72 @@ def runAngularGenericJenkinsfile() {
                                     }
 
                                     if (showGlobalInstalledDependenciesDepth >=0) {
-                                        echo "List global dependencies (depth ${showGlobalInstalledDependenciesDepth})"
-                                        try {
-                                            sh "npm -g list --depth=${showGlobalInstalledDependenciesDepth}"
-                                        } catch(err) {
-                                            echo 'ERROR. There is an error retrieving NPM global dependencies'
+                                        showGlobalInstalledDependenciesDepthFlags = " --depth=${showGlobalInstalledDependenciesDepth}"
+                                    }
+
+                                    try {
+                                        echo "List global dependencies ${showGlobalInstalledDependenciesDepthFlags}"
+                                        sh "npm -g list ${showGlobalInstalledDependenciesDepthFlags}"
+                                    } catch(err) {
+                                        echo 'ERROR. There is an error retrieving NPM global dependencies'
+                                    }
+
+                                }
+
+                                if (showLocalInstalledDependencies) {
+
+                                    Boolean showLocalInstalledDependenciesDepthLimit = false
+                                    int showLocalInstalledDependenciesDepth = -1
+                                    Boolean showLocalInstalledDependenciesOnlyType = false
+                                    String showLocalInstalledDependenciesType = ""
+                                    String showLocalInstalledDependenciesDepthFlags = ""
+                                    String showLocalInstalledDependenciesTypeFlags = ""
+
+
+                                    echo "params.installedDependencies.showLocalInstalledDependenciesDepthLimit: ${params.installedDependencies.showLocalInstalledDependenciesDepthLimit}"
+                                    echo "params.installedDependencies.showLocalInstalledDependenciesDepth: ${params.installedDependencies.showLocalInstalledDependenciesDepth}"
+                                    echo "params.installedDependencies.showLocalInstalledDependenciesOnlyType: ${params.installedDependencies.showLocalInstalledDependenciesOnlyType}"
+                                    echo "params.installedDependencies.showLocalInstalledDependenciesType: ${params.installedDependencies.showLocalInstalledDependenciesType}"
+
+                                    if (params.installedDependencies.showLocalInstalledDependenciesDepthLimit) {
+                                        showLocalInstalledDependenciesDepthLimit = params.installedDependencies.showLocalInstalledDependenciesDepthLimit.toBoolean()
+                                    }
+                                    if (params.installedDependencies.showLocalInstalledDependenciesOnlyType) {
+                                        showLocalInstalledDependenciesOnlyType = params.installedDependencies.showLocalInstalledDependenciesOnlyType.toBoolean()
+                                    }
+
+                                    if (showLocalInstalledDependenciesDepthLimit) {
+
+                                        String showLocalInstalledDependenciesDepthParam = params.installedDependencies.showLocalInstalledDependenciesDepth
+
+                                        if (showLocalInstalledDependenciesDepthParam != null && showLocalInstalledDependenciesDepthParam.isInteger()) {
+                                            showLocalInstalledDependenciesDepth = showLocalInstalledDependenciesDepthParam as Integer
                                         }
 
-                                    } else {
-                                        echo "List global dependencies)"
-                                        sh "npm -g list"
+                                        if (showLocalInstalledDependenciesDepth >= 0) {
+                                            showLocalInstalledDependenciesDepthFlags = " --depth=${showLocalInstalledDependenciesDepth}"
+                                        }
+                                    }
+
+                                    if (showLocalInstalledDependenciesOnlyType) {
+                                        if (params.installedDependencies.showLocalInstalledDependenciesType) {
+                                            showLocalInstalledDependenciesType = params.installedDependencies.showLocalInstalledDependenciesType
+                                            showLocalInstalledDependenciesType = showLocalInstalledDependenciesType.trim()
+                                        }
+
+                                        if (!showLocalInstalledDependenciesType.equalsIgnoreCase("dev") && !showLocalInstalledDependenciesType.equalsIgnoreCase("prod")) {
+                                            currentBuild.result = "FAILED"
+                                            throw new hudson.AbortException("The parameter installedDependencies.showLocalInstalledDependenciesType has an incorrect value. Allowed values (dev, prod)") as Throwable
+                                        }
+
+                                        showLocalInstalledDependenciesTypeFlags = " --only=${showLocalInstalledDependenciesType}"
+                                    }
+
+                                    try {
+                                        echo "List local dependencies ${showGlobalInstalledDependenciesDepthFlags}"
+                                        sh "npm list ${showLocalInstalledDependenciesDepthFlags} ${showLocalInstalledDependenciesTypeFlags}"
+                                    } catch(err) {
+                                        echo 'ERROR. There is an error retrieving NPM local dependencies'
                                     }
 
                                 }
@@ -1101,7 +1158,7 @@ def runAngularGenericJenkinsfile() {
             //User doesn't want to deploy
             //Failed status
             currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-            throw new hudson.AbortException("The deploy on Openshift hasn't been confirmed")
+            throw new hudson.AbortException("The deploy on Openshift hasn't been confirmed") as Throwable
         }
 
 
