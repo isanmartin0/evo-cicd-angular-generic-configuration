@@ -469,6 +469,9 @@ def runAngularGenericJenkinsfile() {
 
                             stage('Build') {
 
+                                boolean isPackageLockJSON = fileExists 'package-lock'
+                                echo "file packag-lock.json exists: ${isPackageLockJSON}"
+
                                 echo "Removing package-lock.json"
 
                                 try {
@@ -476,6 +479,9 @@ def runAngularGenericJenkinsfile() {
                                 } catch (err) {
                                     echo "package-lock.json doesn't exist"
                                 }
+
+                                isPackageLockJSON = fileExists 'package-lock'
+                                echo "file packag-lock.json exists: ${isPackageLockJSON}"
 
                                 echo 'Building dependencies...'
                                 sh 'npm i'
