@@ -107,7 +107,7 @@ objects:
         - image: "${DOCKER_REGISTRY}:5000/${PROJECT}${BRANCH_NAME_HY_CONTAINER_IMAGE}/${PROJECT}:latest"
           name: ${PROJECT}
           ports:
-          - containerPort: 8080
+          - containerPort: 8081
             protocol: TCP
           resources:
             limits:
@@ -121,13 +121,13 @@ objects:
             initialDelaySeconds: 3
             httpGet:
               path: /
-              port: 8080
+              port: 8081
           livenessProbe:
             timeoutSeconds: 3
             initialDelaySeconds: 30
             httpGet:
               path: /
-              port: 8080
+              port: 8081
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
         dnsPolicy: ClusterFirst
@@ -147,7 +147,7 @@ objects:
   spec:
     ports:
     - name: web
-      port: 8080
+      port: 8081
       targetPort: 8080
     selector:
       app: ${PROJECT}
