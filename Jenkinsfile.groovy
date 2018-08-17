@@ -557,7 +557,7 @@ def runAngularGenericJenkinsfile() {
                                     String showLocalInstalledDependenciesDepthFlags = ""
                                     String showLocalInstalledDependenciesTypeFlags = ""
 
-/*
+
                                     echo "params.installedDependencies.showLocalInstalledDependenciesDepthLimit: ${params.installedDependencies.showLocalInstalledDependenciesDepthLimit}"
                                     echo "params.installedDependencies.showLocalInstalledDependenciesDepth: ${params.installedDependencies.showLocalInstalledDependenciesDepth}"
                                     echo "params.installedDependencies.showLocalInstalledDependenciesOnlyType: ${params.installedDependencies.showLocalInstalledDependenciesOnlyType}"
@@ -566,7 +566,7 @@ def runAngularGenericJenkinsfile() {
                                     if (params.installedDependencies.showLocalInstalledDependenciesDepthLimit) {
                                         showLocalInstalledDependenciesDepthLimit = params.installedDependencies.showLocalInstalledDependenciesDepthLimit.toBoolean()
                                     }
-
+/*
                                     if (params.installedDependencies.showLocalInstalledDependenciesOnlyType) {
                                         showLocalInstalledDependenciesOnlyType = params.installedDependencies.showLocalInstalledDependenciesOnlyType.toBoolean()
                                     }
