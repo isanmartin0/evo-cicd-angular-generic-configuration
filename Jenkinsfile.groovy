@@ -547,7 +547,7 @@ def runAngularGenericJenkinsfile() {
                                     }
 
                                 }
-
+/*
                                 if (showLocalInstalledDependencies) {
 
                                     Boolean showLocalInstalledDependenciesDepthLimit = false
@@ -605,6 +605,7 @@ def runAngularGenericJenkinsfile() {
                                     }
 
                                 }
+*/
 
                             }
 
