@@ -499,6 +499,9 @@ def runAngularGenericJenkinsfile() {
 
 
                             stage('Get ng version') {
+                                echo "npm -g list --depth=1"
+                                sh "npm -g list --depth=1"
+
                                 echo 'ng version:'
 
                                 if (installGloballyAngularCli) {
