@@ -499,8 +499,11 @@ def runAngularGenericJenkinsfile() {
 
 
                             stage('Get ng version') {
-                                echo "npm -g list --depth=1"
+                                echo "List global dependencies (depth 1)"
                                 sh "npm -g list --depth=1"
+
+                                echi "list local dependencies (depth 1)"
+                                sh "npm list --depth=1"
 
                                 echo 'ng version:'
 
