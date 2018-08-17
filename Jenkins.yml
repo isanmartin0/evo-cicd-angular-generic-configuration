@@ -5,10 +5,10 @@ imageStreamNodejsVersion: 6
 
 angularCli:
   installGloballyAngularCli: false
-  installAngularCliSpecificVersion: true
+  installAngularCliSpecificVersion: false
   angularCliVersion: 1.0.5
 
-nginxVersion: 1.12
+nginxVersion: '1.12'
 
 ngBuildProd:
   useBuildProdFlags: false
