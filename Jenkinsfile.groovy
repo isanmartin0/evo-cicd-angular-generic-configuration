@@ -502,7 +502,7 @@ def runAngularGenericJenkinsfile() {
 
                             stage ('Show installed dependencies') {
 
-                                angularShInstalledDependencies {
+                                angularShowInstalledDependencies {
                                     showGlobalInstalledDependencies = params.showInstalledDependencies.showGlobalInstalledDependencies
                                     showGlobalInstalledDependenciesDepthLimit = params.showInstalledDependencies.showGlobalInstalledDependenciesDepthLimit
                                     showGlobalInstalledDependenciesDepth = params.showInstalledDependencies.showGlobalInstalledDependenciesDepth
