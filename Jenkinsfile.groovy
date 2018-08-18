@@ -4,7 +4,7 @@ import com.evobanco.AngularConstants
 
 def runAngularGenericJenkinsfile() {
 
-    def utils = new AngularUtils()
+    AngularUtils utils = new AngularUtils()
 
     def angularNPMRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-repo/'
     def angularNPMLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-local/'
@@ -353,7 +353,7 @@ def runAngularGenericJenkinsfile() {
                     buildProdFlags = nodeJS_6_installation_build_prod_flags
                 } else {
                     currentBuild.result = "FAILED"
-                    throw new hudson.AbortException("Error setting NodeJS version")
+                    throw new hudson.AbortException("Error setting NodeJS version") as Throwable
                 }
 
                 def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
@@ -484,8 +484,10 @@ def runAngularGenericJenkinsfile() {
 
                                     try {
                                         sh "rm package-lock.json"
-                                    } catch (err) {
+                                    } catch (exc) {
                                         echo "package-lock.json doesn't exist"
+                                        def exc_message = exc.message
+                                        echo "${exc_message}"
                                     }
 
                                     isPackageLockJSON = fileExists 'package-lock'
@@ -498,17 +500,17 @@ def runAngularGenericJenkinsfile() {
                             }
 
 
-                            stage ('Display installed dependencies') {
+                            stage ('Show installed dependencies') {
 
-                                angularDisplayInstalledDependencies {
-                                    showGlobalInstalledDependencies = params.installedDependencies.showGlobalInstalledDependencies
-                                    showGlobalInstalledDependenciesDepthLimit = params.installedDependencies.showGlobalInstalledDependenciesDepthLimit
-                                    showGlobalInstalledDependenciesDepth = params.installedDependencies.showGlobalInstalledDependenciesDepth
-                                    showLocalInstalledDependencies = params.installedDependencies.showLocalInstalledDependencies
-                                    showLocalInstalledDependenciesDepthLimit = params.installedDependencies.showLocalInstalledDependenciesDepthLimit
-                                    showLocalInstalledDependenciesDepth = params.installedDependencies.showLocalInstalledDependenciesDepth
-                                    showLocalInstalledDependenciesOnlyType = params.installedDependencies.showLocalInstalledDependenciesOnlyType
-                                    showLocalInstalledDependenciesType = params.installedDependencies.showLocalInstalledDependenciesType
+                                angularShInstalledDependencies {
+                                    showGlobalInstalledDependencies = params.showInstalledDependencies.showGlobalInstalledDependencies
+                                    showGlobalInstalledDependenciesDepthLimit = params.showInstalledDependencies.showGlobalInstalledDependenciesDepthLimit
+                                    showGlobalInstalledDependenciesDepth = params.showInstalledDependencies.showGlobalInstalledDependenciesDepth
+                                    showLocalInstalledDependencies = params.showInstalledDependencies.showLocalInstalledDependencies
+                                    showLocalInstalledDependenciesDepthLimit = params.showInstalledDependencies.showLocalInstalledDependenciesDepthLimit
+                                    showLocalInstalledDependenciesDepth = params.showInstalledDependencies.showLocalInstalledDependenciesDepth
+                                    showLocalInstalledDependenciesOnlyType = params.showInstalledDependencies.showLocalInstalledDependenciesOnlyType
+                                    showLocalInstalledDependenciesType = params.showInstalledDependencies.showLocalInstalledDependenciesType
                                 }
 
                             }
@@ -626,7 +628,7 @@ def runAngularGenericJenkinsfile() {
                                     def exc_message = exc.message
                                     echo "${exc_message}"
                                     currentBuild.result = "FAILED"
-                                    throw new hudson.AbortException("Error checking existence of tarball")
+                                    throw new hudson.AbortException("Error checking existence of tarball") as Throwable
                                 }
                             }
 
@@ -654,7 +656,7 @@ def runAngularGenericJenkinsfile() {
                                         echo "${exc_message}"
 
                                         currentBuild.result = "FAILED"
-                                        throw new hudson.AbortException("Error publishing package on NPM registry")
+                                        throw new hudson.AbortException("Error publishing package on NPM registry") as Throwable
                                     }
 
                                 }
@@ -683,7 +685,7 @@ def runAngularGenericJenkinsfile() {
                                         echo "${exc_message}"
 
                                         currentBuild.result = "FAILED"
-                                        throw new hudson.AbortException("Error publishing package on generic registry")
+                                        throw new hudson.AbortException("Error publishing package on generic registry") as Throwable
                                     }
 
                                 }
@@ -717,7 +719,7 @@ def runAngularGenericJenkinsfile() {
                                     def exc_message = exc.message
                                     echo "${exc_message}"
                                     currentBuild.result = "FAILED"
-                                    throw new hudson.AbortException("Error checking existence of package on NPM registry")
+                                    throw new hudson.AbortException("Error checking existence of package on NPM registry") as Throwable
                                 }
 
 
@@ -900,7 +902,7 @@ def runAngularGenericJenkinsfile() {
                 def user = err.getCauses()[0].getUser()
                 if('SYSTEM'.equals(user.toString())) { //timeout
                     currentBuild.result = "FAILED"
-                    throw new hudson.AbortException("Timeout on confirm deploy")
+                    throw new hudson.AbortException("Timeout on confirm deploy") as Throwable
                 }
             }
         }
@@ -957,7 +959,7 @@ def runAngularGenericJenkinsfile() {
                             } else {
                                 //Failed status
                                 currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-                                throw new hudson.AbortException("The ${AngularConstants.SMOKE_TEST_TYPE} tests stage has failures")
+                                throw new hudson.AbortException("The ${AngularConstants.SMOKE_TEST_TYPE} tests stage has failures") as Throwable
                             }
                         }
                     }
@@ -987,7 +989,7 @@ def runAngularGenericJenkinsfile() {
                             } else {
                                 //Failed status
                                 currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-                                throw new hudson.AbortException("The ${AngularConstants.ACCEPTANCE_TEST_TYPE} tests stage has failures")
+                                throw new hudson.AbortException("The ${AngularConstants.ACCEPTANCE_TEST_TYPE} tests stage has failures") as Throwable
                             }
                         }
                     }
@@ -1017,7 +1019,7 @@ def runAngularGenericJenkinsfile() {
                             } else {
                                 //Failed status
                                 currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-                                throw new hudson.AbortException("The ${AngularConstants.SECURITY_TEST_TYPE} tests stage has failures")
+                                throw new hudson.AbortException("The ${AngularConstants.SECURITY_TEST_TYPE} tests stage has failures") as Throwable
                             }
                         }
                     }
@@ -1051,7 +1053,7 @@ def runAngularGenericJenkinsfile() {
                         } else {
                             //Failed status
                             currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-                            throw new hudson.AbortException("The ${AngularConstants.PERFORMANCE_TEST_TYPE} tests stage has failures")
+                            throw new hudson.AbortException("The ${AngularConstants.PERFORMANCE_TEST_TYPE} tests stage has failures") as Throwable
                         }
                     }
                 }
