@@ -379,11 +379,6 @@ def runAngularGenericJenkinsfile() {
                 if (params.ngBuildProd.useSpecificOutputPath) {
                     useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath.toBoolean()
                 }
-                if (useSpecificOutputPath) {
-                    if (params.ngBuildProd.buildSpecificOutputPath) {
-                        //packageJSONFilesNodeDistributionFolder = "${params.ngBuildProd.buildSpecificOutputPath}".toArray(new String[0])
-                    }
-                }
                 echo "packageJSONFilesNodeDistributionFolder: ${packageJSONFilesNodeDistributionFolder}"
             }
 
