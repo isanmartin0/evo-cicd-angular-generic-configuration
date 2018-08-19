@@ -391,10 +391,12 @@ def runAngularGenericJenkinsfile() {
 
                 echo "packageJSONFilesNodeDistributionFolder: ${packageJSONFilesNodeDistributionFolder}"
 
-                def confirm = input message: 'Waiting for user approval',
-                        parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
             }
+
+            def confirm = input message: 'Waiting for user approval',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
 
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
