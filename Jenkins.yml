@@ -1,7 +1,7 @@
 openshift:
   templatePath: kube/nginx_template.yaml
 
-imageStreamNodejsVersion: 6
+imageStreamNodejsVersion: 8
 
 removeSourcePackageLock: false
 
