@@ -370,15 +370,15 @@ def runAngularGenericJenkinsfile() {
             stage('XXX') {
                 echo "Original package.json:"
                 echo "${packageJSON}"
-                def packageJSONFilesNode = packageJSON.files
-                echo "packageJSONFilesNode: ${packageJSONFilesNode}"
+                //def packageJSONFilesNode = packageJSON.files
+                //echo "packageJSONFilesNode: ${packageJSONFilesNode}"
                 //Redefining packageJSON.files
-                Boolean useSpecificOutputPath = false
+                //Boolean useSpecificOutputPath = false
                 //echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
                 //echo "params.ngBuildProd.buildSpecificOutputPath: ${params.ngBuildProd.buildSpecificOutputPath}"
-                if (params.ngBuildProd.useSpecificOutputPath) {
-                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath.toBoolean()
-                }
+                //if (params.ngBuildProd.useSpecificOutputPath) {
+                //    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath.toBoolean()
+                //}
                 //echo "packageJSONFilesNodeDistributionFolder: ${packageJSONFilesNodeDistributionFolder}"
             }
 
