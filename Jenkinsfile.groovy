@@ -370,33 +370,25 @@ def runAngularGenericJenkinsfile() {
             stage('XXX') {
                 echo "Original package.json:"
                 echo "${packageJSON}"
-
                 def packageJSONFilesNode = packageJSON.files
                 echo "packageJSONFilesNode: ${packageJSONFilesNode}"
-
                 //Redefining packageJSON.files
                 Boolean useSpecificOutputPath = false
                 echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
                 echo "params.ngBuildProd.buildSpecificOutputPath: ${params.ngBuildProd.buildSpecificOutputPath}"
-
                 if (params.ngBuildProd.useSpecificOutputPath) {
                     useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath.toBoolean()
                 }
-
                 if (useSpecificOutputPath) {
                     if (params.ngBuildProd.buildSpecificOutputPath) {
                         //packageJSONFilesNodeDistributionFolder = "${params.ngBuildProd.buildSpecificOutputPath}".toArray(new String[0])
                     }
                 }
-
                 echo "packageJSONFilesNodeDistributionFolder: ${packageJSONFilesNodeDistributionFolder}"
-
-
             }
 
             def confirm = input message: 'Waiting for user approval',
                     parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
 
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
