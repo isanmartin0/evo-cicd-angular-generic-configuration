@@ -373,8 +373,6 @@ def runAngularGenericJenkinsfile() {
                  "${packageJSON} \n" +
                  "Original package.json: \n" +
                  "${packageJSON} \n" +
-
-                 "packageJSONFilesNode: ${packageJSONFilesNode} \n" +
                  "log 1\n" +
                  "log 2\n" +
                  "log 3\n" +
