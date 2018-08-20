@@ -384,12 +384,12 @@ def runAngularGenericJenkinsfile() {
                 String logMessage = "xx"
                 echo "${logMessage}"
 
-                logMessage =  "yy"
-                echo "${logMessage}"
-                logMessage =  "zz"
-                echo "${logMessage}"
-                logMessage =  "ww"
-                echo "${logMessage}"
+
+                utils.logMessage("xx")
+                utils.logMessage("yy")
+                utils.logMessage("zz")
+                utils.logMessage("ww")
+
 
 
                 //Redefining packageJSON.files
