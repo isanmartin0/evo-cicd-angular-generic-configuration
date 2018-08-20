@@ -742,19 +742,15 @@ def runAngularGenericJenkinsfile() {
 
                                 stage('Artifact Generic Registry Publish') {
 
-                                    echo "Utils ref: ${utils}"
                                     angularGenericRegistryPublish {
                                         artCredentialsId = artifactoryCredential
                                         theArtifactoryURL = artifactoryURL
                                         theAngularGenericLocalRepositoryURL = angularGenericLocalRepositoryURL
                                         thePackageName = packageName
-                                        thePackageTarball = packageTarball + "X"
-                                        theUtils = utils
+                                        thePackageTarball = packageTarball
                                     }
 
                                     artifactoryRepository = angularGenericLocalRepositoryURL
-
-                                    echo "Utils ref: ${utils}"
 
 /* Before globar var
                                     echo "Publishing artifact to a generic registry"
@@ -792,13 +788,27 @@ def runAngularGenericJenkinsfile() {
                         } else {
 
                             stage('Configure Artifactory NPM Registry') {
+
+                                angularConfigureNPMRepository {
+                                    theAngularNPMRepositoryURL = angularNPMRepositoryURL
+                                }
+
+                                artifactoryRepository = angularNPMLocalRepositoryURL
+
+
+/* Before global variable
                                 echo 'Setting Artifactory NPM registry'
                                 sh "npm config set registry ${angularNPMRepositoryURL} "
 
                                 sh "npm config get registry"
+*/
 
-                                artifactoryRepository = angularNPMLocalRepositoryURL
                             }
+
+                            utils = null
+                            def confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
 
                             stage('Check published package on NPM registry') {
 
