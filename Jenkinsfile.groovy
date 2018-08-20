@@ -742,6 +742,7 @@ def runAngularGenericJenkinsfile() {
 
                                 stage('Artifact Generic Registry Publish') {
 
+                                    echo "Utils ref: ${utils}"
                                     angularGenericRegistryPublish {
                                         artCredentialsId = artifactoryCredential
                                         theArtifactoryURL = artifactoryURL
@@ -752,6 +753,8 @@ def runAngularGenericJenkinsfile() {
                                     }
 
                                     artifactoryRepository = angularGenericLocalRepositoryURL
+
+                                    echo "Utils ref: ${utils}"
 
 /* Before globar var
                                     echo "Publishing artifact to a generic registry"
