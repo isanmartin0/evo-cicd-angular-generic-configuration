@@ -587,7 +587,7 @@ def runAngularGenericJenkinsfile() {
                                     useBuildProdFlags = params.ngBuildProd.useBuildProdFlags
                                     theBuildProdDefaultFlags = buildProdFlags
                                     theBuildProdFlags = params.ngBuildProd.buildProdFlags
-                                    theBuildSpecificOutputPath = angularCliLocalPath
+                                    theAngularCliLocalPath = angularCliLocalPath
                                     theInstallGloballyAngularCli = installGloballyAngularCli
                                 }
 
