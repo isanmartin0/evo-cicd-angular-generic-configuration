@@ -369,17 +369,6 @@ def runAngularGenericJenkinsfile() {
 
             }
 
-            stage('XXX') {
-                angularCreateTarball {
-                    thePackageJSON = packageJSON
-                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
-                    buildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
-                }
-            }
-
-            def confirm = input message: 'Waiting for user approval',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
             stage('Prepare') {
                 echo "Prepare stage (PGC)"
 
@@ -439,6 +428,14 @@ def runAngularGenericJenkinsfile() {
 
                                 stage('Install globally @angular/cli') {
 
+                                    angularInstallGloballyAngularCli {
+                                        installAngularCliSpecificVersion = params.angularCli.installAngularCliSpecificVersion
+                                        angularCliDefaultVersion = angularCliVersion
+                                        angularCliSpecificVersion = params.angularCli.angularCliVersion
+                                        nodeJS_pipeline_installation = nodeJS_pipeline_installation
+                                    }
+
+/* before global variable
                                     Boolean installAngularCliSpecificVersion = false
                                     echo "params.angularCli.installAngularCliSpecificVersion: ${params.angularCli.installAngularCliSpecificVersion}"
 
@@ -464,11 +461,13 @@ def runAngularGenericJenkinsfile() {
 
                                     echo "Installing globally @angular/cli version ${angularCliVersion}"
                                     sh "npm install -g @angular/cli@${angularCliVersion}"
-
+*/
                                 }
                             } else {
                                 echo "Skipping @angular/cli installation..."
                             }
+
+
 
 
                             stage('Configure Artifactory NPM Registry') {
@@ -604,7 +603,7 @@ def runAngularGenericJenkinsfile() {
                             stage('Create tarball') {
 
                                 angularCreateTarball {
-                                    thePackageJSON = ${packageJSON}
+                                    thePackageJSON = packageJSON
                                     useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
                                     buildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
                                 }
@@ -652,7 +651,9 @@ def runAngularGenericJenkinsfile() {
 */
                             }
 
-
+                            currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
+                            utils = null
+                            throw new hudson.AbortException("The deploy on Openshift hasn't been confirmed") as Throwable
 
                             stage ('Check tarball creation') {
 
