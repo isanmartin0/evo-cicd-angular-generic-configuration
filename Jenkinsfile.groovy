@@ -383,16 +383,6 @@ def runAngularGenericJenkinsfile() {
                 def dd = ""
 
 
-
-                //utils.logMessage(sb)
-/*
-                utils.logMessage("xx")
-                utils.logMessage("yy")
-                utils.logMessage("zz")
-                utils.logMessage("ww")
-*/
-
-
                 //Redefining packageJSON.files
                 //Boolean useSpecificOutputPath = false
                 //echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
@@ -778,11 +768,13 @@ def runAngularGenericJenkinsfile() {
                                     currentBuild.result = "FAILED"
                                     throw new hudson.AbortException("Error checking existence of package on NPM registry") as Throwable
                                 }
-*/
+
 
 
 
                             }
+
+*/
                         }
 
 
