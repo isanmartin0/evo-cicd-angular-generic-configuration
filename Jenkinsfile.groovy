@@ -677,7 +677,6 @@ def runAngularGenericJenkinsfile() {
 
 
                             stage ('Check tarball creation') {
-                                packageTarball = packageTarball + "X"
                                 angularCheckTarballCreation {
                                     thePackageTarball = packageTarball
                                 }
@@ -699,13 +698,20 @@ def runAngularGenericJenkinsfile() {
 */
                             }
 
-                            utils = null
-                            def confirm = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                             if (branchType in params.npmRegistryPublish) {
 
                                 stage('Artifact NPM Registry Publish') {
+
+                                    angularNPMRegistryPublish {
+                                        thePackageTarball = packageTarball
+                                        theAngularNPMLocalRepositoryURL = angularNPMLocalRepositoryURL
+                                    }
+
+                                    artifactoryRepository = angularNPMLocalRepositoryURL
+
+/* Before global variable
+
                                     echo "Publishing artifact to a NPM registry"
 
                                     echo 'Get NPM config registry'
@@ -729,12 +735,25 @@ def runAngularGenericJenkinsfile() {
                                         currentBuild.result = "FAILED"
                                         throw new hudson.AbortException("Error publishing package on NPM registry") as Throwable
                                     }
-
+*/
                                 }
 
                             } else {
 
                                 stage('Artifact Generic Registry Publish') {
+
+                                    angularGenericRegistryPublish {
+                                        artCredentialsId = artifactoryCredential
+                                        theArtifactoryURL = artifactoryURL
+                                        theAngularGenericLocalRepositoryURL = angularGenericLocalRepositoryURL
+                                        thePackageName = packageName
+                                        thePackageTarball = packageTarball
+                                        theUtils = utils
+                                    }
+
+                                    artifactoryRepository = angularGenericLocalRepositoryURL
+
+/* Before globar var
                                     echo "Publishing artifact to a generic registry"
 
                                     try {
@@ -758,9 +777,14 @@ def runAngularGenericJenkinsfile() {
                                         currentBuild.result = "FAILED"
                                         throw new hudson.AbortException("Error publishing package on generic registry") as Throwable
                                     }
-
+*/
                                 }
                             }
+
+                            utils = null
+                            def confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
 
                         } else {
 
