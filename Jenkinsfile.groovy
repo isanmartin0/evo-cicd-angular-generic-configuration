@@ -368,7 +368,7 @@ def runAngularGenericJenkinsfile() {
             }
 
             stage('XXX') {
-                def packageJSONFilesNode = packageJSON.files
+                //def packageJSONFilesNode = packageJSON.files
                 echo "Original package.json:\n" +
                  "${packageJSON} \n" +
                  "Original package.json: \n" +
