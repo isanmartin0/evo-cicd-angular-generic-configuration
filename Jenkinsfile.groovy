@@ -432,7 +432,7 @@ def runAngularGenericJenkinsfile() {
                                         installAngularCliSpecificVersion = params.angularCli.installAngularCliSpecificVersion
                                         angularCliDefaultVersion = angularCliVersion
                                         angularCliSpecificVersion = params.angularCli.angularCliVersion
-                                        nodeJS_pipeline_installation = nodeJS_pipeline_installation
+                                        theNodeJS_pipeline_installation = nodeJS_pipeline_installation
                                     }
 
 /* before global variable
@@ -469,9 +469,11 @@ def runAngularGenericJenkinsfile() {
 
 
 
-                            currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
+
                             utils = null
-                            throw new hudson.AbortException("The deploy on Openshift hasn't been confirmed") as Throwable
+                            def confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
 
                             stage('Configure Artifactory NPM Registry') {
                                 echo 'Setting Artifactory NPM registry'
