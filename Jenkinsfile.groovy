@@ -78,7 +78,7 @@ def runAngularGenericJenkinsfile() {
     int image_stream_nodejs_version_default = 10
     def angularCliVersion_default = "6.1.2"
     def buildProdFlags_default = "--build-optimizer"
-    def angularCliLocalParh = "node_modules/@angular/cli/bin/"
+    def angularCliLocalPath = "node_modules/@angular/cli/bin/"
 
     def build_from_registry_url = 'https://github.com/isanmartin0/s2i-angular-container.git'
     def build_from_artifact_branch = 'master'
@@ -534,22 +534,31 @@ def runAngularGenericJenkinsfile() {
 
                             }
 
-                            utils = null
-                            def confirm = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                             stage('Get ng version') {
 
+                                angularGetNGVersion {
+                                    theAngularCliLocalPath = angularCliLocalPath
+                                    theInstallGloballyAngularCli = installGloballyAngularCli
+                                }
+
+
+/* Before global variable
                                 echo 'ng version:'
 
                                 if (installGloballyAngularCli) {
                                     sh "ng version "
                                 } else {
-                                    sh "${angularCliLocalParh}ng version"
+                                    sh "${angularCliLocalPath}ng version"
                                 }
+*/
 
                             }
+
+                            utils = null
+                            def confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                             if (branchType in params.testing.predeploy.unitTesting) {
@@ -603,7 +612,7 @@ def runAngularGenericJenkinsfile() {
                                 if (installGloballyAngularCli) {
                                     sh "ng build --prod ${buildProdFlags}"
                                 } else {
-                                    sh "${angularCliLocalParh}ng build --prod ${buildProdFlags}"
+                                    sh "${angularCliLocalPath}ng build --prod ${buildProdFlags}"
                                 }
 
 
