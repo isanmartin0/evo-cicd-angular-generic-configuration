@@ -371,7 +371,7 @@ def runAngularGenericJenkinsfile() {
 
             stage('XXX') {
                 angularCreateTarball {
-                    thePackageJSON = ${packageJSON}
+                    thePackageJSON = packageJSON
                     useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
                     buildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
                 }
