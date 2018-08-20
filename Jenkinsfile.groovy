@@ -1125,7 +1125,7 @@ def runAngularGenericJenkinsfile() {
         }
 
         stage('Remove old builds') {
-/*
+
             echo "params.maxOldBuildsToKeep: ${params.jenkins.maxOldBuildsToKeep}"
             echo "params.daysOldBuildsToKeep: ${params.jenkins.daysOldBuildsToKeep}"
 
@@ -1169,7 +1169,7 @@ def runAngularGenericJenkinsfile() {
                 properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '']]])
 
             }
-*/
+
         }
 
     }
