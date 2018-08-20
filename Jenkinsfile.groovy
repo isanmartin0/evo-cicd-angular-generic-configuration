@@ -382,8 +382,7 @@ def runAngularGenericJenkinsfile() {
                  "log 5"
 
                 echo "xx"
-                echo "yy"
-                echo "zz"
+
 
                 //Redefining packageJSON.files
                 //Boolean useSpecificOutputPath = false
