@@ -674,13 +674,15 @@ def runAngularGenericJenkinsfile() {
 */
                             }
 
-                            utils = null
-                            def confirm = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                             stage ('Check tarball creation') {
 
+                                angularCheckTarballCreation {
+                                    thePackageTarball = packageTarball
+                                }
+
+/* Before global variable
                                 try {
                                     echo 'Check tarball creation ...'
                                     tarball_creation_script = $/eval "ls ${packageTarball}"/$
@@ -694,7 +696,12 @@ def runAngularGenericJenkinsfile() {
                                     currentBuild.result = "FAILED"
                                     throw new hudson.AbortException("Error checking existence of tarball") as Throwable
                                 }
+*/
                             }
+
+                            utils = null
+                            def confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                             if (branchType in params.npmRegistryPublish) {
 
