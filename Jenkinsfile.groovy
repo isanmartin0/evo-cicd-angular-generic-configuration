@@ -749,7 +749,7 @@ def runAngularGenericJenkinsfile() {
                             }
 
                         } else {
-
+/*
                             stage('Configure Artifactory NPM Registry') {
                                 echo 'Setting Artifactory NPM registry'
                                 sh "npm config set registry ${angularNPMRepositoryURL} "
@@ -778,7 +778,7 @@ def runAngularGenericJenkinsfile() {
                                     currentBuild.result = "FAILED"
                                     throw new hudson.AbortException("Error checking existence of package on NPM registry") as Throwable
                                 }
-
+*/
 
 
 
