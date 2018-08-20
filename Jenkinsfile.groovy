@@ -376,17 +376,7 @@ def runAngularGenericJenkinsfile() {
                 sb.append("${packageJSON} \n")
                 sb.append("Original package.json: \n")
                 sb.append("${packageJSON} \n")
-                sb.append("log 1\n")
-                sb.append("log 2\n")
-                sb.append("log 3\n")
-                sb.append("log 4\n")
-                sb.append("log 5")
 
-
-                sb.append("xx\n")
-                sb.append("yy\n")
-                sb.append("zz\n")
-                sb.append("ww\n")
                 //utils.logMessage(sb)
 /*
                 utils.logMessage("xx")
