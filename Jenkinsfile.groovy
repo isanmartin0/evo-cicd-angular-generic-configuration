@@ -469,6 +469,9 @@ def runAngularGenericJenkinsfile() {
 
 
 
+                            currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
+                            utils = null
+                            throw new hudson.AbortException("The deploy on Openshift hasn't been confirmed") as Throwable
 
                             stage('Configure Artifactory NPM Registry') {
                                 echo 'Setting Artifactory NPM registry'
@@ -651,9 +654,6 @@ def runAngularGenericJenkinsfile() {
 */
                             }
 
-                            currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-                            utils = null
-                            throw new hudson.AbortException("The deploy on Openshift hasn't been confirmed") as Throwable
 
                             stage ('Check tarball creation') {
 
