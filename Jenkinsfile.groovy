@@ -748,7 +748,7 @@ def runAngularGenericJenkinsfile() {
                                         theArtifactoryURL = artifactoryURL
                                         theAngularGenericLocalRepositoryURL = angularGenericLocalRepositoryURL
                                         thePackageName = packageName
-                                        thePackageTarball = packageTarball
+                                        thePackageTarball = packageTarball + "X"
                                         theUtils = utils
                                     }
 
