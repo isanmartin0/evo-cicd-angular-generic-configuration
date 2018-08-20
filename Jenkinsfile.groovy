@@ -149,15 +149,17 @@ def runAngularGenericJenkinsfile() {
             }
 
             packageName = utils.getProject(packageJSON.name)
-            echo "packageName: ${packageName}"
             packageVersion = packageJSON.version
-            echo "packageVersion: ${packageVersion}"
             packageTag = utils.getPackageTag(packageJSON.name, packageVersion)
-            echo "packageTag: ${packageTag}"
             packageTarball = utils.getPackageTarball(packageJSON.name, packageVersion)
-            echo "packageTarball: ${packageTarball}"
             packageViewTarball = utils.getPackageViewTarball(packageJSON.name, packageVersion)
-            echo "packageViewTarball: ${packageViewTarball}"
+
+
+            echo "packageName: ${packageName} \n" +
+                "packageVersion: ${packageVersion} \n" +
+                "packageTag: ${packageTag} \n" +
+                "packageTarball: ${packageTarball} \n" +
+                "packageViewTarball: ${packageViewTarball}"
 
 
             try {
@@ -378,6 +380,10 @@ def runAngularGenericJenkinsfile() {
                  "log 3\n" +
                  "log 4\n" +
                  "log 5"
+
+                echo "xx"
+                echo "yy"
+                echo "zz"
 
                 //Redefining packageJSON.files
                 //Boolean useSpecificOutputPath = false
