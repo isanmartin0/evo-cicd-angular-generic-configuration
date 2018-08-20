@@ -805,13 +805,16 @@ def runAngularGenericJenkinsfile() {
 
                             }
 
-                            utils = null
-                            def confirm = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                             stage('Check published package on NPM registry') {
 
+                                angularCheckPublishedPackage {
+                                    thePackageTarball = packageViewTarball
+                                }
+
+
+/* Before global variable
                                 try {
                                     echo 'Get tarball location of package ...'
                                     tarball_script = $/eval "npm view  ${
@@ -829,12 +832,13 @@ def runAngularGenericJenkinsfile() {
                                     currentBuild.result = "FAILED"
                                     throw new hudson.AbortException("Error checking existence of package on NPM registry") as Throwable
                                 }
-
-
-
+*/
 
                             }
 
+                            utils = null
+                            def confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                         }
 
