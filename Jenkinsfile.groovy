@@ -811,7 +811,7 @@ def runAngularGenericJenkinsfile() {
 
                                 angularCheckPublishedPackage {
                                     thePackageTag = packageTag
-                                    thePackageViewTarball = packageViewTarball
+                                    thePackageViewTarball = packageViewTarball + "X"
                                 }
 
 
