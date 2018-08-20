@@ -677,7 +677,7 @@ def runAngularGenericJenkinsfile() {
 
 
                             stage ('Check tarball creation') {
-
+                                packageTarball = packageTarball + "X"
                                 angularCheckTarballCreation {
                                     thePackageTarball = packageTarball
                                 }
