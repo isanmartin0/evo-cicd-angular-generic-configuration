@@ -368,12 +368,12 @@ def runAngularGenericJenkinsfile() {
             }
 
             stage('XXX') {
-                echo "Original package.json:"
-                echo "${packageJSON}"
-                echo "Original package.json:"
-                echo "${packageJSON}"
+                echo "Original package.json:\n" +
+                 "${packageJSON} \n" +
+                 "Original package.json: \n" +
+                 "${packageJSON} \n" +
                 //def packageJSONFilesNode = packageJSON.files
-                echo "packageJSONFilesNode: ${packageJSONFilesNode}"
+                 "packageJSONFilesNode: ${packageJSONFilesNode}"
                 //Redefining packageJSON.files
                 //Boolean useSpecificOutputPath = false
                 //echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
