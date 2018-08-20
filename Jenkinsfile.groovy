@@ -464,7 +464,7 @@ def runAngularGenericJenkinsfile() {
 */
                                 }
                             } else {
-                                echo "Skipping @angular/cli installation..."
+                                echo "Skipping globally @angular/cli installation..."
                             }
 
 
