@@ -381,10 +381,6 @@ def runAngularGenericJenkinsfile() {
                  "log 4\n" +
                  "log 5"
 
-                String logMessage = "xx"
-                echo "${logMessage}"
-
-
                 utils.logMessage("xx")
                 utils.logMessage("yy")
                 utils.logMessage("zz")
