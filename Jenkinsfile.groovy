@@ -374,6 +374,11 @@ def runAngularGenericJenkinsfile() {
                  "${packageJSON} \n"
                 //def packageJSONFilesNode = packageJSON.files
                 echo  "packageJSONFilesNode: ${packageJSONFilesNode}"
+                echo "log 1"
+                echo "log 2"
+                echo "log 3"
+                echo "log 4"
+                echo "log 5"
                 //Redefining packageJSON.files
                 //Boolean useSpecificOutputPath = false
                 //echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
