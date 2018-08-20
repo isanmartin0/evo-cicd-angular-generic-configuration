@@ -386,7 +386,7 @@ def runAngularGenericJenkinsfile() {
                 sb.append("yy\n")
                 sb.append("zz\n")
                 sb.append("ww\n")
-                utils.logMessage(sb)
+                //utils.logMessage(sb)
 /*
                 utils.logMessage("xx")
                 utils.logMessage("yy")
