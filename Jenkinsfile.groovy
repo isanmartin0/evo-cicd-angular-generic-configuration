@@ -382,6 +382,9 @@ def runAngularGenericJenkinsfile() {
                  "log 5"
 
                 echo "xx"
+                echo "yy"
+                echo "zz"
+                echo "ww"
 
 
                 //Redefining packageJSON.files
