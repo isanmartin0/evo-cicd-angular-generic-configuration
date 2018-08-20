@@ -100,7 +100,7 @@ def runAngularGenericJenkinsfile() {
     def angularCliVersion = angularCliVersion_default
     def buildProdFlags = buildProdFlags_default
 
-    def packageJSONFilesNodeDistributionFolder = ["dist/"]
+    //def packageJSONFilesNodeDistributionFolder = ["dist/"]
 
 
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
@@ -370,27 +370,11 @@ def runAngularGenericJenkinsfile() {
             }
 
             stage('XXX') {
-                StringBuilder sb = new StringBuilder()
-                //def packageJSONFilesNode = packageJSON.files
-                sb.append("Original package.json:\n")
-                sb.append("${packageJSON} \n")
-                sb.append("Original package.json: \n")
-                sb.append("${packageJSON} \n")
-
-                def aa = ""
-                def bb = ""
-                def cc = ""
-                def dd = ""
-
-
-                //Redefining packageJSON.files
-                //Boolean useSpecificOutputPath = false
-                //echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
-                //echo "params.ngBuildProd.buildSpecificOutputPath: ${params.ngBuildProd.buildSpecificOutputPath}"
-                //if (params.ngBuildProd.useSpecificOutputPath) {
-                //    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath.toBoolean()
-                //}
-                //echo "packageJSONFilesNodeDistributionFolder: ${packageJSONFilesNodeDistributionFolder}"
+                angularCreateTarball {
+                    thePackageJSON = ${packageJSON}
+                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
+                    buildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
+                }
             }
 
             def confirm = input message: 'Waiting for user approval',
@@ -619,6 +603,13 @@ def runAngularGenericJenkinsfile() {
 
                             stage('Create tarball') {
 
+                                angularCreateTarball {
+                                    thePackageJSON = ${packageJSON}
+                                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
+                                    buildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
+                                }
+
+/* before global variable
                                 echo "Original package.json:"
                                 echo "${packageJSON}"
 
@@ -658,6 +649,7 @@ def runAngularGenericJenkinsfile() {
                                 writeJSON file: 'package.json', json: packageJSON, pretty: 4
 
                                 sh "npm pack"
+*/
                             }
 
 
