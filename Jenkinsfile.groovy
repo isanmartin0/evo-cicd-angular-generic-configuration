@@ -372,16 +372,16 @@ def runAngularGenericJenkinsfile() {
                 echo "${packageJSON}"
                 echo "Original package.json:"
                 echo "${packageJSON}"
-                //def packageJSONFilesNode = packageJSON.files
-                //echo "packageJSONFilesNode: ${packageJSONFilesNode}"
+                def packageJSONFilesNode = packageJSON.files
+                echo "packageJSONFilesNode: ${packageJSONFilesNode}"
                 //Redefining packageJSON.files
-                //Boolean useSpecificOutputPath = false
-                //echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
-                //echo "params.ngBuildProd.buildSpecificOutputPath: ${params.ngBuildProd.buildSpecificOutputPath}"
-                //if (params.ngBuildProd.useSpecificOutputPath) {
-                //    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath.toBoolean()
-                //}
-                //echo "packageJSONFilesNodeDistributionFolder: ${packageJSONFilesNodeDistributionFolder}"
+                Boolean useSpecificOutputPath = false
+                echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
+                echo "params.ngBuildProd.buildSpecificOutputPath: ${params.ngBuildProd.buildSpecificOutputPath}"
+                if (params.ngBuildProd.useSpecificOutputPath) {
+                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath.toBoolean()
+                }
+                echo "packageJSONFilesNodeDistributionFolder: ${packageJSONFilesNodeDistributionFolder}"
             }
 
             def confirm = input message: 'Waiting for user approval',
