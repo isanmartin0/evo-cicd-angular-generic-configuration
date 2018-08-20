@@ -810,6 +810,7 @@ def runAngularGenericJenkinsfile() {
                             stage('Check published package on NPM registry') {
 
                                 angularCheckPublishedPackage {
+                                    thePackageTag = packageTag
                                     thePackageTarball = packageViewTarball
                                 }
 
