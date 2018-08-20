@@ -370,18 +370,19 @@ def runAngularGenericJenkinsfile() {
             }
 
             stage('XXX') {
-                //def packageJSONFilesNode = packageJSON.files
-                echo "Original package.json:\n" +
-                 "${packageJSON} \n" +
-                 "Original package.json: \n" +
-                 "${packageJSON} \n" +
-                 "log 1\n" +
-                 "log 2\n" +
-                 "log 3\n" +
-                 "log 4\n" +
-                 "log 5"
-
                 StringBuilder sb = new StringBuilder()
+                //def packageJSONFilesNode = packageJSON.files
+                sb.append("Original package.json:\n")
+                sb.append("${packageJSON} \n")
+                sb.append("Original package.json: \n")
+                sb.append("${packageJSON} \n")
+                sb.append("log 1\n")
+                sb.append("log 2\n")
+                sb.append("log 3\n")
+                sb.append("log 4\n")
+                sb.append("log 5")
+
+
                 sb.append("xx\n")
                 sb.append("yy\n")
                 sb.append("zz\n")
