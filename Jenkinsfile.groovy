@@ -376,8 +376,8 @@ def runAngularGenericJenkinsfile() {
                 echo "packageJSONFilesNode: ${packageJSONFilesNode}"
                 //Redefining packageJSON.files
                 //Boolean useSpecificOutputPath = false
-                echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
-                echo "params.ngBuildProd.buildSpecificOutputPath: ${params.ngBuildProd.buildSpecificOutputPath}"
+                //echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
+                //echo "params.ngBuildProd.buildSpecificOutputPath: ${params.ngBuildProd.buildSpecificOutputPath}"
                 //if (params.ngBuildProd.useSpecificOutputPath) {
                 //    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath.toBoolean()
                 //}
