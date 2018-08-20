@@ -462,7 +462,7 @@ def runAngularGenericJenkinsfile() {
 
                                     echo "Installing globally @angular/cli version ${angularCliVersion}"
                                     sh "npm install -g @angular/cli@${angularCliVersion}"
-
+*/
                                 }
                             } else {
                                 echo "Skipping globally @angular/cli installation..."
