@@ -484,6 +484,10 @@ def runAngularGenericJenkinsfile() {
 
                             stage('Build') {
 
+                                angularInstallDependencies {
+                                    removeSourcePackageLock = params.removeSourcePackageLock
+                                }
+/*Before global var
                                 Boolean removeSourcePackageLock = false
                                 echo "params.removeSourcePackageLock: ${params.removeSourcePackageLock}"
 
@@ -511,7 +515,7 @@ def runAngularGenericJenkinsfile() {
 
                                 echo 'Building dependencies...'
                                 sh 'npm i'
-
+*/
                             }
 
 
