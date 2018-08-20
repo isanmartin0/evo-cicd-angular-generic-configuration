@@ -59,8 +59,8 @@ def runAngularGenericJenkinsfile() {
     String packageScope
 
 
-    int maxOldBuildsToKeep = 0
-    int daysOldBuildsToKeep = 0
+    //int maxOldBuildsToKeep = 0
+    //int daysOldBuildsToKeep = 0
 
     //Taurus parameters
     def taurus_test_base_path = 'taurus'
@@ -1126,6 +1126,12 @@ def runAngularGenericJenkinsfile() {
 
         stage('Remove old builds') {
 
+            angularRemoveOldBuilds {
+                maxOldBuildsToKeep = params.jenkins.maxOldBuildsToKeep
+                daysOldBuildsToKeep = params.jenkins.daysOldBuildsToKeep
+            }
+/* before global var
+
             echo "params.maxOldBuildsToKeep: ${params.jenkins.maxOldBuildsToKeep}"
             echo "params.daysOldBuildsToKeep: ${params.jenkins.daysOldBuildsToKeep}"
 
@@ -1169,7 +1175,7 @@ def runAngularGenericJenkinsfile() {
                 properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '']]])
 
             }
-
+*/
         }
 
     }
