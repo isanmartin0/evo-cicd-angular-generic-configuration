@@ -435,7 +435,7 @@ def runAngularGenericJenkinsfile() {
                                         theNodeJS_pipeline_installation = nodeJS_pipeline_installation
                                     }
 */
- before global variable
+
                                     Boolean installAngularCliSpecificVersion = false
                                     echo "params.angularCli.installAngularCliSpecificVersion: ${params.angularCli.installAngularCliSpecificVersion}"
 
