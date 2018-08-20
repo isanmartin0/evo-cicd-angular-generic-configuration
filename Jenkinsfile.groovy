@@ -1133,7 +1133,7 @@ def runAngularGenericJenkinsfile() {
         }
 
         stage('Remove old builds') {
-
+/*
             echo "params.maxOldBuildsToKeep: ${params.jenkins.maxOldBuildsToKeep}"
             echo "params.daysOldBuildsToKeep: ${params.jenkins.daysOldBuildsToKeep}"
 
@@ -1179,7 +1179,7 @@ def runAngularGenericJenkinsfile() {
             }
 
         }
-
+*/
     }
 
     node {
