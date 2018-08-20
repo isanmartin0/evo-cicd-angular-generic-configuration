@@ -739,7 +739,7 @@ def runAngularGenericJenkinsfile() {
                             }
 
                         } else {
-/*
+
                             stage('Configure Artifactory NPM Registry') {
                                 echo 'Setting Artifactory NPM registry'
                                 sh "npm config set registry ${angularNPMRepositoryURL} "
@@ -774,7 +774,7 @@ def runAngularGenericJenkinsfile() {
 
                             }
 
-*/
+
                         }
 
 
@@ -1169,9 +1169,9 @@ def runAngularGenericJenkinsfile() {
                 properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '']]])
 
             }
-
-        }
 */
+        }
+
     }
 
     node {
