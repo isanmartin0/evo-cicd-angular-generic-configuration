@@ -787,16 +787,23 @@ def runAngularGenericJenkinsfile() {
 
                         } else {
 
-
-                            stage('XXX') {
-                                deploy = angularTimeoutConfirmMessage {
-                                    theTimeoutConfirmDeploy = params.timeoutConfirmDeploy
-                                    theTimeoutConfirmDeployTime = params.timeoutConfirmDeployTime
-                                    theTimeoutConfirmDeployUnit = params.timeoutConfirmDeployUnit
-                                    theMessage = 'Waiting for user approval'
-                                    theChoiceName = 'Continue and deploy?'
-                                    theChoices = 'No\nYes'
-                                    theChoiceDescription = 'Choose "Yes" if you want to deploy this build'
+                            try {
+                                stage('XXX') {
+                                    deploy = angularTimeoutConfirmMessage {
+                                        theTimeoutConfirmDeploy = params.timeoutConfirmDeploy
+                                        theTimeoutConfirmDeployTime = 15
+                                        theTimeoutConfirmDeployUnit = SECONDS
+                                        theMessage = 'Waiting for user approval'
+                                        theChoiceName = 'Continue and deploy?'
+                                        theChoices = 'No\nYes'
+                                        theChoiceDescription = 'Choose "Yes" if you want to deploy this build'
+                                    }
+                                }
+                            } catch (err) {
+                                def user = err.getCauses()[0].getUser()
+                                if('SYSTEM'.equals(user.toString())) { //timeout
+                                    currentBuild.result = "FAILED"
+                                    throw new hudson.AbortException("Timeout on confirm deploy") as Throwable
                                 }
                             }
 
