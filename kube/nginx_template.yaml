@@ -58,8 +58,8 @@ objects:
           value: ${ARTIFACTORY_REPO}
         - name: ARTIFACTORY_TOKEN
           value: ${ARTIFACTORY_TOKEN}
-        - name: BUILD_SPECIFIC_OUTPUT_PATH
-          value: ${BUILD_SPECIFIC_OUTPUT_PATH}
+        - name: BUILD_OUTPUT_PATH
+          value: ${BUILD_OUTPUT_PATH}
         from:
           kind: ImageStreamTag
           name: nginx:${NGINX_VERSION}
@@ -241,6 +241,6 @@ parameters:
 - description: "Artifactory Token"
   name: "ARTIFACTORY_TOKEN"
   value: ""
-- description: "Build Specific Output Path"
-  name: "BUILD_SPECIFIC_OUTPUT_PATH"
+- description: "Build Output Path"
+  name: "BUILD_OUTPUT_PATH"
   value: ""
