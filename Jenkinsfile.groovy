@@ -630,7 +630,7 @@ def runAngularGenericJenkinsfile() {
                                                     thePackageJSON = packageJSON
                                                     theBuildDefaultOutputPath = buildDefaultOutputPath
                                                     useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
-                                                    buildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
+                                                    theBuildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
                                 }
 
 /* before global variable
