@@ -954,6 +954,18 @@ def runAngularGenericJenkinsfile() {
             try {
                 stage('Decide on Deploying') {
 
+                    deploy = angularTimeoutConfirmMessage {
+                        theTimeoutConfirmDeploy = params.timeoutConfirmDeploy
+                        theTimeoutConfirmDeployTime = params.timeoutConfirmDeployTime
+                        theTimeoutConfirmDeployUnit = params.timeoutConfirmDeployUnit
+                        theMessage = 'Waiting for user approval'
+                        theChoiceName = 'Continue and deploy?'
+                        theChoices = 'No\nYes'
+                        theChoiceDescription = 'Choose "Yes" if you want to deploy this build'
+                    }
+
+
+/* Before global variable
                     //Parameters timeout deploy answer
 
                     Boolean timeoutConfirmDeploy = false
@@ -1008,6 +1020,8 @@ def runAngularGenericJenkinsfile() {
                                 parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                     }
+*/
+
                 }
             } catch (err) {
                 def user = err.getCauses()[0].getUser()
