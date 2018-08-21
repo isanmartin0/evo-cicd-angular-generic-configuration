@@ -961,19 +961,20 @@ def runAngularGenericJenkinsfile() {
         def deploy = 'Yes'
 
         if (branchType in params.confirmDeploy) {
-            try {
-                stage('Decide on Deploying') {
 
-                    deploy = angularTimeoutConfirmMessage {
-                        theTimeoutConfirmDeploy = params.timeoutConfirmDeploy
-                        theTimeoutConfirmDeployTime = params.timeoutConfirmDeployTime
-                        theTimeoutConfirmDeployUnit = params.timeoutConfirmDeployUnit
-                        theMessage = 'Waiting for user approval'
-                        theChoiceName = 'Continue and deploy?'
-                        theChoices = 'No\nYes'
-                        theChoiceDescription = 'Choose "Yes" if you want to deploy this build'
-                    }
+            node {
+                try {
+                    stage('Decide on Deploying') {
 
+                        deploy = angularTimeoutConfirmMessage {
+                            theTimeoutConfirmDeploy = params.timeoutConfirmDeploy
+                            theTimeoutConfirmDeployTime = params.timeoutConfirmDeployTime
+                            theTimeoutConfirmDeployUnit = params.timeoutConfirmDeployUnit
+                            theMessage = 'Waiting for user approval'
+                            theChoiceName = 'Continue and deploy?'
+                            theChoices = 'No\nYes'
+                            theChoiceDescription = 'Choose "Yes" if you want to deploy this build'
+                        }
 
 /* Before global variable
                     //Parameters timeout deploy answer
@@ -1032,14 +1033,16 @@ def runAngularGenericJenkinsfile() {
                     }
 */
 
-                }
-            } catch (err) {
-                def user = err.getCauses()[0].getUser()
-                if('SYSTEM'.equals(user.toString())) { //timeout
-                    currentBuild.result = "FAILED"
-                    throw new hudson.AbortException("Timeout on confirm deploy") as Throwable
+                    }
+                } catch (err) {
+                    def user = err.getCauses()[0].getUser()
+                    if ('SYSTEM'.equals(user.toString())) { //timeout
+                        currentBuild.result = "FAILED"
+                        throw new hudson.AbortException("Timeout on confirm deploy") as Throwable
+                    }
                 }
             }
+
         }
 
         if (deploy == 'Yes') {
@@ -1063,6 +1066,9 @@ def runAngularGenericJenkinsfile() {
 
             angularExecuteAllPerformanceTests {
                 theBranchType = branchType
+                theTimeoutConfirmPostDeployTests = params.testing.postdeploy.timeoutConfirmPostDeployTests
+                theTimeoutConfirmPostDeployTestsTime = params.testing.postdeploy.timeoutConfirmPostDeployTestsTime
+                theTimeoutConfirmPostDeployTestsUnit = params.testing.postdeploy.timeoutConfirmPostDeployTestsUnit
                 theSmokeTestingBranches = params.testing.postdeploy.smokeTesting
                 theAcceptanceTestingBranches = params.testing.postdeploy.acceptanceTesting
                 theSecurityTestingBranches = params.testing.postdeploy.securityTesting

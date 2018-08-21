@@ -56,6 +56,9 @@ testing:
       - hotfix
 
   postdeploy:
+    timeoutConfirmPostDeployTests: true
+    timeoutConfirmPostDeployTestsTime: 30
+    timeoutConfirmPostDeployTestsUnit: MINUTES
     smokeTesting:
       # - release
       # - master
