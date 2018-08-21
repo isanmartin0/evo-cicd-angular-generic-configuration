@@ -792,7 +792,7 @@ def runAngularGenericJenkinsfile() {
                                     deploy = angularTimeoutConfirmMessage {
                                         theTimeoutConfirmDeploy = params.timeoutConfirmDeploy
                                         theTimeoutConfirmDeployTime = 15
-                                        theTimeoutConfirmDeployUnit = SECONDS
+                                        theTimeoutConfirmDeployUnit = "SECONDS"
                                         theMessage = 'Waiting for user approval'
                                         theChoiceName = 'Continue and deploy?'
                                         theChoices = 'No\nYes'
