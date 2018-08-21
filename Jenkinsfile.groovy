@@ -100,7 +100,8 @@ def runAngularGenericJenkinsfile() {
     def angularCliVersion = angularCliVersion_default
     def buildProdFlags = buildProdFlags_default
 
-    //def packageJSONFilesNodeDistributionFolder = ["dist/"]
+    def buildDefaultOutputPath = ["dist/"]
+    def buildOutputPath = ''
 
 
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
@@ -625,10 +626,11 @@ def runAngularGenericJenkinsfile() {
 
                             stage('Create tarball') {
 
-                                angularCreateTarball {
-                                    thePackageJSON = packageJSON
-                                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
-                                    buildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
+                                buildOutputPath = angularCreateTarball {
+                                                    thePackageJSON = packageJSON
+                                                    theBuildDefaultOutputPath = buildDefaultOutputPath
+                                                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
+                                                    buildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
                                 }
 
 /* before global variable
@@ -698,6 +700,9 @@ def runAngularGenericJenkinsfile() {
 */
                             }
 
+                            utils = null
+                            def confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                             if (branchType in params.npmRegistryPublish) {
 
@@ -780,9 +785,6 @@ def runAngularGenericJenkinsfile() {
                                 }
                             }
 
-                            utils = null
-                            def confirm = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                         } else {
@@ -811,7 +813,7 @@ def runAngularGenericJenkinsfile() {
 
                                 angularCheckPublishedPackage {
                                     thePackageTag = packageTag
-                                    thePackageViewTarball = packageViewTarball + "X"
+                                    thePackageViewTarball = packageViewTarball
                                 }
 
 
