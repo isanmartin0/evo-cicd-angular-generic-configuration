@@ -27,7 +27,7 @@ ngBuildProd:
   useBuildProdFlags: false
   buildProdFlags:  --aot=false
   useSpecificOutputPath: false
-  buildSpecificOutputPath: /dist
+  buildSpecificOutputPath: dist/
 
 environmentVariables:
   # environmentVariable1: value1
