@@ -742,6 +742,7 @@ def runAngularGenericJenkinsfile() {
 
                             } else {
 
+
                                 stage('Artifact Generic Registry Publish') {
 
                                     angularGenericRegistryPublish {
@@ -785,6 +786,22 @@ def runAngularGenericJenkinsfile() {
 
 
                         } else {
+
+
+                            stage('XXX') {
+                                deploy = angularTimeoutConfirmMessage {
+                                    theTimeoutConfirmDeploy = params.timeoutConfirmDeploy
+                                    theTimeoutConfirmDeployTime = params.timeoutConfirmDeployTime
+                                    theTimeoutConfirmDeployUnit = params.timeoutConfirmDeployUnit
+                                    theMessage = 'Waiting for user approval'
+                                    theChoiceName = 'Continue and deploy?'
+                                    theChoices = 'No\nYes'
+                                    theChoiceDescription = 'Choose "Yes" if you want to deploy this build'
+                                }
+                            }
+
+                            def confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                             stage('Configure Artifactory NPM Registry') {
 
