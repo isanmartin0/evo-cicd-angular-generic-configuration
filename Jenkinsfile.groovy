@@ -836,6 +836,15 @@ def runAngularGenericJenkinsfile() {
 
                             }
 
+                            stage('Set Build Output Path') {
+
+                                buildOutputPath = angularSetBuildOutputPath {
+                                    theBuildDefaultOutputPath = buildDefaultOutputPath
+                                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
+                                    theBuildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
+                                }
+                            }
+
 
                         }
 
