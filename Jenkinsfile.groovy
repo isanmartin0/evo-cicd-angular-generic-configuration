@@ -1061,6 +1061,22 @@ def runAngularGenericJenkinsfile() {
             echo "Openshift route hostname: ${openshift_route_hostname}"
             echo "Openshift route hostname (with protocol): ${openshift_route_hostname_with_protocol}"
 
+            angularExecuteAllPerformanceTests {
+                theBranchType = branchType
+                theSmokeTestingBranches = params.testing.postdeploy.smokeTesting
+                theAcceptanceTestingBranches = params.testing.postdeploy.acceptanceTesting
+                theSecurityTestingBranches = params.testing.postdeploy.securityTesting
+                thePerformanceTestingBranches = params.testing.postdeploy.performanceTesting
+                errorOnPostDeployTestsUnstableResult = params.jenkins.errorOnPostDeployTestsUnstableResult
+                theTaurusTestBasePath = taurus_test_base_path
+                theSmokeTestPath = smoke_test_path
+                theAcceptanceTestPath = acceptance_test_path
+                theSecurityTestPath = security_test_path
+                thePerformanceTestPath = performance_test_path
+                theOpenshiftRouteHostnameWithProtocol = openshift_route_hostname_with_protocol
+            }
+
+/* Before global variable
             echo "params.jenkins.errorOnPostDeployTestsUnstableResult: ${params.jenkins.errorOnPostDeployTestsUnstableResult}"
             Boolean errorOnPostDeployTestsUnstableResult = false
 
@@ -1195,6 +1211,8 @@ def runAngularGenericJenkinsfile() {
             } else {
                 echo "Skipping ${AngularConstants.PERFORMANCE_TEST_TYPE} tests..."
             }
+*/
+
 
         } else {
             //User doesn't want to deploy
