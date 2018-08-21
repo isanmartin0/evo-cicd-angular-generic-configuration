@@ -7,12 +7,12 @@ removeSourcePackageLock: false
 
 showInstalledDependencies:
   showGlobalInstalledDependencies: true
-  showGlobalInstalledDependenciesDepthLimit: true
+  showGlobalInstalledDependenciesDepthLimit: false
   showGlobalInstalledDependenciesDepth: 1
   showLocalInstalledDependencies: true
-  showLocalInstalledDependenciesDepthLimit: true
+  showLocalInstalledDependenciesDepthLimit: false
   showLocalInstalledDependenciesDepth: 0
-  showLocalInstalledDependenciesOnlyType: true
+  showLocalInstalledDependenciesOnlyType: false
   showLocalInstalledDependenciesType: dev
 
 
