@@ -355,7 +355,8 @@ def runAngularGenericJenkinsfile() {
                     angularCliVersion = nodeJS_6_installation_angularCliVersion_default
                     buildProdFlags = nodeJS_6_installation_build_prod_flags
                 } else {
-                    currentBuild.result = "FAILED"
+                    utils = null
+                    currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
                     throw new hudson.AbortException("Error setting NodeJS version") as Throwable
                 }
 
@@ -694,9 +695,12 @@ def runAngularGenericJenkinsfile() {
                     }
                 } catch (err) {
                     def user = err.getCauses()[0].getUser()
+                    utils = null
+                    currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
                     if ('SYSTEM'.equals(user.toString())) { //timeout
-                        currentBuild.result = "FAILED"
                         throw new hudson.AbortException("Timeout on confirm deploy") as Throwable
+                    } else {
+                        throw new hudson.AbortException("There is an error on confirm deploy") as Throwable
                     }
                 }
             }
@@ -740,6 +744,7 @@ def runAngularGenericJenkinsfile() {
         } else {
             //User doesn't want to deploy
             //Failed status
+            utils = null
             currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
             throw new hudson.AbortException("The deploy on Openshift hasn't been confirmed") as Throwable
         }
@@ -769,6 +774,7 @@ def runAngularGenericJenkinsfile() {
     }
 
 
+    utils = null
 
 } //end of method
 
