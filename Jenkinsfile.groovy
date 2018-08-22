@@ -98,9 +98,9 @@ def runAngularGenericJenkinsfile() {
     def nodeJS_8_installation_build_prod_flags = "--aot=false"
     def nodeJS_10_installation_build_prod_flags = "--build-optimizer"
 
-    def nodeJS_6_installation_unit_testing_flags = "--watch=false --code-coverage"
-    def nodeJS_8_installation_unit_testing_flags = "--watch=false --code-coverage"
-    def nodeJS_10_installation_unit_testing_flags = "--watch=false --code-coverage"
+    def nodeJS_6_installation_unit_testing_flags = "--browsers ChromeHeadless --watch=false --code-coverage"
+    def nodeJS_8_installation_unit_testing_flags = "--browsers ChromeHeadless --watch=false --code-coverage"
+    def nodeJS_10_installation_unit_testing_flags = "--browsers ChromeHeadless --watch=false --code-coverage"
 
     def nodeJS_6_installation_e2e_testing_flags = ""
     def nodeJS_8_installation_e2e_testing_flags = ""
