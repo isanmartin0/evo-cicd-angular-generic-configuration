@@ -434,7 +434,7 @@ def runAngularGenericJenkinsfile() {
 
             stage ('XXX') {
 
-                def filesKarmaConfJs = findFiles(glob: '**/karma.conf.js') echo """${files[0].name} ${files[0].path} ${files[0].directory} ${files[0].length} ${files[0].lastModified}"""
+                def filesKarmaConfJs = findFiles(glob: '**/karma.conf.js') echo """${filesKarmaConfJs[0].name} ${filesKarmaConfJs[0].path} ${filesKarmaConfJs[0].directory} ${filesKarmaConfJs[0].length} ${filesKarmaConfJs[0].lastModified}"""
 
 
             }
