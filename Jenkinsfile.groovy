@@ -75,9 +75,12 @@ def runAngularGenericJenkinsfile() {
 
     //Parameters Angular
     Boolean installGloballyAngularCli = false
-    int image_stream_nodejs_version_default = 10
-    def angularCliVersion_default = "6.1.2"
-    def buildProdFlags_default = "--build-optimizer"
+    int image_stream_nodejs_version_default = 8
+    def angularCliVersion_default = "1.7.4"
+    def unitTestingFlags_default = "--watch=false --code-coverage"
+    def e2eTestingFlags_default = ""
+    def buildProdFlags_default = "--aot=false"
+
     def angularCliLocalPath = "node_modules/@angular/cli/bin/"
 
     def build_from_registry_url = 'https://github.com/isanmartin0/s2i-angular-container.git'
@@ -95,9 +98,19 @@ def runAngularGenericJenkinsfile() {
     def nodeJS_8_installation_build_prod_flags = "--aot=false"
     def nodeJS_10_installation_build_prod_flags = "--build-optimizer"
 
+    def nodeJS_6_installation_unit_testing_flags = "--watch=false --code-coverage"
+    def nodeJS_8_installation_unit_testing_flags = "--watch=false --code-coverage"
+    def nodeJS_10_installation_unit_testing_flags = "--watch=false --code-coverage"
+
+    def nodeJS_6_installation_e2e_testing_flags = ""
+    def nodeJS_8_installation_e2e_testing_flags = ""
+    def nodeJS_10_installation_e2e_testing_flags = ""
+
     def nodeJS_pipeline_installation = ""
     int image_stream_nodejs_version = image_stream_nodejs_version_default
     def angularCliVersion = angularCliVersion_default
+    def unitTestingFlags = unitTestingFlags_default
+    def e2eTestingFlags = e2eTestingFlags_default
     def buildProdFlags = buildProdFlags_default
 
     def buildDefaultOutputPath = ["dist/"]
@@ -337,28 +350,34 @@ def runAngularGenericJenkinsfile() {
                 }
 
                 if (image_stream_nodejs_version >= 10) {
-                    echo "Assigning NodeJS installation ${nodeJS_10_installation}"
                     nodeJS_pipeline_installation = nodeJS_10_installation
-                    echo "Assigning @angular/cli version ${nodeJS_10_installation_angularCliVersion_default}"
                     angularCliVersion = nodeJS_10_installation_angularCliVersion_default
+                    unitTestingFlags = nodeJS_10_installation_unit_testing_flags
+                    e2eTestingFlags = nodeJS_10_installation_e2e_testing_flags
                     buildProdFlags = nodeJS_10_installation_build_prod_flags
                 } else if (image_stream_nodejs_version >= 8) {
-                    echo "Assigning NodeJS installation ${nodeJS_8_installation}"
                     nodeJS_pipeline_installation = nodeJS_8_installation
-                    echo "Assigning @angular/cli version ${nodeJS_8_installation_angularCliVersion_default}"
                     angularCliVersion = nodeJS_8_installation_angularCliVersion_default
+                    unitTestingFlags = nodeJS_8_installation_unit_testing_flags
+                    e2eTestingFlags = nodeJS_8_installation_e2e_testing_flags
                     buildProdFlags = nodeJS_8_installation_build_prod_flags
                 } else if (image_stream_nodejs_version >= 6) {
-                    echo "Assigning NodeJS installation ${nodeJS_6_installation}"
                     nodeJS_pipeline_installation = nodeJS_6_installation
-                    echo "Assigning @angular/cli version ${nodeJS_6_installation_angularCliVersion_default}"
                     angularCliVersion = nodeJS_6_installation_angularCliVersion_default
+                    unitTestingFlags = nodeJS_6_installation_unit_testing_flags
+                    e2eTestingFlags = nodeJS_6_installation_e2e_testing_flags
                     buildProdFlags = nodeJS_6_installation_build_prod_flags
                 } else {
                     utils = null
                     currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
                     throw new hudson.AbortException("Error setting NodeJS version") as Throwable
                 }
+
+                echo "Assigning NodeJS installation: ${nodeJS_pipeline_installation}"
+                echo "Assigning default @angular/cli version: ${angularCliVersion}"
+                echo "Assigning default unit testing flags: ${unitTestingFlags}"
+                echo "Assigning default e2e testing flags: ${e2eTestingFlags}"
+                echo "Assigning default build production flags: ${buildProdFlags}"
 
                 def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                 env.PATH = "${node}/bin:${env.PATH}"
@@ -477,11 +496,20 @@ def runAngularGenericJenkinsfile() {
 
                             if (branchType in params.testing.predeploy.unitTesting) {
                                 stage('Test') {
-                                    echo 'TODO: Executing unit tests....'
+                                    angularExecuteUnitTesting {
+                                        useUnitTestingFlags = params.testing.predeploy.useUnitTestingFlags
+                                        theUnitTestingDefaultFlags = unitTestingFlags
+                                        theUnitTestingFlags = params.testing.predeploy.unitTestingFlags
+                                        theAngularCliLocalPath = angularCliLocalPath
+                                        theInstallGloballyAngularCli = installGloballyAngularCli
+                                    }
                                 }
                             } else {
                                 echo "Skipping unit tests..."
                             }
+
+                            def confirm = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                             if (branchType in params.testing.predeploy.sonarQube) {

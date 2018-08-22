@@ -44,12 +44,21 @@ timeoutConfirmDeployUnit: MINUTES
 
 testing:
   predeploy:
+    useUnitTestingFlags: false
+    unitTestingFlags: --watch=false --code-coverage
     unitTesting:
       - feature
       - develop
       - release
       - hotfix
     sonarQube:
+      - feature
+      - develop
+      - release
+      - hotfix
+    useE2eTestingFlags: false
+    e2eTestingFlags:
+    e2eTesting:
       - feature
       - develop
       - release
