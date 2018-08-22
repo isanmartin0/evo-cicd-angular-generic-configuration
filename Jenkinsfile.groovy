@@ -120,9 +120,9 @@ def runAngularGenericJenkinsfile() {
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
 
     //node('nodejs10-chrome') {
-    //node('nodejs') {
+    node('nodejs') {
     //node('prueba-nodejs-centos') {
-    node('openshift37-nodejs10-chrome') {
+    //node('openshift37-nodejs10-chrome') {
 
         echo 'Pipeline begin timestamp... '
         sh 'date'
@@ -468,14 +468,14 @@ def runAngularGenericJenkinsfile() {
                             }
 
 
-                            stage('Build') {
+                            stage('Install packages') {
                                 angularInstallDependencies {
                                     removeSourcePackageLock = params.removeSourcePackageLock
                                 }
                             }
 
 
-                            stage ('Show installed dependencies') {
+                            stage ('Show installed packages') {
                                 angularShowInstalledDependencies {
                                     showGlobalInstalledDependencies = params.showInstalledDependencies.showGlobalInstalledDependencies
                                     showGlobalInstalledDependenciesDepthLimit = params.showInstalledDependencies.showGlobalInstalledDependenciesDepthLimit
