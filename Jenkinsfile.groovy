@@ -119,10 +119,8 @@ def runAngularGenericJenkinsfile() {
 
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
 
-    //node('nodejs10-chrome') {
-    node('nodejs') {
-    //node('prueba-nodejs-centos') {
-    //node('openshift37-nodejs10-chrome') {
+
+    node('openshift37-nodejs10-chrome') {
 
         echo 'Pipeline begin timestamp... '
         sh 'date'
