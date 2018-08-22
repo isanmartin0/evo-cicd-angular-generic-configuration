@@ -318,7 +318,7 @@ def runAngularGenericJenkinsfile() {
                     }
 
                     echo "Jenkins.yml loaded\n" +
-                            "------------------" +
+                            "------------------\n" +
                             ${params}"
 
                     if (isPPCOpenshiftTemplate) {
