@@ -433,22 +433,6 @@ def runAngularGenericJenkinsfile() {
                 echo "Environment selected: ${envLabel}"
             }
 
-            stage ('xxx') {
-                def filesKarmaConfJs = findFiles(glob: 'karma.conf.js')
-
-                if (filesKarmaConfJs.length == 0) {
-                    filesKarmaConfJs = findFiles(glob: 'src/karma.conf.js')
-                }
-
-                echo """Karma configuration file path:  ${filesKarmaConfJs[0].path} """
-                def karmaConfJSFile = readFile file: "${filesKarmaConfJs[0].path}"
-
-                echo "karma.conf.js content:\n" +
-                        "${karmaConfJSFile}"
-            }
-
-            def aaa = input message: 'Waiting for user approval',
-                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
             withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
                 withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
