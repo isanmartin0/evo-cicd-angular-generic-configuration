@@ -431,6 +431,18 @@ def runAngularGenericJenkinsfile() {
                 echo "Environment selected: ${envLabel}"
             }
 
+
+            stage ('XXX') {
+
+                def filesKarmaConfJs = findFiles(glob: '**/karma.conf.js') echo """${files[0].name} ${files[0].path} ${files[0].directory} ${files[0].length} ${files[0].lastModified}"""
+
+
+            }
+
+            def confirm = input message: 'Waiting for user approval',
+                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
+
+
             withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
                 withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
                     withNPM(npmrcConfig: 'my-custom-npmrc') {
@@ -507,9 +519,6 @@ def runAngularGenericJenkinsfile() {
                             } else {
                                 echo "Skipping unit tests..."
                             }
-
-                            def confirm = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
 
                             if (branchType in params.testing.predeploy.sonarQube) {
