@@ -640,42 +640,6 @@ def runAngularGenericJenkinsfile() {
                 }
 
 
-
-/* Before global variable
-                echo "Creating environment variables"
-                def mapEnvironmentVariables = [:]
-
-                echo "params.environmentVariables:"
-                params.environmentVariables.each { key, value ->
-                    echo "params environment variable: ${key} = ${value}"
-                }
-
-                if (params.environmentVariables) {
-                    mapEnvironmentVariables = params.environmentVariables
-                }
-
-                echo "mapEnvironmentVariables:"
-                mapEnvironmentVariables.each { key, value ->
-                    echo "Map environment variable: ${key} = ${value}"
-                }
-
-                int mapEnvironmentVariablesSize = mapEnvironmentVariables.size()
-
-                echo "mapEnvironmentVariables size: ${mapEnvironmentVariablesSize}"
-
-                if (mapEnvironmentVariablesSize > 0) {
-                    retry(3) {
-                        angularOpenshiftEnvironmentVariables {
-                            branchHY = branchNameHY
-                            branch_type = branchType
-                            map_environment_variables = mapEnvironmentVariables
-                        }
-
-                        sleep(10)
-                    }
-                }
-*/
-
                 angularOpenshiftBuildProject {
                     repoUrl = angularNPMRepositoryURL
                     branchHY = branchNameHY
