@@ -317,6 +317,10 @@ def runAngularGenericJenkinsfile() {
                         echo "Using Jenkins.yml from Angular generic project"
                     }
 
+                    echo "Jenkins.yml loaded\n" +
+                            "------------------" +
+                            ${params}"
+
                     if (isPPCOpenshiftTemplate) {
                         //The template is provided by parallel project configuration (PPC)
                         params.openshift.templatePath = relativeTargetDirPPC + params.openshift.templatePath
