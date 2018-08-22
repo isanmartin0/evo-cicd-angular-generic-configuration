@@ -629,7 +629,19 @@ def runAngularGenericJenkinsfile() {
                 /**************************************************************
                  ************* ENVIRONMENT VARIABLES CREATION *****************
                  **************************************************************/
+                retry(3) {
+                    angularOpenshiftEnvironmentVariables {
+                        branchHY = branchNameHY
+                        branch_type = branchType
+                        map_environment_variables = mapEnvironmentVariables
+                    }
 
+                    sleep(10)
+                }
+
+
+
+/* Before global variable
                 echo "Creating environment variables"
                 def mapEnvironmentVariables = [:]
 
@@ -662,7 +674,7 @@ def runAngularGenericJenkinsfile() {
                         sleep(10)
                     }
                 }
-
+*/
 
                 angularOpenshiftBuildProject {
                     repoUrl = angularNPMRepositoryURL
