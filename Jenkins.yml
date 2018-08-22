@@ -19,7 +19,7 @@ showInstalledDependencies:
 angularCli:
   installGloballyAngularCli: false
   installAngularCliSpecificVersion: false
-  angularCliVersion: 1.0.5
+  angularCliVersion: 1.7.4
 
 nginxVersion: '1.12'
 
