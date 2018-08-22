@@ -633,7 +633,7 @@ def runAngularGenericJenkinsfile() {
                     angularOpenshiftEnvironmentVariables {
                         branchHY = branchNameHY
                         branch_type = branchType
-                        map_environment_variables = mapEnvironmentVariables
+                        map_environment_variables = params.environmentVariables
                     }
 
                     sleep(10)
