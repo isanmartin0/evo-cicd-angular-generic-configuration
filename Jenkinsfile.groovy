@@ -319,7 +319,7 @@ def runAngularGenericJenkinsfile() {
 
                     echo "Jenkins.yml loaded\n" +
                             "------------------\n" +
-                            ${params}"
+                            "${params}"
 
                     if (isPPCOpenshiftTemplate) {
                         //The template is provided by parallel project configuration (PPC)
