@@ -383,7 +383,6 @@ def runAngularGenericJenkinsfile() {
                 echo "This branch is a ${branchType} branch"
                 branchNameHY = branchName.replace("/", "-").replace(".", "-").replace("_","-")
                 echo "Branch name processed: ${branchName}"
-
             }
 
             stage ('Openshift environment') {
@@ -418,7 +417,6 @@ def runAngularGenericJenkinsfile() {
 
                         if (branchName != 'master') {
 
-
                             echo "params.angularCli.installGloballyAngularCli: ${params.angularCli.installGloballyAngularCli}"
 
                             if (params.angularCli.installGloballyAngularCli) {
@@ -426,52 +424,17 @@ def runAngularGenericJenkinsfile() {
                             }
 
                             if (installGloballyAngularCli) {
-
                                 stage('Install globally @angular/cli') {
-
                                     angularInstallGloballyAngularCli {
                                         installAngularCliSpecificVersion = params.angularCli.installAngularCliSpecificVersion
                                         angularCliDefaultVersion = angularCliVersion
                                         angularCliSpecificVersion = params.angularCli.angularCliVersion
                                         theNodeJS_pipeline_installation = nodeJS_pipeline_installation
                                     }
-
-
-/* Before global var
-                                    Boolean installAngularCliSpecificVersion = false
-                                    echo "params.angularCli.installAngularCliSpecificVersion: ${params.angularCli.installAngularCliSpecificVersion}"
-
-                                    if (params.angularCli.installAngularCliSpecificVersion) {
-                                        installAngularCliSpecificVersion = params.angularCli.installAngularCliSpecificVersion.toBoolean()
-                                    }
-
-                                    if (installAngularCliSpecificVersion) {
-
-                                        echo "Installing a specific @angular/cli version"
-                                        echo "params.angularCli.angularCliVersion: ${params.angularCli.angularCliVersion}"
-                                        String angularCliVersionParam = params.angularCli.angularCliVersion
-
-                                        if (angularCliVersionParam != null) {
-                                            angularCliVersion = angularCliVersionParam
-                                        }
-
-                                    } else {
-                                        echo "Installing default @angular/cli version"
-                                        echo "NodeJS version: ${nodeJS_pipeline_installation}"
-                                        echo "@angular/cli default version: ${angularCliVersion}"
-                                    }
-
-                                    echo "Installing globally @angular/cli version ${angularCliVersion}"
-                                    sh "npm install -g @angular/cli@${angularCliVersion}"
-*/
                                 }
                             } else {
                                 echo "Skipping globally @angular/cli installation..."
                             }
-
-
-
-
 
 
                             stage('Configure Artifactory NPM Registry') {
@@ -482,46 +445,14 @@ def runAngularGenericJenkinsfile() {
                             }
 
 
-
                             stage('Build') {
-
                                 angularInstallDependencies {
                                     removeSourcePackageLock = params.removeSourcePackageLock
                                 }
-/*Before global var
-                                Boolean removeSourcePackageLock = false
-                                echo "params.removeSourcePackageLock: ${params.removeSourcePackageLock}"
-
-                                if (params.removeSourcePackageLock) {
-                                    removeSourcePackageLock = params.removeSourcePackageLock.toBoolean()
-                                }
-
-                                if (removeSourcePackageLock) {
-                                    boolean isPackageLockJSON = fileExists 'package-lock.json'
-                                    echo "file package-lock.json exists: ${isPackageLockJSON}"
-
-                                    echo "Removing package-lock.json"
-
-                                    try {
-                                        sh "rm package-lock.json"
-                                    } catch (exc) {
-                                        echo "package-lock.json doesn't exist"
-                                        def exc_message = exc.message
-                                        echo "${exc_message}"
-                                    }
-
-                                    isPackageLockJSON = fileExists 'package-lock'
-                                    echo "file package-lock.json exists: ${isPackageLockJSON}"
-                                }
-
-                                echo 'Building dependencies...'
-                                sh 'npm i'
-*/
                             }
 
 
                             stage ('Show installed dependencies') {
-
                                 angularShowInstalledDependencies {
                                     showGlobalInstalledDependencies = params.showInstalledDependencies.showGlobalInstalledDependencies
                                     showGlobalInstalledDependenciesDepthLimit = params.showInstalledDependencies.showGlobalInstalledDependenciesDepthLimit
@@ -532,38 +463,20 @@ def runAngularGenericJenkinsfile() {
                                     showLocalInstalledDependenciesOnlyType = params.showInstalledDependencies.showLocalInstalledDependenciesOnlyType
                                     showLocalInstalledDependenciesType = params.showInstalledDependencies.showLocalInstalledDependenciesType
                                 }
-
                             }
 
 
-
                             stage('Get ng version') {
-
                                 angularGetNGVersion {
                                     theAngularCliLocalPath = angularCliLocalPath
                                     theInstallGloballyAngularCli = installGloballyAngularCli
                                 }
-
-
-/* Before global variable
-                                echo 'ng version:'
-
-                                if (installGloballyAngularCli) {
-                                    sh "ng version "
-                                } else {
-                                    sh "${angularCliLocalPath}ng version"
-                                }
-*/
-
                             }
-
 
 
                             if (branchType in params.testing.predeploy.unitTesting) {
                                 stage('Test') {
-
                                     echo 'TODO: Executing unit tests....'
-
                                 }
                             } else {
                                 echo "Skipping unit tests..."
@@ -571,19 +484,15 @@ def runAngularGenericJenkinsfile() {
 
 
                             if (branchType in params.testing.predeploy.sonarQube) {
-
                                 stage('SonarQube') {
-
                                     echo "TODO: Running SonarQube..."
-
                                 }
-
                             } else {
                                 echo "Skipping Running SonarQube..."
                             }
 
-                            stage('Build Angular application') {
 
+                            stage('Build Angular application') {
                                 angularBuildAngularApplication {
                                     useBuildProdFlags = params.ngBuildProd.useBuildProdFlags
                                     theBuildProdDefaultFlags = buildProdFlags
@@ -591,160 +500,37 @@ def runAngularGenericJenkinsfile() {
                                     theAngularCliLocalPath = angularCliLocalPath
                                     theInstallGloballyAngularCli = installGloballyAngularCli
                                 }
-
-/* Before global var
-                                echo "Building angular application"
-
-
-                                Boolean useBuildProdFlags = false
-                                echo "params.ngBuildProd.useBuildProdFlags: ${params.ngBuildProd.useBuildProdFlags}"
-                                echo "params.ngBuildProd.buildProdFlags: ${params.ngBuildProd.buildProdFlags}"
-
-                                if (params.ngBuildProd.useBuildProdFlags) {
-                                    useBuildProdFlags = params.ngBuildProd.useBuildProdFlags.toBoolean()
-                                }
-
-                                if (useBuildProdFlags) {
-                                    buildProdFlags = params.ngBuildProd.buildProdFlags
-                                } else {
-                                    echo "Build prod parameters default: ${buildProdFlags}"
-                                }
-
-                                echo "useBuildProdFlags: ${useBuildProdFlags}"
-                                echo "buildProdFlags: ${buildProdFlags}"
-
-                                if (installGloballyAngularCli) {
-                                    sh "ng build --prod ${buildProdFlags}"
-                                } else {
-                                    sh "${angularCliLocalPath}ng build --prod ${buildProdFlags}"
-                                }
-
-*/
                             }
 
 
-
                             stage('Create tarball') {
-
                                 buildOutputPath = angularCreateTarball {
                                                     thePackageJSON = packageJSON
                                                     theBuildDefaultOutputPath = buildDefaultOutputPath
                                                     useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
                                                     theBuildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
                                 }
-
-/* before global variable
-                                echo "Original package.json:"
-                                echo "${packageJSON}"
-
-                                def packageJSONFilesNode = packageJSON.files
-                                echo "packageJSONFilesNode: ${packageJSONFilesNode}"
-
-                                //Redefining packageJSON.files
-                                Boolean useSpecificOutputPath = false
-                                echo "params.ngBuildProd.useSpecificOutputPath: ${params.ngBuildProd.useSpecificOutputPath}"
-                                echo "params.ngBuildProd.buildSpecificOutputPath: ${params.ngBuildProd.buildSpecificOutputPath}"
-
-                                if (params.ngBuildProd.useSpecificOutputPath) {
-                                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath.toBoolean()
-                                }
-
-                                if (useSpecificOutputPath) {
-                                    if (params.ngBuildProd.buildSpecificOutputPath) {
-                                        packageJSONFilesNodeDistributionFolder = "${params.ngBuildProd.buildSpecificOutputPath}".toArray(new String[0])
-                                    }
-                                }
-
-                                echo "packageJSONFilesNodeDistributionFolder: ${packageJSONFilesNodeDistributionFolder}"
-
-                                packageJSON.files = packageJSONFilesNodeDistributionFolder
-
-                                def packageJSONPrivateNode = packageJSON.private
-                                echo "packageJSONPrivateNode: ${packageJSONPrivateNode}"
-
-                                //Redefining packageJSON.private
-                                if (packageJSONPrivateNode) {
-                                    packageJSON.private = false
-                                }
-
-                                echo "Updated package.json:"
-                                echo "${packageJSON}"
-
-                                writeJSON file: 'package.json', json: packageJSON, pretty: 4
-
-                                sh "npm pack"
-*/
                             }
-
 
 
                             stage ('Check tarball creation') {
                                 angularCheckTarballCreation {
                                     thePackageTarball = packageTarball
                                 }
-
-/* Before global variable
-                                try {
-                                    echo 'Check tarball creation ...'
-                                    tarball_creation_script = $/eval "ls ${packageTarball}"/$
-                                    echo "${tarball_creation_script}"
-                                    def tarball_creation_view = sh(script: "${tarball_creation_script}", returnStdout: true).toString().trim()
-                                    echo "${tarball_creation_view}"
-                                } catch (exc) {
-                                    echo 'There is an error on tarball creation'
-                                    def exc_message = exc.message
-                                    echo "${exc_message}"
-                                    currentBuild.result = "FAILED"
-                                    throw new hudson.AbortException("Error checking existence of tarball") as Throwable
-                                }
-*/
                             }
 
 
                             if (branchType in params.npmRegistryPublish) {
-
                                 stage('Artifact NPM Registry Publish') {
-
                                     angularNPMRegistryPublish {
                                         thePackageTarball = packageTarball
                                         theAngularNPMLocalRepositoryURL = angularNPMLocalRepositoryURL
                                     }
 
                                     artifactoryRepository = angularNPMLocalRepositoryURL
-
-/* Before global variable
-
-                                    echo "Publishing artifact to a NPM registry"
-
-                                    echo 'Get NPM config registry'
-                                    sh 'npm config get registry'
-
-                                    echo 'Test NPM repository authentication'
-                                    sh 'npm whoami'
-
-                                    try {
-                                        echo 'Publish package on Artifactory NPM registry'
-
-                                        sh "npm publish ${packageTarball} --registry ${angularNPMLocalRepositoryURL}"
-
-                                        artifactoryRepository = angularNPMLocalRepositoryURL
-
-                                    } catch (exc) {
-                                        echo 'There is an error on publish package'
-                                        def exc_message = exc.message
-                                        echo "${exc_message}"
-
-                                        currentBuild.result = "FAILED"
-                                        throw new hudson.AbortException("Error publishing package on NPM registry") as Throwable
-                                    }
-*/
                                 }
-
                             } else {
-
-
                                 stage('Artifact Generic Registry Publish') {
-
                                     angularGenericRegistryPublish {
                                         artCredentialsId = artifactoryCredential
                                         theArtifactoryURL = artifactoryURL
@@ -754,98 +540,33 @@ def runAngularGenericJenkinsfile() {
                                     }
 
                                     artifactoryRepository = angularGenericLocalRepositoryURL
-
-/* Before globar var
-                                    echo "Publishing artifact to a generic registry"
-
-                                    try {
-                                        echo 'Publish package on Artifactory generic registry'
-
-                                        withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
-                                            echo "Checking credentials on Artifactory"
-                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} ${artifactoryURL}api/system/ping"
-
-                                            echo "Deploying artifact on Artifactory gemeric repository"
-                                            sh "curl -H X-JFrog-Art-Api:${ARTIFACTORY_TOKEN} -X PUT ${angularGenericLocalRepositoryURL}${packageName}/${packageTarball} -T ${packageTarball}"
-
-                                            artifactoryRepository = angularGenericLocalRepositoryURL
-                                        }
-
-                                    } catch (exc) {
-                                        echo 'There is an error on publish package'
-                                        def exc_message = exc.message
-                                        echo "${exc_message}"
-
-                                        currentBuild.result = "FAILED"
-                                        throw new hudson.AbortException("Error publishing package on generic registry") as Throwable
-                                    }
-*/
                                 }
                             }
 
-
-
-                        } else {
-
+                        } else { //if branchName != 'master'
                             stage('Configure Artifactory NPM Registry') {
-
                                 angularConfigureNPMRepository {
                                     theAngularNPMRepositoryURL = angularNPMRepositoryURL
                                 }
 
                                 artifactoryRepository = angularNPMLocalRepositoryURL
-
-
-/* Before global variable
-                                echo 'Setting Artifactory NPM registry'
-                                sh "npm config set registry ${angularNPMRepositoryURL} "
-
-                                sh "npm config get registry"
-*/
-
                             }
 
 
-
                             stage('Check published package on NPM registry') {
-
                                 angularCheckPublishedPackage {
                                     thePackageTag = packageTag
                                     thePackageViewTarball = packageViewTarball
                                 }
-
-
-/* Before global variable
-                                try {
-                                    echo 'Get tarball location of package ...'
-                                    tarball_script = $/eval "npm view  ${
-                                        packageTag
-                                    } dist.tarball | grep '${
-                                        packageViewTarball
-                                    }'"/$
-                                    echo "${tarball_script}"
-                                    def tarball_view = sh(script: "${tarball_script}", returnStdout: true).toString().trim()
-                                    echo "${tarball_view}"
-                                } catch (exc) {
-                                    echo 'There is an error on retrieving the tarball location'
-                                    def exc_message = exc.message
-                                    echo "${exc_message}"
-                                    currentBuild.result = "FAILED"
-                                    throw new hudson.AbortException("Error checking existence of package on NPM registry") as Throwable
-                                }
-*/
-
                             }
 
                             stage('Set Build Output Path') {
-
                                 buildOutputPath = angularSetBuildOutputPath {
                                     theBuildDefaultOutputPath = buildDefaultOutputPath
                                     useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
                                     theBuildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
                                 }
                             }
-
 
                         }
 
@@ -862,13 +583,12 @@ def runAngularGenericJenkinsfile() {
                             echo "new branchName: ${branchName}"
 
                         }
-                    }
-                }
-            }
+                    } // withNPM
+                } // withEnv
+            } // withCredentials
 
 
             stage('OpenShift Build') {
-
                 /*********************************************
                  ************* NGINX VERSION *****************
                  *********************************************/
@@ -883,7 +603,6 @@ def runAngularGenericJenkinsfile() {
                  **********************************************************/
 
                 echo "Building image on OpenShift..."
-
 
                 angularOpenshiftCheckAndCreateProject {
                     oseCredential = openshiftCredential
@@ -932,7 +651,6 @@ def runAngularGenericJenkinsfile() {
                 echo "mapEnvironmentVariables size: ${mapEnvironmentVariablesSize}"
 
                 if (mapEnvironmentVariablesSize > 0) {
-
                     retry(3) {
                         angularOpenshiftEnvironmentVariables {
                             branchHY = branchNameHY
@@ -951,9 +669,9 @@ def runAngularGenericJenkinsfile() {
                     branch_type = branchType
                 }
 
-            }
+            } // end stage
 
-        }
+        } // end isPPCJenkinsFile
 
     } // end of node
 
@@ -961,11 +679,9 @@ def runAngularGenericJenkinsfile() {
         def deploy = 'Yes'
 
         if (branchType in params.confirmDeploy) {
-
             node {
                 try {
                     stage('Decide on Deploying') {
-
                         deploy = angularTimeoutConfirmMessage {
                             theTimeoutConfirm = params.timeoutConfirmDeploy
                             theTimeoutConfirmTime = params.timeoutConfirmDeployTime
@@ -975,64 +691,6 @@ def runAngularGenericJenkinsfile() {
                             theChoices = 'No\nYes'
                             theChoiceDescription = 'Choose "Yes" if you want to deploy this build'
                         }
-
-/* Before global variable
-                    //Parameters timeout deploy answer
-
-                    Boolean timeoutConfirmDeploy = false
-                    int timeoutConfirmDeployTime = 0
-                    String timeoutConfirmDeployUnit = ''
-                    boolean isTimeoutConfirmDeployUnitValid = false
-
-                    echo "params.timeoutConfirmDeploy: ${params.timeoutConfirmDeploy}"
-
-                    if (params.timeoutConfirmDeploy != null) {
-                        timeoutConfirmDeploy = params.timeoutConfirmDeploy.toBoolean()
-                    }
-
-                    if (timeoutConfirmDeploy) {
-                        echo "params.timeoutConfirmDeployTime: ${params.timeoutConfirmDeployTime}"
-                        echo "params.timeoutConfirmDeployUnit: ${params.timeoutConfirmDeployUnit}"
-
-                        String timeoutConfirmDeployTimeParam = params.timeoutConfirmDeployTime
-                        if (timeoutConfirmDeployTimeParam != null && timeoutConfirmDeployTimeParam.isInteger()) {
-                            timeoutConfirmDeployTime = timeoutConfirmDeployTimeParam as Integer
-                        }
-
-                        if (params.timeoutConfirmDeployUnit != null && ("NANOSECONDS".equals(params.timeoutConfirmDeployUnit.toUpperCase())
-                                || "MICROSECONDS".equals(params.timeoutConfirmDeployUnit.toUpperCase())
-                                || "MILLISECONDS".equals(params.timeoutConfirmDeployUnit.toUpperCase())
-                                || "SECONDS".equals(params.timeoutConfirmDeployUnit.toUpperCase())
-                                || "MINUTES".equals(params.timeoutConfirmDeployUnit.toUpperCase())
-                                || "HOURS".equals(params.timeoutConfirmDeployUnit.toUpperCase())
-                                || "DAYS".equals(params.timeoutConfirmDeployUnit.toUpperCase()))) {
-                            isTimeoutConfirmDeployUnitValid = true
-                            timeoutConfirmDeployUnit = params.timeoutConfirmDeployUnit.toUpperCase()
-                        }
-                    }
-
-                    echo "timeoutConfirmDeploy value: ${timeoutConfirmDeploy}"
-
-                    if (timeoutConfirmDeploy) {
-                        echo "timeoutConfirmDeployTime value: ${timeoutConfirmDeployTime}"
-                        echo "timeoutConfirmDeployUnit value: ${timeoutConfirmDeployUnit}"
-                    }
-
-
-                    if (timeoutConfirmDeploy && timeoutConfirmDeployTime > 0 && isTimeoutConfirmDeployUnitValid) {
-                        //Wrap input with timeout
-                        timeout(time:timeoutConfirmDeployTime, unit:"${timeoutConfirmDeployUnit}") {
-                            deploy = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-                        }
-                    } else {
-                        //Input without timeout
-                        deploy = input message: 'Waiting for user approval',
-                                parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
-
-                    }
-*/
-
                     }
                 } catch (err) {
                     def user = err.getCauses()[0].getUser()
@@ -1042,7 +700,6 @@ def runAngularGenericJenkinsfile() {
                     }
                 }
             }
-
         }
 
         if (deploy == 'Yes') {
@@ -1057,7 +714,6 @@ def runAngularGenericJenkinsfile() {
                     }
 
                     openshift_route_hostname_with_protocol = utils.getRouteHostnameWithProtocol(openshift_route_hostname, false)
-
                 }
             }
 
@@ -1081,145 +737,6 @@ def runAngularGenericJenkinsfile() {
                 thePerformanceTestPath = performance_test_path
                 theOpenshiftRouteHostnameWithProtocol = openshift_route_hostname_with_protocol
             }
-
-/* Before global variable
-            echo "params.jenkins.errorOnPostDeployTestsUnstableResult: ${params.jenkins.errorOnPostDeployTestsUnstableResult}"
-            Boolean errorOnPostDeployTestsUnstableResult = false
-
-            if (params.jenkins.errorOnPostDeployTestsUnstableResult != null) {
-                errorOnPostDeployTestsUnstableResult = params.jenkins.errorOnPostDeployTestsUnstableResult.toBoolean()
-            }
-
-            echo "errorOnPostDeployTestsUnstableResult value: ${errorOnPostDeployTestsUnstableResult}"
-
-
-            def tasks = [:]
-
-            //Smoke tests
-            if (branchType in params.testing.postdeploy.smokeTesting) {
-                tasks["${AngularConstants.SMOKE_TEST_TYPE}"] = {
-                    node('taurus') { //taurus
-                        try {
-                            stage("${AngularConstants.SMOKE_TEST_TYPE} Tests") {
-                                angularExecutePerformanceTest {
-                                    pts_taurus_test_base_path = taurus_test_base_path
-                                    pts_acceptance_test_path = smoke_test_path
-                                    pts_openshift_route_hostname_with_protocol = openshift_route_hostname_with_protocol
-                                    pts_performance_test_type = AngularConstants.SMOKE_TEST_TYPE
-                                }
-                            }
-                        } catch (exc) {
-                            def exc_message = exc.message
-                            echo "${exc_message}"
-                            if (errorOnPostDeployTestsUnstableResult) {
-                                currentBuild.result = AngularConstants.UNSTABLE_BUILD_RESULT
-                            } else {
-                                //Failed status
-                                currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-                                throw new hudson.AbortException("The ${AngularConstants.SMOKE_TEST_TYPE} tests stage has failures") as Throwable
-                            }
-                        }
-                    }
-                }
-            } else {
-                echo "Skipping ${AngularConstants.SMOKE_TEST_TYPE} tests..."
-            }
-
-            //Acceptance tests
-            if (branchType in params.testing.postdeploy.acceptanceTesting) {
-                tasks["${AngularConstants.ACCEPTANCE_TEST_TYPE}"] = {
-                    node('taurus') { //taurus
-                        try {
-                            stage("${AngularConstants.ACCEPTANCE_TEST_TYPE} Tests") {
-                                angularExecutePerformanceTest {
-                                    pts_taurus_test_base_path = taurus_test_base_path
-                                    pts_acceptance_test_path = acceptance_test_path
-                                    pts_openshift_route_hostname_with_protocol = openshift_route_hostname_with_protocol
-                                    pts_performance_test_type = AngularConstants.ACCEPTANCE_TEST_TYPE
-                                }
-                            }
-                        } catch (exc) {
-                            def exc_message = exc.message
-                            echo "${exc_message}"
-                            if (errorOnPostDeployTestsUnstableResult) {
-                                currentBuild.result = AngularConstants.UNSTABLE_BUILD_RESULT
-                            } else {
-                                //Failed status
-                                currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-                                throw new hudson.AbortException("The ${AngularConstants.ACCEPTANCE_TEST_TYPE} tests stage has failures") as Throwable
-                            }
-                        }
-                    }
-                }
-            } else {
-                echo "Skipping ${AngularConstants.ACCEPTANCE_TEST_TYPE} tests..."
-            }
-
-            //Security tests
-            if (branchType in params.testing.postdeploy.securityTesting) {
-                tasks["${AngularConstants.SECURITY_TEST_TYPE}"] = {
-                    node('taurus') { //taurus
-                        try {
-                            stage("${AngularConstants.SECURITY_TEST_TYPE} Tests") {
-                                angularExecutePerformanceTest {
-                                    pts_taurus_test_base_path = taurus_test_base_path
-                                    pts_acceptance_test_path = security_test_path
-                                    pts_openshift_route_hostname_with_protocol = openshift_route_hostname_with_protocol
-                                    pts_performance_test_type = AngularConstants.SECURITY_TEST_TYPE
-                                }
-                            }
-                        } catch (exc) {
-                            def exc_message = exc.message
-                            echo "${exc_message}"
-                            if (errorOnPostDeployTestsUnstableResult) {
-                                currentBuild.result = AngularConstants.UNSTABLE_BUILD_RESULT
-                            } else {
-                                //Failed status
-                                currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-                                throw new hudson.AbortException("The ${AngularConstants.SECURITY_TEST_TYPE} tests stage has failures") as Throwable
-                            }
-                        }
-                    }
-                }
-            } else {
-                echo "Skipping ${AngularConstants.SECURITY_TEST_TYPE} tests..."
-            }
-
-
-            //Executing smoke, acceptance and security tests in parallel
-            parallel tasks
-
-
-            //Performance tests
-            if (branchType in params.testing.postdeploy.performanceTesting) {
-                node('taurus') { //taurus
-                    try {
-                        stage("${AngularConstants.PERFORMANCE_TEST_TYPE} Tests") {
-                            angularExecutePerformanceTest {
-                                pts_taurus_test_base_path = taurus_test_base_path
-                                pts_acceptance_test_path = performance_test_path
-                                pts_openshift_route_hostname_with_protocol = openshift_route_hostname_with_protocol
-                                pts_performance_test_type = AngularConstants.PERFORMANCE_TEST_TYPE
-                            }
-                        }
-                    } catch (exc) {
-                        def exc_message = exc.message
-                        echo "${exc_message}"
-                        if (errorOnPostDeployTestsUnstableResult) {
-                            currentBuild.result = AngularConstants.UNSTABLE_BUILD_RESULT
-                        } else {
-                            //Failed status
-                            currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
-                            throw new hudson.AbortException("The ${AngularConstants.PERFORMANCE_TEST_TYPE} tests stage has failures") as Throwable
-                        }
-                    }
-                }
-            } else {
-                echo "Skipping ${AngularConstants.PERFORMANCE_TEST_TYPE} tests..."
-            }
-*/
-
-
         } else {
             //User doesn't want to deploy
             //Failed status
@@ -1228,66 +745,16 @@ def runAngularGenericJenkinsfile() {
         }
 
 
-
         stage('Notification') {
             echo "Sending Notifications..."
-
         }
 
         stage('Remove old builds') {
-
             angularRemoveOldBuilds {
                 maxOldBuildsToKeep = params.jenkins.maxOldBuildsToKeep
                 daysOldBuildsToKeep = params.jenkins.daysOldBuildsToKeep
             }
-/* before global var
-
-            echo "params.maxOldBuildsToKeep: ${params.jenkins.maxOldBuildsToKeep}"
-            echo "params.daysOldBuildsToKeep: ${params.jenkins.daysOldBuildsToKeep}"
-
-            String maxOldBuildsToKeepParam = params.jenkins.maxOldBuildsToKeep
-            String daysOldBuildsToKeepParam = params.jenkins.daysOldBuildsToKeep
-
-            if (maxOldBuildsToKeepParam != null && maxOldBuildsToKeepParam.isInteger()) {
-                maxOldBuildsToKeep = maxOldBuildsToKeepParam as Integer
-            }
-
-            if (daysOldBuildsToKeepParam != null && daysOldBuildsToKeepParam.isInteger()) {
-                daysOldBuildsToKeep = daysOldBuildsToKeepParam as Integer
-            }
-
-            echo "maxOldBuildsToKeep: ${maxOldBuildsToKeep}"
-            echo "daysOldBuildsToKeep: ${daysOldBuildsToKeep}"
-
-            if (maxOldBuildsToKeep > 0 && daysOldBuildsToKeep > 0) {
-
-                echo "Keeping last ${maxOldBuildsToKeep} builds"
-                echo "Keeping builds for  ${daysOldBuildsToKeep} last days"
-
-                properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: "${daysOldBuildsToKeep}", numToKeepStr: "${maxOldBuildsToKeep}"]]])
-
-            } else if (maxOldBuildsToKeep > 0) {
-
-                echo "Keeping last ${maxOldBuildsToKeep} builds"
-
-                properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: "${maxOldBuildsToKeep}"]]])
-
-            } else if (daysOldBuildsToKeep > 0) {
-
-                echo "Keeping builds for  ${daysOldBuildsToKeep} last days"
-
-                properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: "${daysOldBuildsToKeep}", numToKeepStr: '']]])
-
-            } else {
-
-                echo "Not removing old builds."
-
-                properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '']]])
-
-            }
-*/
         }
-
     }
 
     node {
@@ -1306,4 +773,3 @@ def runAngularGenericJenkinsfile() {
 } //end of method
 
 return this
-
