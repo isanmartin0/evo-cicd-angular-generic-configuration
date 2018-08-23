@@ -557,9 +557,11 @@ def runAngularGenericJenkinsfile() {
                             if (branchType in params.testing.predeploy.sonarQube) {
                                 stage('SonarQube') {
 
-
+                                    try {
                                         sh "ng lint --format json '>' report_lint.json"
-
+                                    } catch (err) {
+                                        echo "La ejecución de ng lint ha arrojado errores"
+                                    }
 
 
                                     angularExecuteSonarQubeAnalisis {
