@@ -44,6 +44,8 @@ timeoutConfirmDeployUnit: MINUTES
 
 testing:
   predeploy:
+    useKarmaSonarQubeReporterSpecificVersion: false
+    karmaSonarQubeReporterSpecificVersion: 1.2.0
     useUnitTestingFlags: false
     unitTestingFlags: --browsers ChromeHeadless --watch=false --code-coverage
     useUnitTestingKarmaConfigurationFileSpecificPath: false
@@ -53,11 +55,7 @@ testing:
       - develop
       - release
       - hotfix
-    sonarQube:
-      - feature
-      - develop
-      - release
-      - hotfix
+
     useE2ETestingFlags: false
     e2eTestingFlags:
     useE2ETestingProtractorConfigurationFileSpecificPath: false
@@ -67,6 +65,23 @@ testing:
       - develop
       - release
       - hotfix
+
+    sonarQube:
+      - feature
+      - develop
+      - release
+      - hotfix
+
+    sonarQubeAnalisis:
+      sonarSources: src
+      sonarExclusions: **/node_modules/**,**/*.spec.ts
+      sonarTests: e2e
+      sonarTestInclusions: **/*.e2e-spec.ts,**/*.po.ts
+      sonarTSTSLintConfigPath: tslint.json
+      sonarTestExecutionReportPath: reports/test-report.xml
+      sonarCoverageReportPath: coverage/lcov.info
+
+
 
   postdeploy:
     timeoutConfirmPostDeployTests: true

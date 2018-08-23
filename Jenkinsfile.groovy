@@ -116,6 +116,11 @@ def runAngularGenericJenkinsfile() {
     def buildDefaultOutputPath = ["dist/"]
     def buildOutputPath = ''
 
+    def sonarProjectPath = "sonar-project.properties"
+    def sonarQubeServer = 'sonarqube'
+    def sonarScannerHome = 'SonarQube Scanner 3.1.0'
+    def karmaSonarQubeReporterDefaultVersion = "1.2.0"
+
 
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
 
@@ -477,6 +482,20 @@ def runAngularGenericJenkinsfile() {
                             }
 
 
+                            if (branchType in params.testing.predeploy.unitTesting && branchType in params.testing.predeploy.sonarQube) {
+
+                                stage('Karma-sonarqube-reporter installation') {
+
+                                    angularInstallKarmaSonarQubeReporter {
+                                        useKarmaSonarQubeReporterSpecificVersion = params.testing.predeploy.useKarmaSonarQubeReporterSpecificVersion
+                                        theKarmaSonarQubeReporterDefaultVersion = karmaSonarQubeReporterDefaultVersion
+                                        theKarmaSonarQubeReporterSpecificVersion = params.testing.predeploy.karmaSonarQubeReporterSpecificVersion
+                                    }
+
+                                }
+                            }
+
+
                             stage ('Show installed packages') {
                                 angularShowInstalledDependencies {
                                     showGlobalInstalledDependencies = params.showInstalledDependencies.showGlobalInstalledDependencies
@@ -500,7 +519,8 @@ def runAngularGenericJenkinsfile() {
 
 
                             if (branchType in params.testing.predeploy.unitTesting) {
-                                stage('Unit Test') {
+
+                                stage('Unit Testing') {
                                     angularExecuteUnitTesting {
                                         useUnitTestingFlags = params.testing.predeploy.useUnitTestingFlags
                                         theUnitTestingDefaultFlags = unitTestingFlags
@@ -517,7 +537,7 @@ def runAngularGenericJenkinsfile() {
 
 
                             if (branchType in params.testing.predeploy.e2eTesting) {
-                                stage('e2e Test') {
+                                stage('e2e Testing') {
                                     angularExecuteE2ETesting {
                                         useE2ETestingFlags = params.testing.predeploy.useE2ETestingFlags
                                         theE2ETestingDefaultFlags = e2eTestingFlags
@@ -539,12 +559,29 @@ def runAngularGenericJenkinsfile() {
 
                             if (branchType in params.testing.predeploy.sonarQube) {
                                 stage('SonarQube') {
-                                    echo "TODO: Running SonarQube..."
+
+                                    angularExecuteSonarQubeAnalisis {
+                                        theSonarProjectPath = sonarProjectPath
+                                        thePackageName = packageName
+                                        theBranchNameHY = branchNameHY
+                                        theSonarQubeServer = sonarQubeServer
+                                        theScannerHome = sonarScannerHome
+                                        theSonarSources = params.testing.predeploy.sonarQubeAnalisis.sonarSources
+                                        theSonarExclusions = params.testing.predeploy.sonarQubeAnalisis.sonarExclusions
+                                        theSonarTests = params.testing.predeploy.sonarQubeAnalisis.sonarTests
+                                        theSonarTestsInclusions = params.testing.predeploy.sonarQubeAnalisis.sonarTestInclusions
+                                        theSonarTSLintConfigPath = params.testing.predeploy.sonarQubeAnalisis.sonarTSTSLintConfigPath
+                                        theSonarTestExecutionReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarTestExecutionReportPath
+                                        theSonarCoverageReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarCoverageReportPath
+                                    }
                                 }
                             } else {
                                 echo "Skipping Running SonarQube..."
                             }
 
+
+                            def confirm2 = input message: 'Waiting for user approval',
+                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                             stage('Build Angular application') {
                                 angularBuildAngularApplication {
