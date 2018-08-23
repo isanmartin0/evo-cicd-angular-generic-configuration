@@ -81,14 +81,13 @@ testing:
       - hotfix
     sonarQubeAnalisis:
       sonarSources: src
-      sonarExclusions: **/node_modules/**,**/*.spec.ts
+      sonarExclusions: "**/node_modules/**,**/*.spec.ts"
       sonarTests: e2e
-      sonarTestInclusions: **/*.e2e-spec.ts,**/*.po.ts
+      sonarTestInclusions: "**/*.e2e-spec.ts,**/*.po.ts"
       sonarTSTSLintConfigPath: tslint.json
-      sonarTypescriptExclusions
+      sonarTypescriptExclusions: "**/node_modules/**,**/typings.d.ts,**/main.ts,**/environments/environment*.ts,**/*routing.module.ts"
       sonarTestExecutionReportPath: reports/test-report.xml
       sonarCoverageReportPath: coverage/lcov.info
-
 
 
   postdeploy:
