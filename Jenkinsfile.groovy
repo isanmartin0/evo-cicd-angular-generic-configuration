@@ -77,6 +77,7 @@ def runAngularGenericJenkinsfile() {
     Boolean installGloballyAngularCli = false
     int image_stream_nodejs_version_default = 8
     def angularCliVersion_default = "1.7.4"
+    def lintingFlags_default = "--format prose --force true"
     def unitTestingFlags_default = "--browsers ChromeHeadles --watch=false --code-coverage"
     def e2eTestingFlags_default = ""
     def buildProdFlags_default = "--aot=false"
@@ -98,6 +99,10 @@ def runAngularGenericJenkinsfile() {
     def nodeJS_8_installation_build_prod_flags = "--aot=false"
     def nodeJS_10_installation_build_prod_flags = "--build-optimizer"
 
+    def nodeJS_6_installation_linting_flags = "--format prose --force true"
+    def nodeJS_8_installation_linting_flags = "--format prose --force true"
+    def nodeJS_10_installation_linting_flags = "--format prose --force true"
+
     def nodeJS_6_installation_unit_testing_flags = "--browsers ChromeHeadless --watch=false --code-coverage"
     def nodeJS_8_installation_unit_testing_flags = "--browsers ChromeHeadless --watch=false --code-coverage"
     def nodeJS_10_installation_unit_testing_flags = "--browsers ChromeHeadless --watch=false --code-coverage"
@@ -109,6 +114,7 @@ def runAngularGenericJenkinsfile() {
     def nodeJS_pipeline_installation = ""
     int image_stream_nodejs_version = image_stream_nodejs_version_default
     def angularCliVersion = angularCliVersion_default
+    def lintingFlags = lintingFlags_default
     def unitTestingFlags = unitTestingFlags_default
     def e2eTestingFlags = e2eTestingFlags_default
     def buildProdFlags = buildProdFlags_default
@@ -361,18 +367,21 @@ def runAngularGenericJenkinsfile() {
                 if (image_stream_nodejs_version >= 10) {
                     nodeJS_pipeline_installation = nodeJS_10_installation
                     angularCliVersion = nodeJS_10_installation_angularCliVersion_default
+                    lintingFlags = nodeJS_10_installation_linting_flags
                     unitTestingFlags = nodeJS_10_installation_unit_testing_flags
                     e2eTestingFlags = nodeJS_10_installation_e2e_testing_flags
                     buildProdFlags = nodeJS_10_installation_build_prod_flags
                 } else if (image_stream_nodejs_version >= 8) {
                     nodeJS_pipeline_installation = nodeJS_8_installation
                     angularCliVersion = nodeJS_8_installation_angularCliVersion_default
+                    lintingFlags = nodeJS_8_installation_linting_flags
                     unitTestingFlags = nodeJS_8_installation_unit_testing_flags
                     e2eTestingFlags = nodeJS_8_installation_e2e_testing_flags
                     buildProdFlags = nodeJS_8_installation_build_prod_flags
                 } else if (image_stream_nodejs_version >= 6) {
                     nodeJS_pipeline_installation = nodeJS_6_installation
                     angularCliVersion = nodeJS_6_installation_angularCliVersion_default
+                    lintingFlags = nodeJS_6_installation_linting_flags
                     unitTestingFlags = nodeJS_6_installation_unit_testing_flags
                     e2eTestingFlags = nodeJS_6_installation_e2e_testing_flags
                     buildProdFlags = nodeJS_6_installation_build_prod_flags
@@ -517,6 +526,21 @@ def runAngularGenericJenkinsfile() {
                                 }
                             }
 
+                            if (branchType in params.testing.predeploy.linting) {
+
+                                stage('Linting') {
+                                    angularExecuteLinting {
+                                        useLintingFlags = params.testing.predeploy.useLintingFlags
+                                        theLintingDefaultFlags = lintingFlags
+                                        theLintingFlags = params.testing.predeploy.lintingFlags
+                                        theAngularCliLocalPath = angularCliLocalPath
+                                        theInstallGloballyAngularCli = installGloballyAngularCli
+                                    }
+                                }
+
+                            } else {
+                                echo "Skipping linting..."
+                            }
 
                             if (branchType in params.testing.predeploy.unitTesting) {
 

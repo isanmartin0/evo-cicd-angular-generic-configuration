@@ -44,6 +44,14 @@ timeoutConfirmDeployUnit: MINUTES
 
 testing:
   predeploy:
+    useLintingFlags: false
+    lintingFlags: --format json --force true
+    linting:
+      - feature
+      - develop
+      - release
+      - hotfix
+
     useUnitTestingFlags: false
     unitTestingFlags: --browsers ChromeHeadless --watch=false --code-coverage
     useUnitTestingKarmaConfigurationFileSpecificPath: false
