@@ -44,8 +44,7 @@ timeoutConfirmDeployUnit: MINUTES
 
 testing:
   predeploy:
-    useKarmaSonarQubeReporterSpecificVersion: false
-    karmaSonarQubeReporterSpecificVersion: 1.2.0
+
     useUnitTestingFlags: false
     unitTestingFlags: --browsers ChromeHeadless --watch=false --code-coverage
     useUnitTestingKarmaConfigurationFileSpecificPath: false
@@ -66,12 +65,13 @@ testing:
       - release
       - hotfix
 
+    useKarmaSonarQubeReporterSpecificVersion: false
+    karmaSonarQubeReporterSpecificVersion: 1.2.0
     sonarQube:
       - feature
       - develop
       - release
       - hotfix
-
     sonarQubeAnalisis:
       sonarSources: src
       sonarExclusions: **/node_modules/**,**/*.spec.ts
