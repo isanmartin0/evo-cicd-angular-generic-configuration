@@ -77,7 +77,7 @@ def runAngularGenericJenkinsfile() {
     Boolean installGloballyAngularCli = false
     int image_stream_nodejs_version_default = 8
     def angularCliVersion_default = "1.7.4"
-    def unitTestingFlags_default = "--watch=false --code-coverage"
+    def unitTestingFlags_default = "--browsers ChromeHeadles --watch=false --code-coverage"
     def e2eTestingFlags_default = ""
     def buildProdFlags_default = "--aot=false"
 
@@ -500,7 +500,7 @@ def runAngularGenericJenkinsfile() {
 
 
                             if (branchType in params.testing.predeploy.unitTesting) {
-                                stage('Test') {
+                                stage('Unit Test') {
                                     angularExecuteUnitTesting {
                                         useUnitTestingFlags = params.testing.predeploy.useUnitTestingFlags
                                         theUnitTestingDefaultFlags = unitTestingFlags
@@ -511,6 +511,21 @@ def runAngularGenericJenkinsfile() {
                                 }
                             } else {
                                 echo "Skipping unit tests..."
+                            }
+
+
+                            if (branchType in params.testing.predeploy.e2eTesting) {
+                                stage('Unit Test') {
+                                    angularExecuteE2ETesting {
+                                        useE2ETestingFlags = params.testing.predeploy.useE2ETestingFlags
+                                        theE2ETestingDefaultFlags = e2eTestingFlags
+                                        theE2ETestingFlags = params.testing.predeploy.e2eTestingFlags
+                                        theAngularCliLocalPath = angularCliLocalPath
+                                        theInstallGloballyAngularCli = installGloballyAngularCli
+                                    }
+                                }
+                            } else {
+                                echo "Skipping e2e tests..."
                             }
 
 

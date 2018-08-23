@@ -56,7 +56,7 @@ testing:
       - develop
       - release
       - hotfix
-    useE2eTestingFlags: false
+    useE2ETestingFlags: false
     e2eTestingFlags:
     e2eTesting:
       - feature
