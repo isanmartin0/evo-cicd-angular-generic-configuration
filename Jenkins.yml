@@ -13,7 +13,7 @@ showInstalledDependencies:
   showLocalInstalledDependenciesDepthLimit: false
   showLocalInstalledDependenciesDepth: 0
   showLocalInstalledDependenciesOnlyType: false
-  showLocalInstalledDependenciesType: dev
+  showLocalInstalledDependenciesType: prod
 
 
 angularCli:
