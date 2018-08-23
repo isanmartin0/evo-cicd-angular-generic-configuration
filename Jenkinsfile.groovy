@@ -558,9 +558,15 @@ def runAngularGenericJenkinsfile() {
                                 stage('SonarQube') {
 
                                     try {
-                                        sh "ng lint --format json > report_lint.json"
+                                        sh "ng lint --format json '>' report_lint.json"
                                     } catch (err) {
-                                        sh "ng lint > report_lint.json"
+
+                                        try {
+                                            sh "ng lint '>' report_lint.json"
+                                        } catch (err2) {
+                                            sh "ng lint"
+                                        }
+
                                     }
 
 
