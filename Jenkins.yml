@@ -77,6 +77,7 @@ testing:
       sonarTests: e2e
       sonarTestInclusions: **/*.e2e-spec.ts,**/*.po.ts
       sonarTSTSLintConfigPath: tslint.json
+      sonarTypescriptExclusions
       sonarTestExecutionReportPath: reports/test-report.xml
       sonarCoverageReportPath: coverage/lcov.info
 
