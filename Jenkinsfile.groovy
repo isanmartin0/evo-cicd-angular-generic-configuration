@@ -580,14 +580,6 @@ def runAngularGenericJenkinsfile() {
 
                             if (branchType in params.testing.predeploy.sonarQube) {
                                 stage('SonarQube') {
-
-                                    try {
-                                        sh "ng lint --format json '>' report_lint.json"
-                                    } catch (err) {
-                                        echo "La ejecución de ng lint ha arrojado errores"
-                                    }
-
-
                                     angularExecuteSonarQubeAnalisis {
                                         theSonarProjectPath = sonarProjectPath
                                         thePackageName = packageName
@@ -608,9 +600,6 @@ def runAngularGenericJenkinsfile() {
                                 echo "Skipping Running SonarQube..."
                             }
 
-
-                            def confirm2 = input message: 'Waiting for user approval',
-                                    parameters: [choice(name: 'Continue and deploy?', choices: 'No\nYes', description: 'Choose "Yes" if you want to deploy this build')]
 
                             stage('Build Angular application') {
                                 angularBuildAngularApplication {
