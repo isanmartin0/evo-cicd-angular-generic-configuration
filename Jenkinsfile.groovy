@@ -505,6 +505,8 @@ def runAngularGenericJenkinsfile() {
                                         useUnitTestingFlags = params.testing.predeploy.useUnitTestingFlags
                                         theUnitTestingDefaultFlags = unitTestingFlags
                                         theUnitTestingFlags = params.testing.predeploy.unitTestingFlags
+                                        useUnitTestingKarmaConfigurationFileSpecificPath = params.testing.predeploy.useUnitTestingKarmaConfigurationFileSpecificPath
+                                        theUnitTestingKarmaConfigurationFileSpecificPath = params.testing.predeploy.unitTestingKarmaConfigurationFileSpecificPath
                                         theAngularCliLocalPath = angularCliLocalPath
                                         theInstallGloballyAngularCli = installGloballyAngularCli
                                     }
@@ -515,11 +517,13 @@ def runAngularGenericJenkinsfile() {
 
 
                             if (branchType in params.testing.predeploy.e2eTesting) {
-                                stage('Unit Test') {
+                                stage('e2e Test') {
                                     angularExecuteE2ETesting {
                                         useE2ETestingFlags = params.testing.predeploy.useE2ETestingFlags
                                         theE2ETestingDefaultFlags = e2eTestingFlags
                                         theE2ETestingFlags = params.testing.predeploy.e2eTestingFlags
+                                        useE2ETestingProtractorConfigurationFileSpecificPath = params.testing.predeploy.useE2ETestingProtractorConfigurationFileSpecificPath
+                                        theE2ETestingProtractorConfigurationFileSpecificPath = params.testing.predeploy.e2eTestingProtractorConfigurationFileSpecificPath
                                         theAngularCliLocalPath = angularCliLocalPath
                                         theInstallGloballyAngularCli = installGloballyAngularCli
                                     }
