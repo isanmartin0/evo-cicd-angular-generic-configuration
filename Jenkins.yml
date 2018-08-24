@@ -81,7 +81,7 @@ testing:
     sonarQubeAnalisis:
       sonarSources: src
       sonarExclusions: "**/node_modules/**,**/*.spec.ts"
-      sonarTests: e2e
+      sonarTests: src
       sonarTestInclusions: "**/*.spec.ts"
       sonarTSTSLintConfigPath: tslint.json
       sonarTypescriptExclusions: "**/node_modules/**,**/typings.d.ts,**/main.ts,**/environments/environment*.ts,**/*routing.module.ts"
