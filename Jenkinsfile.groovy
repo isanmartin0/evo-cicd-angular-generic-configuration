@@ -491,7 +491,7 @@ def runAngularGenericJenkinsfile() {
                             }
 
 
-                            if (branchType in params.testing.predeploy.unitTesting && branchType in params.testing.predeploy.sonarQube) {
+                            if (branchType in params.testing.predeploy.unitTesting) {
 
                                 stage('Karma-sonarqube-reporter installation') {
 
@@ -653,7 +653,7 @@ def runAngularGenericJenkinsfile() {
                             }
 
                         } else { //if branchName != 'master'
-                            stage('Configure Artifactory NPM Registry') {
+                            stage('Establish Artifactory registry type') {
                                 angularConfigureNPMRepository {
                                     theAngularNPMRepositoryURL = angularNPMRepositoryURL
                                 }
