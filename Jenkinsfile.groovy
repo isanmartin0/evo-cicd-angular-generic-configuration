@@ -408,7 +408,7 @@ def runAngularGenericJenkinsfile() {
 
             }
 
-            stage('Prepare') {
+            stage('Branch type detection') {
                 echo "Prepare stage (PGC)"
 
                 angularSetDisplayName()
@@ -561,7 +561,7 @@ def runAngularGenericJenkinsfile() {
 
 
                             if (branchType in params.testing.predeploy.e2eTesting) {
-                                stage('e2e Testing') {
+                                stage('End to end (e2e) Testing') {
                                     angularExecuteE2ETesting {
                                         useE2ETestingFlags = params.testing.predeploy.useE2ETestingFlags
                                         theE2ETestingDefaultFlags = e2eTestingFlags
