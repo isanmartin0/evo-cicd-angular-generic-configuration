@@ -12,11 +12,11 @@ removeSourcePackageLock: false
 
 showInstalledDependencies:
   showGlobalInstalledDependencies: true
-  showGlobalInstalledDependenciesDepthLimit: false
+  showGlobalInstalledDependenciesDepthLimit: true
   showGlobalInstalledDependenciesDepth: 1
   showLocalInstalledDependencies: true
   showLocalInstalledDependenciesDepthLimit: false
-  showLocalInstalledDependenciesDepth: 0
+  showLocalInstalledDependenciesDepth: 1
   showLocalInstalledDependenciesOnlyType: false
   showLocalInstalledDependenciesType: prod
 
@@ -44,7 +44,7 @@ timeoutConfirmDeployUnit: MINUTES
 testing:
   predeploy:
     useLintingFlags: false
-    lintingFlags: --format json --force true
+    lintingFlags: --force true
     linting:
       - feature
       - develop
