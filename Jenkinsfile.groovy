@@ -590,7 +590,6 @@ def runAngularGenericJenkinsfile() {
                                         theSonarExclusions = params.testing.predeploy.sonarQubeAnalisis.sonarExclusions
                                         theSonarTests = params.testing.predeploy.sonarQubeAnalisis.sonarTests
                                         theSonarTestsInclusions = params.testing.predeploy.sonarQubeAnalisis.sonarTestInclusions
-                                        theSonarTSLintConfigPath = params.testing.predeploy.sonarQubeAnalisis.sonarTSTSLintConfigPath
                                         theSonarTypescriptExclusions = params.testing.predeploy.sonarQubeAnalisis.sonarTypescriptExclusions
                                         theSonarTestExecutionReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarTestExecutionReportPath
                                         theSonarCoverageReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarCoverageReportPath
