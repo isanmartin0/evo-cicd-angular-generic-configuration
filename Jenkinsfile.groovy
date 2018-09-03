@@ -163,6 +163,9 @@ def runAngularGenericJenkinsfile() {
 
             packageJSON = readJSON file: 'package.json'
 
+            echo "package.json content:"
+            echo "${packageJSON}"
+
             isScopedPackage = utils.isScopedPackage(packageJSON.name)
             echo "isScopedPackage: ${isScopedPackage}"
 
