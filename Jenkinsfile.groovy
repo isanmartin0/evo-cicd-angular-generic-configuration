@@ -457,35 +457,35 @@ def runAngularGenericJenkinsfile() {
                     case 'feature':
                         echo "Detect feature type branch"
                         envLabel="dev"
-                        if (params.ngBuild.environments.environmentFeature) {
+                        if (params.ngBuild.buildEnvironments.environmentFeature) {
                             buildEnvironment = "${params.ngBuild.buildEnvironments.environmentFeature}"
                         }
                         break
                     case 'develop':
                         echo "Detect develop type branch"
                         envLabel="dev"
-                        if (params.ngBuild.environments.environmentDevelop) {
+                        if (params.ngBuild.buildEnvironments.environmentDevelop) {
                             buildEnvironment = "${params.ngBuild.buildEnvironments.environmentDevelop}"
                         }
                         break
                     case 'release':
                         echo "Detect release type branch"
                         envLabel="uat"
-                        if (params.ngBuild.environments.environmentRelease) {
+                        if (params.ngBuild.buildEnvironments.environmentRelease) {
                             buildEnvironment = "${params.ngBuild.buildEnvironments.environmentRelease}"
                         }
                         break
                     case 'master':
                         echo "Detect master type branch"
                         envLabel="pro"
-                        if (params.ngBuild.environments.environmentMaster) {
+                        if (params.ngBuild.buildEnvironments.environmentMaster) {
                             buildEnvironment = "${params.ngBuild.buildEnvironments.environmentMaster}"
                         }
                         break
                     case 'hotfix':
                         echo "Detect hotfix type branch"
                         envLabel="uat"
-                        if (params.ngBuild.environments.environmentHotfix) {
+                        if (params.ngBuild.buildEnvironments.environmentHotfix) {
                             buildEnvironment = "${params.ngBuild.buildEnvironments.environmentHotfix}"
                         }
                         break
