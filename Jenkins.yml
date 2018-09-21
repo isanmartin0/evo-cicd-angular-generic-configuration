@@ -32,8 +32,8 @@ ngBuild:
   buildEnvironments:
     environmentDevelop: dev
     environmentFeature: dev
-    environmentRelease: uat
-    environmentHotfix: uat
+    environmentRelease: dev
+    environmentHotfix: dev
     environmentMaster: prod
 
 environmentVariables:
