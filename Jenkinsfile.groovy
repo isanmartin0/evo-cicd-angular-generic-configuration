@@ -80,7 +80,8 @@ def runAngularGenericJenkinsfile() {
     def lintingFlags_default = "--format prose --force true"
     def unitTestingFlags_default = "--browsers ChromeHeadles --watch=false --code-coverage"
     def e2eTestingFlags_default = ""
-    def buildProdFlags_default = "--aot=false"
+    def buildFlags_default = "--aot=false"
+    def buildEnvironmentFlag_default = "--env="
 
     def angularCliLocalPath = "node_modules/@angular/cli/bin/"
 
@@ -95,9 +96,17 @@ def runAngularGenericJenkinsfile() {
     def nodeJS_8_installation_angularCliVersion_default = "1.7.4"
     def nodeJS_10_installation_angularCliVersion_default = "6.1.2"
 
-    def nodeJS_6_installation_build_prod_flags = "--aot=false"
-    def nodeJS_8_installation_build_prod_flags = "--aot=false"
-    def nodeJS_10_installation_build_prod_flags = "--build-optimizer"
+    def nodeJS_6_installation_angularJson_filename = ".angular-cli.json"
+    def nodeJS_8_installation_angularJson_filename = ".angular-cli.json"
+    def nodeJS_10_installation_angularJson_filename = "angular.json"
+
+    def nodeJS_6_installation_build_flags = "--aot=false"
+    def nodeJS_8_installation_build_flags = "--aot=false"
+    def nodeJS_10_installation_build_flags = "--build-optimizer"
+
+    def nodeJS_6_installation_build_environment_flag = "--env="
+    def nodeJS_8_installation_build_environment_flag = "--env="
+    def nodeJS_10_installation_build_environment_flag = "--configuration="
 
     def nodeJS_6_installation_linting_flags = "--format prose --force true"
     def nodeJS_8_installation_linting_flags = "--format prose --force true"
@@ -117,7 +126,9 @@ def runAngularGenericJenkinsfile() {
     def lintingFlags = lintingFlags_default
     def unitTestingFlags = unitTestingFlags_default
     def e2eTestingFlags = e2eTestingFlags_default
-    def buildProdFlags = buildProdFlags_default
+    def buildFlags = buildFlags_default
+    def buildEnvironmentFlag = buildEnvironmentFlag_default
+    def buildEnvironment
 
     def buildDefaultOutputPath = ["dist/"]
     def buildOutputPath = ''
@@ -127,6 +138,8 @@ def runAngularGenericJenkinsfile() {
     def sonarScannerHome = 'SonarQube Scanner 3.1.0'
     def karmaSonarQubeReporterDefaultVersion = "1.2.0"
 
+    def angularJSONFileName = ''
+    def angularJSON
 
     echo "BEGIN ANGULAR GENERIC CONFIGURATION PROJECT (PGC)"
 
@@ -373,21 +386,27 @@ def runAngularGenericJenkinsfile() {
                     lintingFlags = nodeJS_10_installation_linting_flags
                     unitTestingFlags = nodeJS_10_installation_unit_testing_flags
                     e2eTestingFlags = nodeJS_10_installation_e2e_testing_flags
-                    buildProdFlags = nodeJS_10_installation_build_prod_flags
+                    buildFlags = nodeJS_10_installation_build_flags
+                    buildEnvironmentFlag = nodeJS_10_installation_build_environment_flag
+                    angularJSONFileName = nodeJS_10_installation_angularJson_filename
                 } else if (image_stream_nodejs_version >= 8) {
                     nodeJS_pipeline_installation = nodeJS_8_installation
                     angularCliVersion = nodeJS_8_installation_angularCliVersion_default
                     lintingFlags = nodeJS_8_installation_linting_flags
                     unitTestingFlags = nodeJS_8_installation_unit_testing_flags
                     e2eTestingFlags = nodeJS_8_installation_e2e_testing_flags
-                    buildProdFlags = nodeJS_8_installation_build_prod_flags
+                    buildFlags = nodeJS_8_installation_build_flags
+                    buildEnvironmentFlag = nodeJS_8_installation_build_environment_flag
+                    angularJSONFileName = nodeJS_8_installation_angularJson_filename
                 } else if (image_stream_nodejs_version >= 6) {
                     nodeJS_pipeline_installation = nodeJS_6_installation
                     angularCliVersion = nodeJS_6_installation_angularCliVersion_default
                     lintingFlags = nodeJS_6_installation_linting_flags
                     unitTestingFlags = nodeJS_6_installation_unit_testing_flags
                     e2eTestingFlags = nodeJS_6_installation_e2e_testing_flags
-                    buildProdFlags = nodeJS_6_installation_build_prod_flags
+                    buildFlags = nodeJS_6_installation_build_flags
+                    buildEnvironmentFlag = nodeJS_6_installation_build_environment_flag
+                    angularJSONFileName = nodeJS_6_installation_angularJson_filename
                 } else {
                     utils = null
                     currentBuild.result = AngularConstants.FAILURE_BUILD_RESULT
@@ -398,7 +417,9 @@ def runAngularGenericJenkinsfile() {
                 echo "Assigning default @angular/cli version: ${angularCliVersion}"
                 echo "Assigning default unit testing flags: ${unitTestingFlags}"
                 echo "Assigning default e2e testing flags: ${e2eTestingFlags}"
-                echo "Assigning default build production flags: ${buildProdFlags}"
+                echo "Assigning default build flags: ${buildFlags}"
+                echo "Assigning default build environment flag: ${buildEnvironmentFlag}"
+                echo "Assigning default angular json file: ${angularJSONFileName}"
 
                 def node = tool name: "${nodeJS_pipeline_installation}", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                 env.PATH = "${node}/bin:${env.PATH}"
@@ -408,6 +429,11 @@ def runAngularGenericJenkinsfile() {
 
                 echo 'NPM version:'
                 sh "npm -v"
+
+                angularJSON = readJSON file: '${angularJSONFileName}'
+
+                echo "${angularJSONFileName} content:"
+                echo "${angularJSON}"
 
             }
 
@@ -431,22 +457,37 @@ def runAngularGenericJenkinsfile() {
                     case 'feature':
                         echo "Detect feature type branch"
                         envLabel="dev"
+                        if (params.ngBuild.environments.environmentFeature) {
+                            buildEnvironment = "${params.ngBuild.environments.environmentFeature}"
+                        }
                         break
                     case 'develop':
                         echo "Detect develop type branch"
                         envLabel="dev"
+                        if (params.ngBuild.environments.environmentDevelop) {
+                            buildEnvironment = "${params.ngBuild.environments.environmentDevelop}"
+                        }
                         break
                     case 'release':
                         echo "Detect release type branch"
                         envLabel="uat"
+                        if (params.ngBuild.environments.environmentRelease) {
+                            buildEnvironment = "${params.ngBuild.environments.environmentRelease}"
+                        }
                         break
                     case 'master':
                         echo "Detect master type branch"
                         envLabel="pro"
+                        if (params.ngBuild.environments.environmentMaster) {
+                            buildEnvironment = "${params.ngBuild.environments.environmentMaster}"
+                        }
                         break
                     case 'hotfix':
                         echo "Detect hotfix type branch"
                         envLabel="uat"
+                        if (params.ngBuild.environments.environmentHotfix) {
+                            buildEnvironment = "${params.ngBuild.environments.environmentHotfix}"
+                        }
                         break
                 }
                 echo "Environment selected: ${envLabel}"
@@ -457,204 +498,212 @@ def runAngularGenericJenkinsfile() {
                 withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
                     withNPM(npmrcConfig: 'my-custom-npmrc') {
 
-                        if (branchName != 'master') {
+                        //All branches will do these stages
+                        echo "params.angularCli.installGloballyAngularCli: ${params.angularCli.installGloballyAngularCli}"
 
-                            echo "params.angularCli.installGloballyAngularCli: ${params.angularCli.installGloballyAngularCli}"
+                        if (params.angularCli.installGloballyAngularCli) {
+                            installGloballyAngularCli = params.angularCli.installGloballyAngularCli.toBoolean()
+                        }
 
-                            if (params.angularCli.installGloballyAngularCli) {
-                                installGloballyAngularCli = params.angularCli.installGloballyAngularCli.toBoolean()
-                            }
-
-                            if (installGloballyAngularCli) {
-                                stage('Install globally @angular/cli') {
-                                    angularInstallGloballyAngularCli {
-                                        installAngularCliSpecificVersion = params.angularCli.installAngularCliSpecificVersion
-                                        angularCliDefaultVersion = angularCliVersion
-                                        angularCliSpecificVersion = params.angularCli.angularCliVersion
-                                        theNodeJS_pipeline_installation = nodeJS_pipeline_installation
-                                    }
-                                }
-                            } else {
-                                echo "Skipping globally @angular/cli installation..."
-                            }
-
-
-                            stage('Configure Artifactory NPM Registry') {
-                                echo 'Setting Artifactory NPM registry'
-                                sh "npm config set registry ${angularNPMRepositoryURL} "
-
-                                sh "npm config get registry"
-                            }
-
-
-                            stage('Install packages') {
-                                angularInstallDependencies {
-                                    removeSourcePackageLock = params.removeSourcePackageLock
+                        if (installGloballyAngularCli) {
+                            stage('Install globally @angular/cli') {
+                                angularInstallGloballyAngularCli {
+                                    installAngularCliSpecificVersion = params.angularCli.installAngularCliSpecificVersion
+                                    angularCliDefaultVersion = angularCliVersion
+                                    angularCliSpecificVersion = params.angularCli.angularCliVersion
+                                    theNodeJS_pipeline_installation = nodeJS_pipeline_installation
                                 }
                             }
+                        } else {
+                            echo "Skipping globally @angular/cli installation..."
+                        }
 
 
-                            if (branchType in params.testing.predeploy.unitTesting) {
+                        stage('Configure Artifactory NPM Registry') {
+                            echo 'Setting Artifactory NPM registry'
+                            sh "npm config set registry ${angularNPMRepositoryURL} "
 
-                                stage('Karma-sonarqube-reporter installation') {
+                            sh "npm config get registry"
+                        }
 
-                                    angularInstallKarmaSonarQubeReporter {
-                                        useKarmaSonarQubeReporterSpecificVersion = params.testing.predeploy.useKarmaSonarQubeReporterSpecificVersion
-                                        theKarmaSonarQubeReporterDefaultVersion = karmaSonarQubeReporterDefaultVersion
-                                        theKarmaSonarQubeReporterSpecificVersion = params.testing.predeploy.karmaSonarQubeReporterSpecificVersion
-                                    }
 
-                                }
+                        stage('Install packages') {
+                            angularInstallDependencies {
+                                removeSourcePackageLock = params.removeSourcePackageLock
                             }
+                        }
 
 
-                            stage ('Show installed packages') {
-                                angularShowInstalledDependencies {
-                                    showGlobalInstalledDependencies = params.showInstalledDependencies.showGlobalInstalledDependencies
-                                    showGlobalInstalledDependenciesDepthLimit = params.showInstalledDependencies.showGlobalInstalledDependenciesDepthLimit
-                                    showGlobalInstalledDependenciesDepth = params.showInstalledDependencies.showGlobalInstalledDependenciesDepth
-                                    showLocalInstalledDependencies = params.showInstalledDependencies.showLocalInstalledDependencies
-                                    showLocalInstalledDependenciesDepthLimit = params.showInstalledDependencies.showLocalInstalledDependenciesDepthLimit
-                                    showLocalInstalledDependenciesDepth = params.showInstalledDependencies.showLocalInstalledDependenciesDepth
-                                    showLocalInstalledDependenciesOnlyType = params.showInstalledDependencies.showLocalInstalledDependenciesOnlyType
-                                    showLocalInstalledDependenciesType = params.showInstalledDependencies.showLocalInstalledDependenciesType
+                        if (branchType in params.testing.predeploy.unitTesting) {
+
+                            stage('Karma-sonarqube-reporter installation') {
+
+                                angularInstallKarmaSonarQubeReporter {
+                                    useKarmaSonarQubeReporterSpecificVersion = params.testing.predeploy.useKarmaSonarQubeReporterSpecificVersion
+                                    theKarmaSonarQubeReporterDefaultVersion = karmaSonarQubeReporterDefaultVersion
+                                    theKarmaSonarQubeReporterSpecificVersion = params.testing.predeploy.karmaSonarQubeReporterSpecificVersion
                                 }
+
                             }
+                        }
 
 
-                            stage('Get ng version') {
-                                angularGetNGVersion {
+                        stage ('Show installed packages') {
+                            angularShowInstalledDependencies {
+                                showGlobalInstalledDependencies = params.showInstalledDependencies.showGlobalInstalledDependencies
+                                showGlobalInstalledDependenciesDepthLimit = params.showInstalledDependencies.showGlobalInstalledDependenciesDepthLimit
+                                showGlobalInstalledDependenciesDepth = params.showInstalledDependencies.showGlobalInstalledDependenciesDepth
+                                showLocalInstalledDependencies = params.showInstalledDependencies.showLocalInstalledDependencies
+                                showLocalInstalledDependenciesDepthLimit = params.showInstalledDependencies.showLocalInstalledDependenciesDepthLimit
+                                showLocalInstalledDependenciesDepth = params.showInstalledDependencies.showLocalInstalledDependenciesDepth
+                                showLocalInstalledDependenciesOnlyType = params.showInstalledDependencies.showLocalInstalledDependenciesOnlyType
+                                showLocalInstalledDependenciesType = params.showInstalledDependencies.showLocalInstalledDependenciesType
+                            }
+                        }
+
+
+                        stage('Get ng version') {
+                            angularGetNGVersion {
+                                theAngularCliLocalPath = angularCliLocalPath
+                                theInstallGloballyAngularCli = installGloballyAngularCli
+                            }
+                        }
+
+                        if (branchType in params.testing.predeploy.linting) {
+
+                            stage('Linting') {
+                                angularExecuteLinting {
+                                    useLintingFlags = params.testing.predeploy.useLintingFlags
+                                    theLintingDefaultFlags = lintingFlags
+                                    theLintingFlags = params.testing.predeploy.lintingFlags
                                     theAngularCliLocalPath = angularCliLocalPath
                                     theInstallGloballyAngularCli = installGloballyAngularCli
                                 }
                             }
 
-                            if (branchType in params.testing.predeploy.linting) {
+                        } else {
+                            echo "Skipping linting..."
+                        }
 
-                                stage('Linting') {
-                                    angularExecuteLinting {
-                                        useLintingFlags = params.testing.predeploy.useLintingFlags
-                                        theLintingDefaultFlags = lintingFlags
-                                        theLintingFlags = params.testing.predeploy.lintingFlags
-                                        theAngularCliLocalPath = angularCliLocalPath
-                                        theInstallGloballyAngularCli = installGloballyAngularCli
-                                    }
-                                }
+                        if (branchType in params.testing.predeploy.unitTesting) {
 
-                            } else {
-                                echo "Skipping linting..."
-                            }
-
-                            if (branchType in params.testing.predeploy.unitTesting) {
-
-                                stage('Unit Testing') {
-                                    angularExecuteUnitTesting {
-                                        useUnitTestingFlags = params.testing.predeploy.useUnitTestingFlags
-                                        theUnitTestingDefaultFlags = unitTestingFlags
-                                        theUnitTestingFlags = params.testing.predeploy.unitTestingFlags
-                                        useUnitTestingKarmaConfigurationFileSpecificPath = params.testing.predeploy.useUnitTestingKarmaConfigurationFileSpecificPath
-                                        theUnitTestingKarmaConfigurationFileSpecificPath = params.testing.predeploy.unitTestingKarmaConfigurationFileSpecificPath
-                                        theAngularCliLocalPath = angularCliLocalPath
-                                        theInstallGloballyAngularCli = installGloballyAngularCli
-                                    }
-                                }
-                            } else {
-                                echo "Skipping unit tests..."
-                            }
-
-
-                            if (branchType in params.testing.predeploy.e2eTesting) {
-                                stage('End to end (e2e) Testing') {
-                                    angularExecuteE2ETesting {
-                                        useE2ETestingFlags = params.testing.predeploy.useE2ETestingFlags
-                                        theE2ETestingDefaultFlags = e2eTestingFlags
-                                        theE2ETestingFlags = params.testing.predeploy.e2eTestingFlags
-                                        useE2ETestingProtractorConfigurationFileSpecificPath = params.testing.predeploy.useE2ETestingProtractorConfigurationFileSpecificPath
-                                        theE2ETestingProtractorConfigurationFileSpecificPath = params.testing.predeploy.e2eTestingProtractorConfigurationFileSpecificPath
-                                        theAngularCliLocalPath = angularCliLocalPath
-                                        theInstallGloballyAngularCli = installGloballyAngularCli
-                                    }
-                                }
-                            } else {
-                                echo "Skipping e2e tests..."
-                            }
-
-
-
-                            if (branchType in params.testing.predeploy.sonarQube) {
-                                stage('SonarQube') {
-                                    angularExecuteSonarQubeAnalisis {
-                                        theSonarProjectPath = sonarProjectPath
-                                        thePackageName = packageName
-                                        theBranchNameHY = branchNameHY
-                                        theSonarQubeServer = sonarQubeServer
-                                        theScannerHome = sonarScannerHome
-                                        theSonarSources = params.testing.predeploy.sonarQubeAnalisis.sonarSources
-                                        theSonarExclusions = params.testing.predeploy.sonarQubeAnalisis.sonarExclusions
-                                        theSonarTests = params.testing.predeploy.sonarQubeAnalisis.sonarTests
-                                        theSonarTestsInclusions = params.testing.predeploy.sonarQubeAnalisis.sonarTestInclusions
-                                        theSonarTypescriptExclusions = params.testing.predeploy.sonarQubeAnalisis.sonarTypescriptExclusions
-                                        theSonarTestExecutionReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarTestExecutionReportPath
-                                        theSonarCoverageReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarCoverageReportPath
-                                    }
-                                }
-                            } else {
-                                echo "Skipping Running SonarQube..."
-                            }
-
-
-                            stage('Build Angular application') {
-                                angularBuildAngularApplication {
-                                    useBuildProdFlags = params.ngBuildProd.useBuildProdFlags
-                                    theBuildProdDefaultFlags = buildProdFlags
-                                    theBuildProdFlags = params.ngBuildProd.buildProdFlags
+                            stage('Unit Testing') {
+                                angularExecuteUnitTesting {
+                                    useUnitTestingFlags = params.testing.predeploy.useUnitTestingFlags
+                                    theUnitTestingDefaultFlags = unitTestingFlags
+                                    theUnitTestingFlags = params.testing.predeploy.unitTestingFlags
+                                    useUnitTestingKarmaConfigurationFileSpecificPath = params.testing.predeploy.useUnitTestingKarmaConfigurationFileSpecificPath
+                                    theUnitTestingKarmaConfigurationFileSpecificPath = params.testing.predeploy.unitTestingKarmaConfigurationFileSpecificPath
                                     theAngularCliLocalPath = angularCliLocalPath
                                     theInstallGloballyAngularCli = installGloballyAngularCli
                                 }
                             }
+                        } else {
+                            echo "Skipping unit tests..."
+                        }
 
 
-                            stage('Create tarball') {
-                                buildOutputPath = angularCreateTarball {
-                                                    thePackageJSON = packageJSON
-                                                    theBuildDefaultOutputPath = buildDefaultOutputPath
-                                                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
-                                                    theBuildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
+                        if (branchType in params.testing.predeploy.e2eTesting) {
+                            stage('End to end (e2e) Testing') {
+                                angularExecuteE2ETesting {
+                                    useE2ETestingFlags = params.testing.predeploy.useE2ETestingFlags
+                                    theE2ETestingDefaultFlags = e2eTestingFlags
+                                    theE2ETestingFlags = params.testing.predeploy.e2eTestingFlags
+                                    useE2ETestingProtractorConfigurationFileSpecificPath = params.testing.predeploy.useE2ETestingProtractorConfigurationFileSpecificPath
+                                    theE2ETestingProtractorConfigurationFileSpecificPath = params.testing.predeploy.e2eTestingProtractorConfigurationFileSpecificPath
+                                    theAngularCliLocalPath = angularCliLocalPath
+                                    theInstallGloballyAngularCli = installGloballyAngularCli
                                 }
                             }
+                        } else {
+                            echo "Skipping e2e tests..."
+                        }
 
 
-                            stage ('Check tarball creation') {
-                                angularCheckTarballCreation {
+
+                        if (branchType in params.testing.predeploy.sonarQube) {
+                            stage('SonarQube') {
+                                angularExecuteSonarQubeAnalisis {
+                                    theSonarProjectPath = sonarProjectPath
+                                    thePackageName = packageName
+                                    theBranchNameHY = branchNameHY
+                                    theSonarQubeServer = sonarQubeServer
+                                    theScannerHome = sonarScannerHome
+                                    theSonarSources = params.testing.predeploy.sonarQubeAnalisis.sonarSources
+                                    theSonarExclusions = params.testing.predeploy.sonarQubeAnalisis.sonarExclusions
+                                    theSonarTests = params.testing.predeploy.sonarQubeAnalisis.sonarTests
+                                    theSonarTestsInclusions = params.testing.predeploy.sonarQubeAnalisis.sonarTestInclusions
+                                    theSonarTypescriptExclusions = params.testing.predeploy.sonarQubeAnalisis.sonarTypescriptExclusions
+                                    theSonarTestExecutionReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarTestExecutionReportPath
+                                    theSonarCoverageReportPath = params.testing.predeploy.sonarQubeAnalisis.sonarCoverageReportPath
+                                }
+                            }
+                        } else {
+                            echo "Skipping Running SonarQube..."
+                        }
+
+
+                        stage('Build Angular application') {
+
+                            def isProdFlag = false
+                            if (branchType in params.ngBuild.flagProdBranches) {
+                                isProdFlag = true
+                            }
+                            angularBuildAngularApplication {
+                                theIsProdFlag = isProdFlag
+                                theBuildEnvirnomentFlag = buildEnvironmentFlag
+                                theBuildEnvironment = buildEnvironment
+                                useBuildFlags = params.ngBuild.useBuildFlags
+                                theBuildDefaultFlags = buildFlags
+                                theBuildFlags = params.ngBuild.buildFlags
+                                theAngularCliLocalPath = angularCliLocalPath
+                                theInstallGloballyAngularCli = installGloballyAngularCli
+                            }
+                        }
+
+
+                        stage('Create tarball') {
+                            buildOutputPath = angularCreateTarball {
+                                                thePackageJSON = packageJSON
+                                                theBuildDefaultOutputPath = buildDefaultOutputPath
+                                                useSpecificOutputPath = params.ngBuild.useSpecificOutputPath
+                                                theBuildSpecificOutputPath = params.ngBuild.buildSpecificOutputPath
+                            }
+                        }
+
+
+                        stage ('Check tarball creation') {
+                            angularCheckTarballCreation {
+                                thePackageTarball = packageTarball
+                            }
+                        }
+
+
+                        if (branchType in params.npmRegistryPublish) {
+                            stage('Artifact NPM Registry Publish') {
+                                angularNPMRegistryPublish {
+                                    thePackageTarball = packageTarball
+                                    theAngularNPMLocalRepositoryURL = angularNPMLocalRepositoryURL
+                                }
+
+                                artifactoryRepository = angularNPMLocalRepositoryURL
+                            }
+                        } else {
+                            stage('Artifact Generic Registry Publish') {
+                                angularGenericRegistryPublish {
+                                    artCredentialsId = artifactoryCredential
+                                    theArtifactoryURL = artifactoryURL
+                                    theAngularGenericLocalRepositoryURL = angularGenericLocalRepositoryURL
+                                    thePackageName = packageName
                                     thePackageTarball = packageTarball
                                 }
+
+                                artifactoryRepository = angularGenericLocalRepositoryURL
                             }
+                        }
 
 
-                            if (branchType in params.npmRegistryPublish) {
-                                stage('Artifact NPM Registry Publish') {
-                                    angularNPMRegistryPublish {
-                                        thePackageTarball = packageTarball
-                                        theAngularNPMLocalRepositoryURL = angularNPMLocalRepositoryURL
-                                    }
-
-                                    artifactoryRepository = angularNPMLocalRepositoryURL
-                                }
-                            } else {
-                                stage('Artifact Generic Registry Publish') {
-                                    angularGenericRegistryPublish {
-                                        artCredentialsId = artifactoryCredential
-                                        theArtifactoryURL = artifactoryURL
-                                        theAngularGenericLocalRepositoryURL = angularGenericLocalRepositoryURL
-                                        thePackageName = packageName
-                                        thePackageTarball = packageTarball
-                                    }
-
-                                    artifactoryRepository = angularGenericLocalRepositoryURL
-                                }
-                            }
-
-                        } else { //if branchName != 'master'
+                        if (branchName == 'master') {
                             stage('Establish Artifactory registry type') {
                                 angularConfigureNPMRepository {
                                     theAngularNPMRepositoryURL = angularNPMRepositoryURL
@@ -674,8 +723,8 @@ def runAngularGenericJenkinsfile() {
                             stage('Set Build Output Path') {
                                 buildOutputPath = angularSetBuildOutputPath {
                                     theBuildDefaultOutputPath = buildDefaultOutputPath
-                                    useSpecificOutputPath = params.ngBuildProd.useSpecificOutputPath
-                                    theBuildSpecificOutputPath = params.ngBuildProd.buildSpecificOutputPath
+                                    useSpecificOutputPath = params.ngBuild.useSpecificOutputPath
+                                    theBuildSpecificOutputPath = params.ngBuild.buildSpecificOutputPath
                                 }
                             }
 

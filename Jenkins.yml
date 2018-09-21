@@ -20,17 +20,27 @@ showInstalledDependencies:
   showLocalInstalledDependenciesOnlyType: false
   showLocalInstalledDependenciesType: prod
 
-ngBuildProd:
-  useBuildProdFlags: false
-  buildProdFlags:  --aot=false
+ngBuild:
+  useBuildFlags: false
+  buildFlags:  --aot=false
   useSpecificOutputPath: false
   buildSpecificOutputPath: dist/
+  flagProdBranches:
+    - release
+    - hotfix
+    - master
+  buildEnvironments:
+    environmentDevelop: dev
+    environmentFeature: dev
+    environmentRelease: uat
+    environmentHotfix: uat
+    environmentMaster: prod
 
 environmentVariables:
   # environmentVariable1: value1
 
 npmRegistryPublish:
-  - release
+  - master
 
 nginxVersion: '1.12'
 
@@ -50,6 +60,7 @@ testing:
       - develop
       - release
       - hotfix
+      - master
 
     useUnitTestingFlags: false
     unitTestingFlags: --browsers ChromeHeadless --watch=false --code-coverage
@@ -60,6 +71,7 @@ testing:
       - develop
       - release
       - hotfix
+      - master
 
     useE2ETestingFlags: false
     e2eTestingFlags:
@@ -70,6 +82,7 @@ testing:
       - develop
       - release
       - hotfix
+      - master
 
     useKarmaSonarQubeReporterSpecificVersion: false
     karmaSonarQubeReporterSpecificVersion: 1.2.0
@@ -78,6 +91,7 @@ testing:
       - develop
       - release
       - hotfix
+      - master
     sonarQubeAnalisis:
       sonarSources: src
       sonarExclusions: "**/node_modules/**,**/*.spec.ts"
