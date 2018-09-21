@@ -430,7 +430,7 @@ def runAngularGenericJenkinsfile() {
                 echo 'NPM version:'
                 sh "npm -v"
 
-                angularJSON = readJSON file: '${angularJSONFileName}'
+                angularJSON = readJSON file: "${angularJSONFileName}"
 
                 echo "${angularJSONFileName} content:"
                 echo "${angularJSON}"
