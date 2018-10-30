@@ -498,8 +498,8 @@ def runAngularGenericJenkinsfile() {
 
             withCredentials([string(credentialsId: "${artifactoryNPMAuthCredential}", variable: 'ARTIFACTORY_NPM_AUTH'), string(credentialsId: "${artifactoryNPMEmailAuthCredential}", variable: 'ARTIFACTORY_NPM_EMAIL_AUTH')]) {
                 withEnv(["NPM_AUTH=${ARTIFACTORY_NPM_AUTH}", "NPM_AUTH_EMAIL=${ARTIFACTORY_NPM_EMAIL_AUTH}"]) {
-                    withNPM(npmrcConfig: 'my-custom-npmrc') {
-
+                    //withNPM(npmrcConfig: 'my-custom-npmrc') {
+                    withNPM(npmrcConfig: 'npm-config-prueba') {
                         //All branches will do these stages
                         echo "params.angularCli.installGloballyAngularCli: ${params.angularCli.installGloballyAngularCli}"
 
