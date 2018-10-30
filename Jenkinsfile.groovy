@@ -16,8 +16,10 @@ def runAngularGenericJenkinsfile() {
     def openshiftCredential = 'openshift'
     def registry = '172.20.253.34'
     def artifactoryCredential = 'artifactory-token'
-    def artifactoryNPMAuthCredential = 'artifactory-npm-auth'
-    def artifactoryNPMEmailAuthCredential = 'artifactory-npm-email-auth'
+    //def artifactoryNPMAuthCredential = 'artifactory-npm-auth'
+    //def artifactoryNPMEmailAuthCredential = 'artifactory-npm-email-auth'
+    def artifactoryNPMAuthCredential = 'prueba-artifactory-npm-auth'
+    def artifactoryNPMEmailAuthCredential = 'prueba-artifactory-npm-email-auth'
     def jenkinsNamespace = 'cicd'
     def params
     String envLabel
