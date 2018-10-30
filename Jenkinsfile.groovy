@@ -6,7 +6,9 @@ def runAngularGenericJenkinsfile() {
 
     AngularUtils utils = new AngularUtils()
 
-    def angularNPMRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-repo/'
+    //def angularNPMRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-repo/'
+    def angularNPMRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/prueba-repo/'
+
     def angularNPMLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/api/npm/angular-npm-local/'
     def angularGenericLocalRepositoryURL = 'https://digitalservices.evobanco.com/artifactory/angular-generic-local/'
     def artifactoryURL = 'https://digitalservices.evobanco.com/artifactory/'
